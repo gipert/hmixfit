@@ -33,12 +33,12 @@
     "fit" : {
         "parameters" : {
             "2nbb-bege" : {
-                "range" : [9E4, 1.1E5],
+                "range" : [8.5E4, 9.5E4],
                 "long-name" : "2#nu#beta#beta - enrBEGe",
                 "units" : "cts"
             },
             "2nbb-coax" : {
-                "range" : [7E4, 1E5],
+                "range" : [6.5E4, 7.5E4],
                 "long-name" : "2#nu#beta#beta - enrCoax",
                 "units" : "cts"
             },
@@ -53,12 +53,12 @@
                 "units" : "cts"
             },
             "Pb214Bi214-cables" : {
-                "range" : [3E3, 3.5E4],
+                "range" : [3E3, 5E4],
                 "long-name" : "^{214}Pb + ^{214}Bi - cables",
                 "units" : "cts"
             },
             "Ac228-holders" : {
-                "range" : [0, 1E4],
+                "range" : [0, 3E4],
                 "long-name" : "^{228}Ac - holders",
                 "units" : "cts"
             },
@@ -68,7 +68,7 @@
                 "units" : "cts"
             },
             "K40-far" : {
-                "range" : [0, 1E7],
+                "range" : [0, 2E7],
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
@@ -78,12 +78,12 @@
                 "units" : "cts"
             },
             "K42-above-array" : {
-                "range" : [0, 1E7],
+                "range" : [0, 1E8],
                 "long-name" : "^{42}K - hom. in LAr above array",
                 "units" : "cts"
             },
             "K42-nplus-bege" : {
-                "range" : [0, 1E4],
+                "range" : [0, 5E4],
                 "long-name" : "^{42}K - n^+ (BEGe)",
                 "units" : "cts"
             },
@@ -124,7 +124,7 @@
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseII-v04.00-raw.root" : {
+            "../../data/datahist-bkg-model-run53-run92-v04.00-noNatCoax.root" : {
                 "M1_enrBEGe" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/v1.0",
                     "fit-range" : [[565, 2014], [2064, 5220]],
