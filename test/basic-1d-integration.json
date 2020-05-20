@@ -8,6 +8,7 @@
     },
     "integration" : {
         "enabled" : true,
+        "use-best-fit-likelihood-offset" : true,
         "method" : "kIntCuba",
         "cuba-method" : "kCubaDivonne",
         "integrator-settings" : {

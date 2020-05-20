@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     if (config["integration"].is_object()) {
         if (config["integration"].value("enabled", false)) {
             model->SetIntegrationProperties(config["integration"]);
-            model->Integrate();
+            model->Integrate((bool)config["integration"].value("use-best-fit-likelihood-offset", false));
             auto logpost = model->LogProbability(model->GetBestFitParameters());
             BCLog::OutSummary("Posterior at global mode: " + std::to_string(logpost));
         }

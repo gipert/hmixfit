@@ -93,6 +93,7 @@ class GerdaFitter : public BCModel {
     void SaveHistograms(std::string filename);
     void WriteResultsTree(std::string filename);
     double GetFastPValue(const std::vector<double>& parameters, long niter);
+    double Integrate(bool enable_offset);
 
     template<typename BasicJsonType>
     std::vector<std::pair<double,double>> CheckAndStoreRanges(BasicJsonType& range);
@@ -124,6 +125,7 @@ class GerdaFitter : public BCModel {
     private:
 
     std::map<std::string,TFormula> obs_tformulas;
+    double _likelihood_offset = 0.; // for easier integration
 
     TF1 ParseTFormula(std::string prefix, std::string expr, double rangelow, double rangeup);
     std::string SafeROOTName(const std::string original);
