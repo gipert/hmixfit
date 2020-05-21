@@ -88,9 +88,14 @@
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
-            "K42-lar" : {
-                "range" : [6E6, 8E7],
-                "long-name" : "^{42}K - hom. in LAr",
+            "K42-outside-ms" : {
+                "range" : [1E6, 2E8],
+                "long-name" : "^{42}K - in LAr outside mini-shrouds",
+                "units" : "cts"
+            },
+            "K42-inside-ms" : {
+                "range" : [0, 3E5],
+                "long-name" : "^{42}K - in LAr inside mini-shrouds",
                 "units" : "cts"
             },
             "K42-above-array" : {
@@ -140,7 +145,7 @@
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseIIplus-v06.13.root" : {
+            "../../data/gerda-data-bkgmodel-phaseIIplus-v07.00.root" : {
                 "raw/M1_invCoax" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
                     "fit-range" : [[565, 2014], [2064, 3500]],
@@ -209,9 +214,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -318,9 +331,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -437,9 +458,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -548,9 +577,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
