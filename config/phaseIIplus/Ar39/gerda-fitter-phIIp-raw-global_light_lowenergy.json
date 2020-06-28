@@ -2,7 +2,7 @@
     "id" : "phIIp-raw-global_light_lowenergy",
     "logging" : "summary",
     "precision" : "kQuick",
-    "output-dir" : "../../results/phIIp-raw-global_light_lowenergy",
+    "output-dir" : "../../../results/phIIp-raw-global_light_lowenergy",
     "global-mode-search" : {
         "method" : "kOptMinuit"
     },
@@ -39,109 +39,107 @@
     "fit" : {
         "parameters" : {
             "2nbb-semicoax" : {
-                "fixed" : 42699,
+                "fixed" : 43107,
                 "long-name" : "2#nu#beta#beta - SemiCoax",
                 "units" : "cts"
             },
             "2nbb-bege" : {
-                "fixed" : 54270,
+                "fixed" : 54601,
                 "long-name" : "2#nu#beta#beta - BEGe",
                 "units" : "cts"
             },
             "2nbb-invcoax" : {
-                "fixed" : 27756,
+                "fixed" : 27814,
                 "long-name" : "2#nu#beta#beta - InvCoax",
                 "units" : "cts"
             },
             "Bi212Tl208-cables" : {
-                "fixed" : 1.935e+04,
+                "fixed" : 1.923e+04,
                 "long-name" : "^{212}Bi + ^{208}Tl - cables",
                 "units" : "cts"
             },
             "Co60-cables" : {
-                "fixed" : 4780.8,
+                "fixed" : 4467.2,
                 "long-name" : "^{60}Co - cables",
                 "units" : "cts"
             },
             "Pb214Bi214-cables" : {
-                "fixed" : 24652,
+                "fixed" : 24562,
                 "long-name" : "^{214}Pb + ^{214}Bi - cables",
                 "units" : "cts"
             },
             "Ac228-holders" : {
-                "fixed" : 6309.6,
+                "fixed" : 5430.8,
                 "long-name" : "^{228}Ac - holders",
                 "units" : "cts"
             },
             "K40-central-fiber-shroud" : {
-                "fixed" : 1.382e+05,
+                "fixed" : 2.379e+05,
                 "long-name" : "^{40}K - central fiber shroud",
                 "units" : "cts"
             },
             "K40-close" : {
-                "fixed" : 6.1002e+05,
+                "fixed" : 4.6165e+05,
                 "long-name" : "^{40}K - close",
                 "units" : "cts"
             },
             "K40-far" : {
-                "fixed" : 1.4605e+05,
+                "fixed" : 7.8913e+05,
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
-            "K42-lar" : {
-                "fixed" : 1.8639e+07,
-                "long-name" : "^{42}K - hom. in LAr",
+            "K42-outside-ms" : {
+                "fixed" : 8.8152e+06,
+                "long-name" : "^{42}K - in LAr outside mini-shrouds",
+                "units" : "cts"
+            },
+            "K42-inside-ms" : {
+                "fixed" : 8.647e+04,
+                "long-name" : "^{42}K - in LAr inside mini-shrouds",
                 "units" : "cts"
             },
             "K42-above-array" : {
-                "fixed" : 3.307e+07,
+                "fixed" : 3.252e+07,
                 "long-name" : "^{42}K - hom. in LAr above the array",
                 "units" : "cts"
             },
             "Zn65-invcoax" : {
-                "fixed" : 1809,
+                "fixed" : 1840,
                 "long-name" : "^{65}Zn - InvCoax",
                 "units" : "cts"
             },
             "K42-nplus-invcoax" : {
-                "fixed" : 9677,
+                "fixed" : 8244,
                 "long-name" : "^{42}K on n+ - InvCoax",
                 "units" : "cts"
             },
-            "K42-nplus-bege" : {
-                "fixed" : 1599,
-                "long-name" : "^{42}K - n^+ (BEGe)",
-                "units" : "cts"
-            },
             "K42-nplus-semicoax" : {
-                "fixed" : 4.893e+04,
+                "fixed" : 5.069e+04,
                 "long-name" : "^{42}K - n^+ (Coax)",
                 "units" : "cts"
             },
             "alpha-slope-bege" : {
-                "fixed" : 5.467e-05,
+                "fixed" : 0.0001022,
                 "long-name" : "#alpha-model BEGe - slope",
                 "units" : "cts"
             },
-            "alpha-offset-bege" : {
-                "fixed" : 0.1608,
-                "long-name" : "#alpha-model BEGe - offset",
-                "units" : "cts"
-            },
             "alpha-slope-coax" : {
-                "fixed" : 1.582e-05,
+                "fixed" : 3.091e-05,
                 "long-name" : "#alpha-model SemiCoax - slope",
                 "units" : "cts"
             },
             "alpha-offset-coax" : {
-                "fixed" : 0.1472,
+                "fixed" : 0.05865,
                 "long-name" : "#alpha-model SemiCoax - offset",
                 "units" : "cts"
             },
             "Ar39-lar" : {
-                "range" : [1E9, 8E10],
+                "range" : [4.8E10, 4.9E10],
                 "long-name" : "^{39}Ar - hom. in LAr",
-                "units" : "cts"
+                "units" : "cts",
+                "prior" : {
+                    "TFormula" : "gaus:1,4E10,0.5E10"
+                }
             },
             "Kr85-lar" : {
                 "range" : [2E7, 2E8],
@@ -153,10 +151,10 @@
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseIIplus-v06.13.root" : {
+            "../../../data/gerda-data-bkgmodel-phaseIIplus-v07.00.root" : {
                 "raw/M1_invCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[50, 2014], [2064, 3500]],
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "fit-range" : [40, 600],
                     "rebin-factor" : 2,
                     "components" : [
                         {
@@ -222,9 +220,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -234,14 +240,6 @@
                             "components" : {
                                 "Zn65-invcoax" : {
                                     "isotope" : "Zn65"
-                                }
-                            }
-                        },
-                        {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
-                                    "isotope" : "K42"
                                 }
                             }
                         },
@@ -280,8 +278,8 @@
                     ]
                 },
                 "raw/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[50, 2014], [2064, 3500]],
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "fit-range" : [40, 600],
                     "rebin-factor" : 2,
                     "components" : [
                         {
@@ -347,17 +345,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -382,9 +380,6 @@
                             "components" : {
                                 "alpha-slope-bege" : {
                                     "TFormula" : "x*(x>0 && x<5160)"
-                                },
-                                "alpha-offset-bege" : {
-                                    "TFormula" : "1"
                                 }
                             }
                         },
@@ -407,8 +402,8 @@
                     ]
                 },
                 "raw/M1_enrCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[50, 2014], [2064, 3500]],
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "fit-range" : [40, 600],
                     "rebin-factor" : 2,
                     "components" : [
                         {
@@ -474,17 +469,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -534,8 +529,8 @@
                     ]
                 },
                 "raw/M2_enrE1plusE2" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [150, 3000],
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "fit-range" : [80, 600],
                     "rebin-factor" : 10,
                     "components" : [
                         {
@@ -593,17 +588,17 @@
                             }
                         },
                         {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
-                                "K42-lar" : {
+                                "K42-outside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
+                            "part": "lar/inside_ms",
+                            "components" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
