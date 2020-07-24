@@ -97,6 +97,7 @@ class GerdaFitter : public BCModel {
 
     template<typename BasicJsonType>
     std::vector<std::pair<double,double>> CheckAndStoreRanges(BasicJsonType& range);
+    std::vector<double> ParseBinChangePoints(std::string input);
     // TODO : implement me
     std::vector<std::pair<int,int>> TranslateAxisRangeToBinRange(
         TH1* h,
@@ -130,7 +131,7 @@ class GerdaFitter : public BCModel {
     TF1 ParseTFormula(std::string prefix, std::string expr, double rangelow, double rangeup);
     std::string SafeROOTName(const std::string original);
     void DumpData();
-    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* data, int rebin_x = 1, int rebin_y = 1);
+    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* data, int rebin_x = 1, int rebin_y = 1, std::vector<double> change_points = {});
 };
 
 #endif
