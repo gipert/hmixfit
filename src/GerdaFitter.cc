@@ -1340,7 +1340,8 @@ std::vector<double> GerdaFitter::ParseBinChangePoints(std::string input) {
     // sort, just to be sure
     std::sort(change_points.begin(), change_points.end());
     // and remove duplicates
-    std::unique(change_points.begin(), change_points.end());
+    auto _last = std::unique(change_points.begin(), change_points.end());
+    change_points.erase(_last, change_points.end());
 
     return change_points;
 }
