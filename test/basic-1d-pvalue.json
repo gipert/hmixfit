@@ -1,5 +1,5 @@
 {
-    "id" : "basic-1d",
+    "id" : "basic-1d-pvalue",
     "logging" : "summary",
     "precision" : "kMedium",
     "output-dir" : "results",

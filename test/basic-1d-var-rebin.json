@@ -1,5 +1,5 @@
 {
-    "id" : "basic-1d",
+    "id" : "basic-1d-var-rebin",
     "logging" : "summary",
     "precision" : "kMedium",
     "output-dir" : "results",
@@ -28,7 +28,7 @@
             "data/data.root" : {
                 "h_data" : {
                     "fit-range" : [0, 100],
-                    "rebin-factor" : "0:1:10,13,15,55,55:0.5:100",
+                    "rebin-factor" : "0:1:10,13,15,55,75:5:100",
                     "components" : [
                         {
                             "root-file" : "data/data.root",
