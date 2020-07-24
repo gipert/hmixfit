@@ -1,0 +1,46 @@
+{
+    "id" : "basic-1d",
+    "logging" : "summary",
+    "precision" : "kMedium",
+    "output-dir" : "results",
+    "global-mode-search" : {
+        "method" : "kOptMinuit"
+    },
+    "fit" : {
+        "parameters" : {
+            "signal-1" : {
+                "range" : [0, 50],
+                "long-name" : "Signal 1",
+                "units" : "cts"
+            },
+            "signal-2" : {
+                "range" : [0, 50],
+                "long-name" : "Signal 2",
+                "units" : "cts"
+            },
+            "bkg-1" : {
+                "range" : [0, 0.05],
+                "long-name" : "Background 1",
+                "units" : "cts"
+            }
+        },
+        "theoretical-expectations" : {
+            "data/data.root" : {
+                "h_data" : {
+                    "fit-range" : [[0, 40], [50, 100]],
+                    "rebin-factor" : "0:1:50,55,59,75,75:0.5:100",
+                    "components" : [
+                        {
+                            "root-file" : "data/data.root",
+                            "components" : {
+                                "signal-1" : { "hist-name" : "h_f1" },
+                                "signal-2" : { "hist-name" : "h_f2" },
+                                "bkg-1" :    { "hist-name" : "h_f3" }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
