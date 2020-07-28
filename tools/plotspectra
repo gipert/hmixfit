@@ -240,6 +240,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                             else                         h = dynamic_cast<TH1*>(obj);
                             h->SetLineColor(kGray+1);
                             h->Rebin(rebin);
+                            h->Scale(1, "width");
                             h->Draw("hist same");
                         }
                     }
@@ -251,8 +252,16 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                 auto resgraph = dynamic_cast<TH1*>(data->Clone());
 
                 if (residuals) resgraph->Divide(model);
+                else resgraph->Scale(1, "width");
                 if (range_low_x and range_upp_x) resgraph->GetXaxis()->SetRangeUser(range_low_x->GetVal(), range_upp_x->GetVal());
-                if (logy) resgraph->GetYaxis()->SetRangeUser(0.2, 2*resgraph->GetMaximum());
+                if (logy) {
+                    double minimum = + std::numeric_limits<double>::infinity();
+                    for (int i = 1; i <= resgraph->GetNbinsX(); i++) {
+                        auto cont = resgraph->GetBinContent(i);
+                        if (cont < minimum and cont > 0) minimum = cont;
+                    }
+                    resgraph->GetYaxis()->SetRangeUser(0.2*minimum, 2*resgraph->GetMaximum());
+                }
                 resgraph->Draw("P0 HIST");
                 gPad->Update();
 
@@ -264,6 +273,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                         resgraph->GetBinLowEdge(b),
                         resgraph->GetBinWidth(b),
                         residuals ? true : false,
+                        1./resgraph->GetBinWidth(b),
                         resgraph
                     );
 
@@ -276,6 +286,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                     draw_components();
                     model->SetLineColor(kBlack);
                     model->SetLineWidth(1);
+                    model->Scale(1, "width");
                     model->Draw("hist same");
                 }
 
@@ -289,8 +300,15 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
             }
             // regular plot
             else {
-                if (is_th2) data->Draw("hist 0 lego");
-                else        data->Draw("hist");
+                if (is_th2) {
+                    data->SetZTitle("bin content / bin width");
+                    data->Draw("hist 0 lego");
+                }
+                else {
+                    data->SetYTitle("bin content / bin width");
+                    data->Scale(1, "width");
+                    data->Draw("hist");
+                }
 
                 if (logy and  is_th2) gPad->SetLogz();
                 if (logy and !is_th2) gPad->SetLogy();
@@ -309,6 +327,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                 }
                 else {
                     data->Draw("hist same");
+                    model->Scale(1, "width");
                     model->Draw("hist same");
                 }
             }
