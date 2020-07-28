@@ -98,7 +98,7 @@ namespace poiband {
      * be provided as a last argument, and the boxes will be clipped to its frame
      * size.
      */
-    void draw_poisson_bands(double mu, double x_low, double x_size, bool residuals = false, TH1* h = nullptr) {
+    void draw_poisson_bands(double mu, double x_low, double x_size, bool residuals = false, double scale = 1., TH1* h = nullptr) {
 
         if (h != nullptr and h->GetDimension() != 1) {
             throw runtime_error("draw_poisson_bands(): only 1D histograms are supported");
@@ -128,6 +128,11 @@ namespace poiband {
                 sig2.first = sig2.second = 1;
                 sig3.first = sig3.second = 1;
             }
+        }
+        else {
+            sig1.first *= scale; sig1.second *= scale;
+            sig2.first *= scale; sig2.second *= scale;
+            sig3.first *= scale; sig3.second *= scale;
         }
 
         // compute interval centers (for plotting)

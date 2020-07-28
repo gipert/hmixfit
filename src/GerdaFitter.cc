@@ -177,27 +177,53 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
         // loop over requested histograms in file
         for (auto& elh : el.value().items()) {
             // get rebin factor before reading all histograms
-            auto rebin_x = elh.value().value("rebin-factor-x", 1) * elh.value().value("rebin-factor", 1);
-            auto rebin_y = elh.value().value("rebin-factor-y", 1);
-            if (rebin_x != 1)
-                BCLog::OutDetail("using rebin X factor = " + std::to_string(rebin_x) + " for dataset '" + elh.key() + "'");
-            if (rebin_y != 1)
-                BCLog::OutDetail("using rebin Y factor = " + std::to_string(rebin_y) + " for dataset '" + elh.key() + "'");
+            std::vector<double> change_points;
+            int rebin_x, rebin_y;
+            if (elh.value().contains("rebin-factor") and elh.value()["rebin-factor"].is_string()) {
+                BCLog::OutDetail("using specified variable-sized rebin for dataset '" + el.key() + "'");
+                change_points = this->ParseBinChangePoints(elh.value()["rebin-factor"].get<std::string>());
+            }
+            else {
+                rebin_x = elh.value().value("rebin-factor-x", 1) * elh.value().value("rebin-factor", 1);
+                rebin_y = elh.value().value("rebin-factor-y", 1);
+                if (rebin_x != 1)
+                    BCLog::OutDetail("using rebin X factor = " + std::to_string(rebin_x) + " for dataset '" + elh.key() + "'");
+                if (rebin_y != 1)
+                    BCLog::OutDetail("using rebin Y factor = " + std::to_string(rebin_y) + " for dataset '" + elh.key() + "'");
+            }
 
             BCLog::OutDebug("getting data histogram '" + elh.key() + "' from " + el.key());
             auto th = dynamic_cast<TH1*>(_tf.Get(elh.key().c_str()));
             if (!th) throw std::runtime_error("could not find object '" + elh.key() + "' in file " + el.key());
-            th->SetDirectory(nullptr);
-
-            // rebin if requested
-            th->Rebin(rebin_x);
-            if ((rebin_y != 1) and (_tf.Get(elh.key().c_str())->InheritsFrom(TH2::Class()))) {
-                dynamic_cast<TH2*>(_tf.Get(elh.key().c_str()))->RebinY(rebin_y);
+            if (th->GetDimension() != 1 and !change_points.empty()) {
+                throw std::runtime_error("cannot apply variable-sized rebin to TH2 or TH3");
             }
+
+            // set explicative histogram names
             auto basename = el.key().substr(
                     el.key().find_last_of('/')+1,
                     el.key().find_last_of('.') - el.key().find_last_of('/') - 1);
             basename += "_" + std::string(th->GetName());
+
+            // rebin if requested
+            if (change_points.empty()) {
+                th->Rebin(rebin_x);
+                if ((rebin_y != 1) and (_tf.Get(elh.key().c_str())->InheritsFrom(TH2::Class()))) {
+                    dynamic_cast<TH2*>(_tf.Get(elh.key().c_str()))->RebinY(rebin_y);
+                }
+            }
+            else {
+                // do variable rebin
+                th = dynamic_cast<TH1*>(
+                    th->Rebin(
+                        change_points.size()-1,
+                        this->SafeROOTName(basename).c_str(),
+                        &change_points[0]
+                    ));
+            }
+
+            // please ROOT do not auto-delete this object
+            th->SetDirectory(nullptr);
             th->SetName(this->SafeROOTName(basename).c_str());
 
             dataset _current_ds;
@@ -233,7 +259,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             BCLog::OutDebug("summing object '" + elh.key() + " with weight "
                                     + std::to_string(p.value().get<double>()));
                             // get histogram
-                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data, rebin_x, rebin_y);
+                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data, rebin_x, rebin_y, change_points);
                             // add it with weight
                             if (!sum) {
                                 sum = thh;
@@ -255,7 +281,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             + volume + "-" + part + "-" + i + ".root";
                         BCLog::OutDebug("getting object '" + elh.key() + "' in file " + filename);
                         // get histogram
-                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data, rebin_x, rebin_y);
+                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data, rebin_x, rebin_y, change_points);
                         return thh;
                     }
                     else throw std::runtime_error("unexpected 'part' value found in [\"fit\"][\""
@@ -285,7 +311,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                     if (!iso.value().contains("TFormula") and it.contains("root-file")) {
                         BCLog::OutDebug("user-specified ROOT file detected");
                         auto obj_name = iso.value().value("hist-name", elh.key());
-                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data, rebin_x, rebin_y);
+                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data, rebin_x, rebin_y, change_points);
                         _current_ds.comp.insert({comp_idx, thh});
                     }
                     // it's a explicit TFormula
@@ -358,8 +384,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                 });
             }
             else { // sanity check x-range
-                auto & x_range = elh.value().contains("fit-range-x")
-                    ? elh.value()["fit-range-x"] : elh.value()["fit-range"];
+                auto x_range = elh.value().contains("fit-range-x") ? elh.value()["fit-range-x"] : elh.value()["fit-range"];
                 if (!x_range.is_array())
                     throw std::runtime_error("wrong \"fit-range-x\" format, array expected");
                 if (!(x_range[0].is_array() or x_range[0].is_number()))
@@ -373,7 +398,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         if (!r[0].is_number() or !r[1].is_number()) {
                             throw std::runtime_error("not-a-number value detected in \"fit-range-x\"");
                         }
-                        _vxr.push_back({r[0],r[1]});
+                        _vxr.push_back({r[0], r[1]});
                     }
                 }
                 else _vxr.push_back({x_range[0], x_range[1]});
@@ -648,20 +673,33 @@ void GerdaFitter::CalculateObservables(const std::vector<double>& parameters) {
     }
 }
 
-TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, TH1* dataformat, int rebin_x, int rebin_y) {
+TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, TH1* dataformat, int rebin_x, int rebin_y, std::vector<double> change_points) {
     TFile _tf(filename.c_str());
     if (!_tf.IsOpen()) throw std::runtime_error("invalid ROOT file: " + filename);
     auto obj = _tf.Get(objectname.c_str());
     if (!obj) throw std::runtime_error("could not find object '" + objectname + "' in file " + filename);
-    // please do not delete it when the TFile goes out of scope
+
     if (obj->InheritsFrom(TH1::Class())) {
         auto _th = dynamic_cast<TH1*>(obj);
         // rebin component
-        _th->Rebin(rebin_x);
-        if ((rebin_y != 1) and (obj->InheritsFrom(TH2::Class()))) {
-            dynamic_cast<TH2*>(obj)->RebinY(rebin_y);
-            BCLog::OutDebug("rebinned combonent : [" + std::to_string(rebin_x) + "," + std::to_string(rebin_y) + "]");
+        if (change_points.empty()) {
+            _th->Rebin(rebin_x);
+            if ((rebin_y != 1) and (obj->InheritsFrom(TH2::Class()))) {
+                dynamic_cast<TH2*>(obj)->RebinY(rebin_y);
+            }
+            BCLog::OutDebug("rebinned combonent with factors: [" + std::to_string(rebin_x) + "," + std::to_string(rebin_y) + "]");
         }
+        else {
+            // do variable rebin
+            _th = dynamic_cast<TH1*>(
+                _th->Rebin(
+                    change_points.size()-1,
+                    _th->GetName(),
+                    &change_points[0]
+                ));
+            BCLog::OutDebug("rebinned combonent with variable binning");
+        }
+
         // sanity checks
         if (_th->GetDimension() > 2) throw std::runtime_error("TH3 are not supported yet");
         if (_th->GetNcells() != dataformat->GetNcells() or // ncells : nbins + over- and underflow
@@ -678,6 +716,7 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
                 + " and corresponding data histogram do not have the same y-ranges");
             }
         }
+        // please do not delete it when the TFile goes out of scope
         _th->SetDirectory(nullptr);
         TParameter<Long64_t>* _nprim = nullptr;
         auto _name_nodir = objectname.substr(objectname.find_last_of('/')+1, std::string::npos);
@@ -1239,6 +1278,72 @@ std::vector<std::pair<double,double>> GerdaFitter::CheckAndStoreRanges(BasicJson
     if (_bad_range) throw std::runtime_error("Range is ill-defined");
 
     return _v_range;
+}
+
+/*
+ * convert strings of the type "0:1:10,23,34,56:4:68" into vector of change points
+ */
+std::vector<double> GerdaFitter::ParseBinChangePoints(std::string input) {
+    if (input.empty()) throw std::runtime_error("GerdaFitter::ParseBinChangePoints(): empty input");
+
+    std::vector<double> change_points;
+
+    unsigned long pos;
+    do {
+        pos = input.find_first_of(',');
+        std::string el = input.substr(0, pos);
+        if (el.find(':') != std::string::npos) {
+            // is of the type 'start:step:stop'
+            auto elpos = el.find_first_of(':');
+            std::string sstart = el.substr(0, elpos);
+            el.erase(0, elpos+1);
+            elpos = el.find_first_of(':');
+            if (elpos == std::string::npos) {
+                throw std::invalid_argument("GerdaFitter::ParseBinChangePoints(): invalid range element format '" + el + "'");
+            }
+            std::string sstep = el.substr(0, elpos);
+            el.erase(0, elpos+1);
+            std::string sstop = el;
+
+            double start, step, stop;
+            // is it a valid number?
+            try {
+                start = std::stod(sstart);
+                step = std::stod(sstep);
+                stop = std::stod(sstop);
+            }
+            catch (const std::invalid_argument& e) {
+                throw std::invalid_argument("GerdaFitter::ParseBinChangePoints(): stod: conversion of range element '" + el + "' failed");
+            }
+
+            // ok, now some other sanity checks
+            if (stop <= start or step <= 0 or step > (stop - start)) {
+                throw std::invalid_argument("GerdaFitter::ParseBinChangePoints(): range element '" + el + "' does not make sense");
+            }
+
+            // finally we can push the change points
+            for (double i = start; i <= stop; i += step) change_points.push_back(i);
+        }
+        else {
+            // is it a valid number?
+            try {
+                change_points.push_back(std::stod(el));
+            }
+            catch (const std::invalid_argument& e) {
+                throw std::invalid_argument("GerdaFitter::ParseBinChangePoints(): stod: conversion of range element '" + el + "' failed");
+            }
+        }
+        input.erase(0, pos+1);
+    }
+    while (pos != std::string::npos);
+
+    // sort, just to be sure
+    std::sort(change_points.begin(), change_points.end());
+    // and remove duplicates
+    auto _last = std::unique(change_points.begin(), change_points.end());
+    change_points.erase(_last, change_points.end());
+
+    return change_points;
 }
 
 std::vector<std::pair<int,int>> GerdaFitter::TranslateAxisRangeToBinRange(

@@ -1,14 +1,10 @@
 {
-    "id" : "basic-1d-pvalue",
+    "id" : "basic-1d-unconnected-ranges-var-rebin",
     "logging" : "summary",
     "precision" : "kMedium",
     "output-dir" : "results",
     "global-mode-search" : {
         "method" : "kOptMinuit"
-    },
-    "p-value": {
-        "enabled" : true,
-        "iterations" : 1E4
     },
     "fit" : {
         "parameters" : {
@@ -31,8 +27,8 @@
         "theoretical-expectations" : {
             "data/data.root" : {
                 "h_data" : {
-                    "fit-range" : [0, 100],
-                    "rebin-factor" : 1,
+                    "fit-range" : [[0, 40], [50, 100]],
+                    "rebin-factor" : "0:1:10,13,15,40,50,55,75:5:100",
                     "components" : [
                         {
                             "root-file" : "data/data.root",
