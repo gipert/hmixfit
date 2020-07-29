@@ -1,6 +1,7 @@
 gerda-fitter
 results
 /data
+/src/obj
 *.root
 *.sif
 

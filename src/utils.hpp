@@ -25,6 +25,9 @@
 #include <string>
 #include <exception>
 
+// BAT
+#include "BAT/BCLog.h"
+
 // ROOT
 #include "TH2.h"
 #include "TF1.h"
@@ -187,7 +190,7 @@ namespace utils {
         std::vector<std::pair<double,double>> /*x_range*/,
         std::vector<std::pair<double,double>> /*y_range*/
     ) {
-        BCLog::OutSummary("TranslateAxisRangeToBinRange(): implement me!");
+        throw std::runtime_error("TranslateAxisRangeToBinRange(): implement me!");
         std::vector<std::pair<int,int>> _b_range;
         return _b_range;
     }
@@ -202,7 +205,7 @@ namespace utils {
                 + "] n-bins : " + std::to_string(_b_max-_b_min+1)
             );
             integral += h->Integral(_b_min, _b_max);
-        } 
+        }
         return integral;
     }
 
@@ -211,8 +214,8 @@ namespace utils {
         std::vector<std::pair<double,double>> /*x_range*/,
         std::vector<std::pair<double,double>> /*y_range*/
     )
-    { 
-        BCLog::OutSummary("IntegrateHistogram2D(): implement me!");
+    {
+        throw std::runtime_error("IntegrateHistogram2D(): implement me!");
         return 0;
     }
 
