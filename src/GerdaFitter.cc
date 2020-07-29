@@ -1322,7 +1322,8 @@ std::vector<double> GerdaFitter::ParseBinChangePoints(std::string input) {
             }
 
             // finally we can push the change points
-            for (double i = start; i <= stop; i += step) change_points.push_back(i);
+            for (double i = start; i < stop; i += step) change_points.push_back(i);
+            change_points.push_back(stop);
         }
         else {
             // is it a valid number?
