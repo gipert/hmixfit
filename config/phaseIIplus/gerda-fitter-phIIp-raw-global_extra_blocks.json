@@ -1,13 +1,13 @@
 {
-    "id" : "phIIp-raw-global_light",
+    "id" : "phIIp-raw-global_extra_blocks",
     "logging" : "summary",
-    "precision" : "kMedium",
-    "output-dir" : "../../results/phIIp-raw-global_light",
+    "precision" : "kHigh",
+    "output-dir" : "../../results/phIIp-raw-global_extra_blocks",
     "global-mode-search" : {
         "method" : "kOptMinuit"
     },
     "p-value": {
-        "enabled" : false,
+        "enabled" : true,
         "iterations" : 1E7
     },
     "observables": {
@@ -56,35 +56,117 @@
             "Bi212Tl208-cables" : {
                 "range" : [0, 3E4],
                 "long-name" : "^{212}Bi + ^{208}Tl - cables",
-                "units" : "cts"
+                "units" : "cts",
+                "prior" : { "TFormula" : "exp(-x*2.3/4666)" }
             },
             "Co60-cables" : {
-                "range" : [5E2, 8E3],
+                "range" : [0, 8E3],
                 "long-name" : "^{60}Co - cables",
-                "units" : "cts"
+                "units" : "cts",
+                "prior" : { "TFormula" : "exp(-x*2.3/777)" }
             },
             "Pb214Bi214-cables" : {
-                "range" : [2E4, 3.5E4],
+                "range" : [0, 3.5E4],
                 "long-name" : "^{214}Pb + ^{214}Bi - cables",
+                "units" : "cts",
+                "prior" : { "TFormula" : "exp(-x*2.3/77906)" }
+            },
+            "K40-cables" : {
+                "range" : [1e4, 5E5],
+                "long-name" : "^{40}K - cables",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,1.1E5,3.0E4" }
+            },
+            "Bi212Tl208-holders" : {
+                "range" : [0, 3E4],
+                "long-name" : "^{212}Bi + ^{208}Tl - holders",
                 "units" : "cts"
+            },
+            "Co60-holders" : {
+                "range" : [0, 8E3],
+                "long-name" : "^{60}Co - holders",
+                "units" : "cts",
+                "prior" : { "TFormula" : "exp(-x*2.3/3777)" }
             },
             "Ac228-holders" : {
-                "range" : [1E3, 1.5E4],
+                "range" : [0, 1.5E4],
                 "long-name" : "^{228}Ac - holders",
-                "units" : "cts"
+                "units" : "cts",
+                "prior" : { "TFormula" : "exp(-x*2.3/9258)" }
+            },
+            "K40-holders" : {
+                "range" : [5e4, 2E5],
+                "long-name" : "^{40}K - holders",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,1.02e5,2.13e4" }
+            },
+            "Ac228-central-fiber-shroud" : {
+                "range" : [0, 1.5E3],
+                "long-name" : "^{228}Ac - central fiber shroud",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,888,259" }
+            },
+            "Bi212Tl208-central-fiber-shroud" : {
+                "range" : [0, 1.5E3],
+                "long-name" : "^{212}Bi + ^{208}Tl - central fiber shroud",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,888,259" }
+            },
+            "Pb214Bi214-central-fiber-shroud" : {
+                "range" : [0, 1E3],
+                "long-name" : "^{214}Pb + ^{214}Bi - central fiber shroud",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,444,148" }
             },
             "K40-central-fiber-shroud" : {
-                "range" : [0, 3E5],
+                "range" : [0, 5E4],
                 "long-name" : "^{40}K - central fiber shroud",
-                "units" : "cts"
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,1.53E4,0.46E4" }
+            },
+            "Bi212Tl208-outer-fiber-shroud" : {
+                "range" : [0, 1E4],
+                "long-name" : "^{212}Bi + ^{208}Tl - outer fiber shroud",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,6555,1963" }
+            },
+            "Pb214Bi214-outer-fiber-shroud" : {
+                "range" : [0, 1E4],
+                "long-name" : "^{214}Pb + ^{214}Bi - outer fiber shroud",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,3444,1036" }
+            },
+            "K40-outer-fiber-shroud" : {
+                "range" : [0, 2E5],
+                "long-name" : "^{40}K - outer fiber shroud",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,1.1E5,3.3E4" }
+            },
+            "Ac228-mini-shrouds" : {
+                "range" : [0, 1.5E3],
+                "long-name" : "^{228}Ac - mini shrouds",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,703,185" }
+            },
+            "Bi212Tl208-mini-shrouds" : {
+                "range" : [0, 1.5E3],
+                "long-name" : "^{212}Bi + ^{208}Tl - mini shrouds",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,703,185" }
+            },
+            "Pb214Bi214-mini-shrouds" : {
+                "range" : [0, 3E3],
+                "long-name" : "^{214}Pb + ^{214}Bi - mini shrouds",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,1703,518" }
             },
             "K40-close" : {
-                "range" : [4E5, 1E6],
+                "range" : [0, 2E6],
                 "long-name" : "^{40}K - close",
                 "units" : "cts"
             },
             "K40-far" : {
-                "range" : [1E5, 2E6],
+                "range" : [0, 2E6],
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
@@ -124,17 +206,17 @@
                 "units" : "cts"
             },
             "alpha-high-energy-invcoax" : {
-                "range" : [0, 2E-1],
+                "range" : [0, 0.2],
                 "long-name" : "#alpha-model InvCoax - high energy",
                 "units" : "cts"
             },
             "alpha-high-energy-bege" : {
-                "range" : [0, 1],
+                "range" : [0.4, 0.7],
                 "long-name" : "#alpha-model BEGe - high energy",
                 "units" : "cts"
             },
             "alpha-high-energy-coax" : {
-                "range" : [0, 1],
+                "range" : [0.2, 0.4],
                 "long-name" : "#alpha-model SemiCoax - high energy",
                 "units" : "cts"
             }
@@ -143,8 +225,8 @@
             "../../data/gerda-data-bkgmodel-phaseIIplus-v07.00.root" : {
                 "raw/M1_invCoax" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[565, 2014], [2064, 3500]],
-                    "rebin-factor" : 5,
+                    "fit-range" : [[565, 2014], [2064, 5260]],
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_invcoax",
@@ -165,14 +247,26 @@
                                 },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
+                                },
+                                "K40-cables": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
                         {
                             "part": "ge_holders/ge_holders_all",
                             "components" : {
+                                "Co60-holders" : {
+                                    "isotope": "Co60"
+                                },
+                                "Bi212Tl208-holders" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
                                 "Ac228-holders" : {
                                     "isotope" : "Ac228"
+                                },
+                                "K40-holders": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
@@ -181,6 +275,15 @@
                             "components" : {
                                 "K40-close" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-mini-shrouds" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-mini-shrouds" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-mini-shrouds" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -189,6 +292,15 @@
                             "components" : {
                                 "K40-far" : {
                                     "isotope" : "K40"
+                                },
+                                "K40-outer-fiber-shroud" : {
+                                    "isotope" : "K40"
+                                },
+                                "Bi212Tl208-outer-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-outer-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -197,6 +309,15 @@
                             "components" : {
                                 "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-central-fiber-shroud" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-central-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-central-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -268,8 +389,8 @@
                 },
                 "raw/M1_enrBEGe" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[565, 2014], [2064, 3500]],
-                    "rebin-factor" : 5,
+                    "fit-range" : [[565, 2014], [2064, 5260]],
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_bege",
@@ -290,14 +411,26 @@
                                 },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
+                                },
+                                "K40-cables": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
                         {
                             "part": "ge_holders/ge_holders_all",
                             "components" : {
+                                "Co60-holders" : {
+                                    "isotope": "Co60"
+                                },
+                                "Bi212Tl208-holders" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
                                 "Ac228-holders" : {
                                     "isotope" : "Ac228"
+                                },
+                                "K40-holders": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
@@ -306,6 +439,15 @@
                             "components" : {
                                 "K40-close" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-mini-shrouds" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-mini-shrouds" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-mini-shrouds" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -314,6 +456,15 @@
                             "components" : {
                                 "K40-far" : {
                                     "isotope" : "K40"
+                                },
+                                "K40-outer-fiber-shroud" : {
+                                    "isotope" : "K40"
+                                },
+                                "Bi212Tl208-outer-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-outer-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -322,6 +473,15 @@
                             "components" : {
                                 "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-central-fiber-shroud" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-central-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-central-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -374,18 +534,18 @@
                             }
                         },
                         {
-                            "root-file" : "../../data/bkg-alpha-enrBEGe-results.root",
-                            "components" : {
-                                "alpha-high-energy-bege" : {
-                                    "hist-name" : "alpha_model/hMC_all_enrBEGe"
-                                }
-                            }
-                        },
-                        {
                             "part": "gedet/intrinsic_invcoax",
                             "components" : {
                                 "Zn65-invcoax" : {
                                     "isotope" : "Zn65"
+                                }
+                            }
+                        },
+                        {
+                            "root-file" : "../../data/bkg-alpha-enrBEGe-results.root",
+                            "components" : {
+                                "alpha-high-energy-bege" : {
+                                    "hist-name" : "alpha_model/hMC_all_enrBEGe"
                                 }
                             }
                         }
@@ -393,8 +553,8 @@
                 },
                 "raw/M1_enrCoax" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[565, 2014], [2064, 3500]],
-                    "rebin-factor" : 5,
+                    "fit-range" : [[565, 2014], [2064, 5260]],
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_semicoax",
@@ -415,14 +575,26 @@
                                 },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
+                                },
+                                "K40-cables": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
                         {
                             "part": "ge_holders/ge_holders_all",
                             "components" : {
+                                "Co60-holders" : {
+                                    "isotope": "Co60"
+                                },
+                                "Bi212Tl208-holders" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
                                 "Ac228-holders" : {
                                     "isotope" : "Ac228"
+                                },
+                                "K40-holders": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
@@ -431,6 +603,15 @@
                             "components" : {
                                 "K40-close" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-mini-shrouds" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-mini-shrouds" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-mini-shrouds" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -439,6 +620,15 @@
                             "components" : {
                                 "K40-far" : {
                                     "isotope" : "K40"
+                                },
+                                "K40-outer-fiber-shroud" : {
+                                    "isotope" : "K40"
+                                },
+                                "Bi212Tl208-outer-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-outer-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -447,6 +637,15 @@
                             "components" : {
                                 "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-central-fiber-shroud" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-central-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-central-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -499,18 +698,18 @@
                             }
                         },
                         {
-                            "root-file" : "../../data/bkg-alpha-enrCoax-results.root",
-                            "components" : {
-                                "alpha-high-energy-coax" : {
-                                    "hist-name" : "alpha_model/hMC_all_enrCoax"
-                                }
-                            }
-                        },
-                        {
                             "part": "gedet/intrinsic_invcoax",
                             "components" : {
                                 "Zn65-invcoax" : {
                                     "isotope" : "Zn65"
+                                }
+                            }
+                        },
+                        {
+                            "root-file" : "../../data/bkg-alpha-enrCoax-results.root",
+                            "components" : {
+                                "alpha-high-energy-coax" : {
+                                    "hist-name" : "alpha_model/hMC_all_enrCoax"
                                 }
                             }
                         }
@@ -518,8 +717,8 @@
                 },
                 "raw/M2_enrE1plusE2" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [520, 3000],
-                    "rebin-factor" : 10,
+                    "fit-range" : [520, 4000],
+                    "rebin-factor" : "520:20:580,588,604,612:20:722,732:22:908,915:24:962,973:28:1112,1130:28:1170,1179:30:1329,1338,1370,1384:24:1456,1466:27:1520,1530:30:1710,1725,1735,1760,1770,1832,1843,1853,2200,2208,2610,2620,3190,3205,4000",
                     "components" : [
                         {
                             "part": "cables/cables_all",
@@ -532,14 +731,26 @@
                                 },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
+                                },
+                                "K40-cables": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
                         {
                             "part": "ge_holders/ge_holders_all",
                             "components" : {
+                                "Co60-holders" : {
+                                    "isotope": "Co60"
+                                },
+                                "Bi212Tl208-holders" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
                                 "Ac228-holders" : {
                                     "isotope" : "Ac228"
+                                },
+                                "K40-holders": {
+                                    "isotope" : "K40"
                                 }
                             }
                         },
@@ -548,6 +759,15 @@
                             "components" : {
                                 "K40-close" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-mini-shrouds" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-mini-shrouds" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-mini-shrouds" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -556,6 +776,15 @@
                             "components" : {
                                 "K40-far" : {
                                     "isotope" : "K40"
+                                },
+                                "K40-outer-fiber-shroud" : {
+                                    "isotope" : "K40"
+                                },
+                                "Bi212Tl208-outer-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-outer-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
@@ -564,6 +793,15 @@
                             "components" : {
                                 "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
+                                },
+                                "Ac228-central-fiber-shroud" : {
+                                    "isotope" : "Ac228"
+                                },
+                                "Bi212Tl208-central-fiber-shroud" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Pb214Bi214-central-fiber-shroud" : {
+                                    "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 }
                             }
                         },
