@@ -81,8 +81,10 @@ NLOHMANN_JSON_SERIALIZE_ENUM(BCIntegrate::BCOptimizationMethod, {
 
 struct dataset {
     TH1* data;                               // histogram holding data
+    TH1* data_orig;                          // original input data histogram (no rebin or other stuff)
     std::vector<std::pair<int,int>> brange;  // histogram range (bin index!)
     std::map<int, TH1*> comp;                // catalog of fit components
+    std::map<int, TH1*> comp_orig;           // catalog of non-rebinned fit components
 };
 
 class GerdaFitter : public BCModel {
@@ -119,7 +121,7 @@ class GerdaFitter : public BCModel {
     double _likelihood_offset = 0.; // for easier integration
 
     void DumpData();
-    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* data, int rebin_x = 1, int rebin_y = 1, std::vector<double> change_points = {});
+    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format = nullptr);
 };
 
 #endif

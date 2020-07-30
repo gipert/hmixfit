@@ -239,6 +239,48 @@ namespace utils {
         return 0.;
     }
 
+    TH1* ReformatHistogram(TH1* original, TH1* format) {
+
+        if (!original or !format) {
+            throw std::invalid_argument("ReformatHistogram(): invalid (nullptr) input");
+        }
+
+        // FIXME: check whether the original histogram can be legitimately cast into new one
+        // if (format->GetXaxis()->IsVariableBinSize()) {
+        //     auto new_bins = format->GetXaxis()->GetXbins();
+        //     TArrayD* old_bins;
+        //     if (original->GetXaxis()->IsVariableBinSize()) old_bins->Copy(*original->GetXaxis()->GetXbins());
+        //     else {}
+        // }
+        // else {
+        // }
+
+        // clone format
+        auto th_new = dynamic_cast<TH1*>(format->Clone());
+        // detach it from original
+        th_new->SetDirectory(nullptr);
+        th_new->Reset();
+        th_new->SetName(original->GetName());
+        th_new->SetTitle(original->GetTitle());
+
+        // fill new histogram
+        for (int b = 0; b <= original->GetNcells(); ++b) {
+            // first we get the bin index for each axis
+            int bx = 0, by = 0, bz = 0;
+            original->GetBinXYZ(b, bx, by, bz);
+            // wee need the coordinates of the old bin
+            auto x = original->GetXaxis()->GetBinCenter(bx);
+            auto y = original->GetYaxis()->GetBinCenter(by);
+            auto z = original->GetZaxis()->GetBinCenter(bz);
+
+            // now find the corresponding bin in the new histogram and fill it
+            auto newbin = th_new->FindBin(x, y, z);
+            th_new->SetBinContent(newbin, th_new->GetBinContent(newbin) + original->GetBinContent(b));
+        }
+
+        return th_new;
+    }
+
 }
 
 #endif

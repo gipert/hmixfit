@@ -192,7 +192,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
         for (auto& elh : el.value().items()) {
             // get rebin factor before reading all histograms
             std::vector<double> change_points;
-            int rebin_x, rebin_y;
+            int rebin_x = 1, rebin_y = 1;
             if (elh.value().contains("rebin-factor") and elh.value()["rebin-factor"].is_string()) {
                 BCLog::OutDetail("using specified variable-sized rebin for dataset '" + el.key() + "'");
                 change_points = utils::ParseBinChangePoints(elh.value()["rebin-factor"].get<std::string>());
@@ -207,9 +207,9 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
             }
 
             BCLog::OutDebug("getting data histogram '" + elh.key() + "' from " + el.key());
-            auto th = dynamic_cast<TH1*>(_tf.Get(elh.key().c_str()));
-            if (!th) throw std::runtime_error("could not find object '" + elh.key() + "' in file " + el.key());
-            if (th->GetDimension() != 1 and !change_points.empty()) {
+            auto th_orig = dynamic_cast<TH1*>(_tf.Get(elh.key().c_str()));
+            if (!th_orig) throw std::runtime_error("could not find object '" + elh.key() + "' in file " + el.key());
+            if (th_orig->GetDimension() != 1 and !change_points.empty()) {
                 throw std::runtime_error("cannot apply variable-sized rebin to TH2 or TH3");
             }
 
@@ -217,19 +217,28 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
             auto basename = el.key().substr(
                     el.key().find_last_of('/')+1,
                     el.key().find_last_of('.') - el.key().find_last_of('/') - 1);
-            basename += "_" + std::string(th->GetName());
+            basename += "_" + std::string(th_orig->GetName());
+
+            // please ROOT do not auto-delete this object
+            th_orig->SetDirectory(nullptr);
+            th_orig->SetName((utils::SafeROOTName(basename) + "_orig").c_str());
+
+            dataset _current_ds;
+            _current_ds.data_orig = th_orig;
 
             // rebin if requested
+            TH1* th = nullptr;
             if (change_points.empty()) {
+                th = dynamic_cast<TH1*>(th_orig->Clone(utils::SafeROOTName(basename).c_str()));
                 th->Rebin(rebin_x);
-                if ((rebin_y != 1) and (_tf.Get(elh.key().c_str())->InheritsFrom(TH2::Class()))) {
-                    dynamic_cast<TH2*>(_tf.Get(elh.key().c_str()))->RebinY(rebin_y);
+                if ((rebin_y != 1) and th->InheritsFrom(TH2::Class())) {
+                    dynamic_cast<TH2*>(th)->RebinY(rebin_y);
                 }
             }
             else {
                 // do variable rebin
                 th = dynamic_cast<TH1*>(
-                    th->Rebin(
+                    th_orig->Rebin(
                         change_points.size()-1,
                         utils::SafeROOTName(basename).c_str(),
                         &change_points[0]
@@ -238,9 +247,6 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
 
             // please ROOT do not auto-delete this object
             th->SetDirectory(nullptr);
-            th->SetName(utils::SafeROOTName(basename).c_str());
-
-            dataset _current_ds;
             _current_ds.data = th;
 
             // eventually get a global value for the gerda-pdfs path
@@ -273,7 +279,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             BCLog::OutDebug("summing object '" + elh.key() + " with weight "
                                     + std::to_string(p.value().get<double>()));
                             // get histogram
-                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data, rebin_x, rebin_y, change_points);
+                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data);
                             // add it with weight
                             if (!sum) {
                                 sum = thh;
@@ -295,7 +301,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             + volume + "-" + part + "-" + i + ".root";
                         BCLog::OutDebug("getting object '" + elh.key() + "' in file " + filename);
                         // get histogram
-                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data, rebin_x, rebin_y, change_points);
+                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data);
                         return thh;
                     }
                     else throw std::runtime_error("unexpected 'part' value found in [\"fit\"][\""
@@ -325,8 +331,9 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                     if (!iso.value().contains("TFormula") and it.contains("root-file")) {
                         BCLog::OutDebug("user-specified ROOT file detected");
                         auto obj_name = iso.value().value("hist-name", elh.key());
-                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data, rebin_x, rebin_y, change_points);
-                        _current_ds.comp.insert({comp_idx, thh});
+                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data);
+                        _current_ds.comp_orig.insert({comp_idx, thh});
+                        _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
                     // it's a explicit TFormula
                     else if (iso.value().contains("TFormula")) {
@@ -354,14 +361,16 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         }
                         thh->SetDirectory(nullptr);
                         thh->SetName(utils::SafeROOTName(iso.key()).c_str());
-                        _current_ds.comp.insert({comp_idx, thh});
+                        _current_ds.comp_orig.insert({comp_idx, thh});
+                        _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
                     else { // look into gerda-pdfs database
                         BCLog::OutDebug("should be a gerda-pdfs PDF");
                         if (iso.value()["isotope"].is_string()) {
                             auto comp = sum_parts(iso.value()["isotope"]);
                             comp->SetName(utils::SafeROOTName(iso.key() + "_" + std::string(comp->GetName())).c_str());
-                            _current_ds.comp.insert({comp_idx, comp});
+                            _current_ds.comp_orig.insert({comp_idx, comp});
+                            _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(comp, _current_ds.data)});
                         }
                         else if (iso.value()["isotope"].is_object()) {
                             TH1* comp = nullptr;
@@ -376,7 +385,8 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
 
                             }
                             comp->SetName(utils::SafeROOTName(iso.key() + "_" + std::string(comp->GetName())).c_str());
-                            _current_ds.comp.insert({comp_idx, comp});
+                            _current_ds.comp_orig.insert({comp_idx, comp});
+                            _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(comp, _current_ds.data)});
                         }
                         else throw std::runtime_error("unexpected entry " + iso.value()["isotope"].dump() + "found in [\"fit\"][\""
                                 + el.key() + "\"][\"" + elh.key() + "\"][\"components\"][\"" + iso.key() + "\"][\"isotope\"]");
@@ -687,51 +697,22 @@ void GerdaFitter::CalculateObservables(const std::vector<double>& parameters) {
     }
 }
 
-TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, TH1* dataformat, int rebin_x, int rebin_y, std::vector<double> change_points) {
+TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format) {
+
+    // get object
     TFile _tf(filename.c_str());
     if (!_tf.IsOpen()) throw std::runtime_error("invalid ROOT file: " + filename);
     auto obj = _tf.Get(objectname.c_str());
-    if (!obj) throw std::runtime_error("could not find object '" + objectname + "' in file " + filename);
+    if (!obj) throw std::runtime_error("GerdaFitter::GetFitComponent(): could not find object '" +
+                                        objectname + "' in file " + filename);
 
     if (obj->InheritsFrom(TH1::Class())) {
-        auto _th = dynamic_cast<TH1*>(obj);
-        // rebin component
-        if (change_points.empty()) {
-            _th->Rebin(rebin_x);
-            if ((rebin_y != 1) and (obj->InheritsFrom(TH2::Class()))) {
-                dynamic_cast<TH2*>(obj)->RebinY(rebin_y);
-            }
-            BCLog::OutDebug("rebinned combonent with factors: [" + std::to_string(rebin_x) + "," + std::to_string(rebin_y) + "]");
-        }
-        else {
-            // do variable rebin
-            _th = dynamic_cast<TH1*>(
-                _th->Rebin(
-                    change_points.size()-1,
-                    _th->GetName(),
-                    &change_points[0]
-                ));
-            BCLog::OutDebug("rebinned combonent with variable binning");
-        }
 
-        // sanity checks
-        if (_th->GetDimension() > 2) throw std::runtime_error("TH3 are not supported yet");
-        if (_th->GetNcells() != dataformat->GetNcells() or // ncells : nbins + over- and underflow
-            _th->GetDimension() != dataformat->GetDimension() or
-            _th->GetXaxis()->GetXmin() != dataformat->GetXaxis()->GetXmin() or
-            _th->GetXaxis()->GetXmax() != dataformat->GetXaxis()->GetXmax()) {
-            throw std::runtime_error("histogram '" + objectname + "' in file " + filename
-                + " and corresponding data histogram do not have the same number of bins and/or same ranges");
-        }
-        if (_th->GetDimension() == 2) {
-            if (_th->GetYaxis()->GetXmin() != dataformat->GetYaxis()->GetXmin() or
-                _th->GetYaxis()->GetXmax() != dataformat->GetYaxis()->GetXmax()) {
-                throw std::runtime_error("histogram '" + objectname + "' in file " + filename
-                + " and corresponding data histogram do not have the same y-ranges");
-            }
-        }
+        auto th_orig = dynamic_cast<TH1*>(obj);
         // please do not delete it when the TFile goes out of scope
-        _th->SetDirectory(nullptr);
+        th_orig->SetDirectory(nullptr);
+
+        // custom stuff for GERDA pdfs
         TParameter<Long64_t>* _nprim = nullptr;
         auto _name_nodir = objectname.substr(objectname.find_last_of('/')+1, std::string::npos);
         if (_name_nodir.substr(0, 3) == "M1_") {
@@ -744,21 +725,41 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
             BCLog::OutWarning("could not find suitable 'NumberOfPrimaries' object in '"
                 + filename + "', skipping normalization");
         }
-        else _th->Scale(1./_nprim->GetVal());
+        else th_orig->Scale(1./_nprim->GetVal());
 
-        return _th;
+        return th_orig;
     }
     else if (obj->InheritsFrom(TF1::Class())) {
-        auto _th = new TH1D(obj->GetName(), obj->GetTitle(), dataformat->GetNbinsX(),
-            dataformat->GetXaxis()->GetXmin(), dataformat->GetXaxis()->GetXmax());
-        for (int b = 1; b < _th->GetNbinsX(); ++b) {
-            _th->SetBinContent(b, dynamic_cast<TF1*>(obj)->Eval(_th->GetBinCenter(b)));
+
+        // is there a data format? use it
+        TH1* th_new = nullptr;
+        if (tf1_hist_format) {
+            // clone format
+            th_new = dynamic_cast<TH1*>(tf1_hist_format->Clone());
+            th_new->Reset();
+            th_new->SetName(obj->GetName());
+            th_new->SetTitle(obj->GetTitle());
         }
-        _th->SetDirectory(nullptr);
-        return _th;
+        else {
+            throw std::runtime_error("GerdaFitter::GetFitComponent(): a data format is strictly needed if source is a TF1");
+        }
+
+        for (int b = 1; b < th_new->GetNcells(); ++b) {
+            // we gotta find x, y, z for every cell
+            int bx = 0, by = 0, bz = 0;
+            th_new->GetBinXYZ(b, bx, by, bz);
+            auto x = th_new->GetXaxis()->GetBinCenter(bx);
+            auto y = th_new->GetYaxis()->GetBinCenter(by);
+            auto z = th_new->GetZaxis()->GetBinCenter(bz);
+            // now we can evaluate the TF1
+            th_new->SetBinContent(b, dynamic_cast<TF1*>(obj)->Eval(x, y, z));
+        }
+        th_new->SetDirectory(nullptr);
+        return th_new;
     }
     else {
-        throw std::runtime_error("object '" + objectname + "' in file " + filename + " isn't of type TH1 or TF1");
+        throw std::runtime_error("GerdaFitter::GetFitComponent(): object '" + objectname +
+                                 "' in file " + filename + " isn't of type TH1 or TF1");
     }
 
     return nullptr;
@@ -864,13 +865,22 @@ void GerdaFitter::SetIntegrationProperties(json j) {
 }
 
 void GerdaFitter::SaveHistograms(std::string filename) {
+    BCLog::OutSummary("Saving histograms to output file " + filename);
+
     TFile tf(filename.c_str(), "recreate");
     for (auto& it : data) {
-        tf.mkdir(it.data->GetName());
-        tf.cd(it.data->GetName());
-        it.data->Write("fitted_data");
+
+        tf.mkdir(it.data->GetName(), "Dataset directory");
+        tf.mkdir(Form("%s/originals", it.data->GetName()), "Original histograms");
+
+        auto dataset_dir = Form("%s:/%s", filename.c_str(), it.data->GetName());
+        auto dataset_orig_dir = Form("%s/originals", dataset_dir);
 
         TH1* sum = nullptr;
+
+        BCLog::OutDebug("writing histograms in " + std::string(dataset_dir));
+        tf.cd(dataset_dir);
+        it.data->Write("fitted_data");
         for (auto& h : it.comp) {
             auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
             hcopy->Scale(this->GetBestFitParameters()[h.first]);
@@ -883,9 +893,27 @@ void GerdaFitter::SaveHistograms(std::string filename) {
         sum->SetTitle("total_model");
         sum->Write("total_model");
 
+        sum = nullptr;
+        BCLog::OutDebug("writing histograms in " + std::string(dataset_orig_dir));
+        tf.cd(dataset_orig_dir);
+        it.data_orig->Write("fitted_data");
+        for (auto& h : it.comp_orig) {
+            auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
+            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            // compute total model without changing the components
+            if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
+            else      sum->Add(hcopy);
+            hcopy->Write(h.second->GetName());
+            delete hcopy;
+        }
+        sum->SetTitle("total_model");
+        sum->Write("total_model");
+
         // write fit range
+        BCLog::OutDebug("writing fit ranges in " + std::string(dataset_dir));
+        tf.cd(dataset_dir);
         if (it.data->GetDimension() == 1) {
-            BCLog::OutDetail("Writing fit range 1D dataset to file");
+            BCLog::OutDebug("Writing fit range 1D dataset to file");
             TParameter<double> range_low("fit_range_lower", it.data->GetBinLowEdge(it.brange[0].first));
             TParameter<double> range_upp("fit_range_upper", it.data->GetBinLowEdge(it.brange.back().second)
                 + it.data->GetBinWidth(it.brange.back().second));
@@ -894,7 +922,7 @@ void GerdaFitter::SaveHistograms(std::string filename) {
         }
         // for TH2 write y-range
         if (it.data->GetDimension() == 2) {
-            BCLog::OutDetail("Writing fit range 2D dataset to file");
+            BCLog::OutDebug("Writing fit range 2D dataset to file");
             int binx_low, binx_up, biny, binz;
             it.data->GetBinXYZ(it.brange[0].first, binx_low, biny, binz);
             it.data->GetBinXYZ(it.brange.back().second, binx_up, biny, binz);
