@@ -279,7 +279,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             BCLog::OutDebug("summing object '" + elh.key() + " with weight "
                                     + std::to_string(p.value().get<double>()));
                             // get histogram
-                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data);
+                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data_orig);
                             // add it with weight
                             if (!sum) {
                                 sum = thh;
@@ -301,7 +301,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             + volume + "-" + part + "-" + i + ".root";
                         BCLog::OutDebug("getting object '" + elh.key() + "' in file " + filename);
                         // get histogram
-                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data);
+                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data_orig);
                         return thh;
                     }
                     else throw std::runtime_error("unexpected 'part' value found in [\"fit\"][\""
@@ -331,7 +331,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                     if (!iso.value().contains("TFormula") and it.contains("root-file")) {
                         BCLog::OutDebug("user-specified ROOT file detected");
                         auto obj_name = iso.value().value("hist-name", elh.key());
-                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data);
+                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data_orig);
                         _current_ds.comp_orig.insert({comp_idx, thh});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
@@ -352,9 +352,9 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         }
                         auto thh = new TH1D(
                             iso.key().c_str(), iso.key().c_str(),
-                            _current_ds.data->GetNbinsX(),
-                            _current_ds.data->GetXaxis()->GetXmin(),
-                            _current_ds.data->GetXaxis()->GetXmax()
+                            _current_ds.data_orig->GetNbinsX(),
+                            _current_ds.data_orig->GetXaxis()->GetXmin(),
+                            _current_ds.data_orig->GetXaxis()->GetXmax()
                         );
                         for (int b = 1; b < thh->GetNbinsX(); ++b) {
                             thh->SetBinContent(b, _tfunc.Eval(thh->GetBinCenter(b)));
