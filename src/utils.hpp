@@ -239,27 +239,64 @@ namespace utils {
         return 0.;
     }
 
-    TH1* ReformatHistogram(TH1* original, TH1* format) {
+    TH1* ReformatHistogram(TH1* original, TH1* htemplate) {
 
-        if (!original or !format) {
+        if (!original or !htemplate) {
             throw std::invalid_argument("ReformatHistogram(): invalid (nullptr) input");
         }
 
-        // FIXME: check whether the original histogram can be legitimately cast into new one
-        // if (format->GetXaxis()->IsVariableBinSize()) {
-        //     auto new_bins = format->GetXaxis()->GetXbins();
-        //     TArrayD* old_bins;
-        //     if (original->GetXaxis()->IsVariableBinSize()) old_bins->Copy(*original->GetXaxis()->GetXbins());
-        //     else {}
-        // }
-        // else {
-        // }
+        if (htemplate->GetXaxis()->IsVariableBinSize()) {
+            BCLog::OutDebug("ReformatHistogram(): template histogram is variably binned, no consistency checks will be performed! (FIXME)");
+        }
+        else {
+            auto nx = original->GetNbinsX();
+            auto ny = original->GetNbinsY();
+            auto nz = original->GetNbinsZ();
+            auto ax = original->GetXaxis()->GetXmin();
+            auto bx = original->GetXaxis()->GetXmax();
+            auto ay = original->GetYaxis()->GetXmin();
+            auto by = original->GetYaxis()->GetXmax();
+            auto az = original->GetZaxis()->GetXmin();
+            auto bz = original->GetZaxis()->GetXmax();
 
-        // clone format
-        auto th_new = dynamic_cast<TH1*>(format->Clone());
+            auto nx_ = htemplate->GetNbinsX();
+            auto ny_ = htemplate->GetNbinsY();
+            auto nz_ = htemplate->GetNbinsZ();
+            auto ax_ = htemplate->GetXaxis()->GetXmin();
+            auto bx_ = htemplate->GetXaxis()->GetXmax();
+            auto ay_ = htemplate->GetYaxis()->GetXmin();
+            auto by_ = htemplate->GetYaxis()->GetXmax();
+            auto az_ = htemplate->GetZaxis()->GetXmin();
+            auto bz_ = htemplate->GetZaxis()->GetXmax();
+
+            BCLog::OutDebug(Form("ReformatHistogram(): %s (original) = h(%f:%d:%f, %f:%d:%f, %f:%d:%f)",
+                original->GetName(), ax, nx, bx, ay, ny, by, az, nz, bz));
+
+            BCLog::OutDebug(Form("ReformatHistogram(): %s (htemplate) = h(%f:%d:%f, %f:%d:%f, %f:%d:%f)",
+                htemplate->GetName(), ax_, nx_, bx_, ay_, ny_, by_, az_, nz_, bz_));
+
+            if (nx == nx_ and ny == ny_ and nz == nz_ and
+                ax == ax_ and ay == ay_ and az == az_ and
+                bx == bx_ and by == by_ and bz == bz_) {
+
+                BCLog::OutDebug("ReformatHistogram(): original and template histogram seem already consistent, exiting.");
+                auto th_new = dynamic_cast<TH1*>(original->Clone());
+                th_new->SetDirectory(nullptr);
+                return th_new;
+            }
+            else {
+                BCLog::OutDebug("ReformatHistogram(): template histogram looks different from original, proceeding. No consistency checks will be performed! (FIXME)");
+                // FIXME: check whether the original histogram can be legitimately cast into new one
+                // if (fmod(ax_, (bx -ax)/nx) != 0) {
+                // }
+            }
+        }
+
+        // clone htemplate
+        auto th_new = dynamic_cast<TH1*>(htemplate->Clone());
+        th_new->Reset();
         // detach it from original
         th_new->SetDirectory(nullptr);
-        th_new->Reset();
         th_new->SetName(original->GetName());
         th_new->SetTitle(original->GetTitle());
 

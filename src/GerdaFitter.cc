@@ -302,6 +302,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         BCLog::OutDebug("getting object '" + elh.key() + "' in file " + filename);
                         // get histogram
                         auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data_orig);
+
                         return thh;
                     }
                     else throw std::runtime_error("unexpected 'part' value found in [\"fit\"][\""
@@ -674,7 +675,9 @@ double GerdaFitter::LogLikelihood(const std::vector<double>& parameters) {
             for (int b = r.first; b <= r.second; ++b) {
                 // compute theoretical prediction for bin 'b'
                 double pred = 0;
-                for (auto& h : it.comp) pred += parameters[h.first]*h.second->GetBinContent(b);
+                for (auto& h : it.comp) {
+                    pred += parameters[h.first]*h.second->GetBinContent(b);
+                }
                 logprob += BCMath::LogPoisson(it.data->GetBinContent(b), pred);
             }
         }
@@ -1165,7 +1168,7 @@ void GerdaFitter::PrintOptimizationSummary() {
     auto best = this->GetBestFitParameters();
 
     std::string line;
-    int maxnamelength = this->GetMaximumParameterNameLength(false);
+    int maxnamelength = this->GetMaximumParameterNameLength(true);
     line = "    ┌"; for (int i = 0; i < maxnamelength+7; ++i) line += "─"; line += "┬───────────────────┐";
     BCLog::OutSummary(line);
     BCLog::OutSummary(Form("    │ %-*s │ global mode       │", maxnamelength+5, "parameters"));
@@ -1197,7 +1200,7 @@ void GerdaFitter::PrintShortMarginalizationSummary() {
     BCLog::OutSummary("  Parameters values (marginalized mode):");
 
     std::string line;
-    int maxnamelength = this->GetMaximumParameterNameLength(false);
+    int maxnamelength = this->GetMaximumParameterNameLength(true);
 
     line = "    ┌"; for (int i = 0; i < maxnamelength+7; ++i) line += "─"; line += "┬─────────────────────────────┐";
     BCLog::OutSummary(line);

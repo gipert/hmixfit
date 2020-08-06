@@ -6,17 +6,17 @@
 FLAGS = -Wall -Wextra -pedantic -Wshadow -std=c++11 -g -O3 -I obj \
         $$(bat-config --cflags)
 LIBS  = $$(bat-config --libs)
-OBJ = obj/json.gch obj/utils.gch obj/GerdaFitter.o obj/gerda-fitter.o
+OBJ = obj/GerdaFitter.o obj/gerda-fitter.o obj/json.gch obj/utils.gch
 
 all : dirs | gerda-fitter $(OBJ)
 
-gerda-fitter : obj/GerdaFitter.o obj/gerda-fitter.o
-	$(CXX) $(FLAGS) -o $@ $^ $(LIBS)
+gerda-fitter : $(OBJ)
+	$(CXX) $(FLAGS) -o $@ obj/GerdaFitter.o obj/gerda-fitter.o $(LIBS)
 
-obj/gerda-fitter.o : gerda-fitter.cc
+obj/gerda-fitter.o : gerda-fitter.cc json.hpp
 	$(CXX) $(FLAGS) -c -o $@ $< $(LIBS)
 
-obj/GerdaFitter.o : GerdaFitter.cc GerdaFitter.hh
+obj/GerdaFitter.o : GerdaFitter.cc GerdaFitter.hh utils.hpp json.hpp
 	$(CXX) $(FLAGS) -c -o $@ $< $(LIBS)
 
 obj/%.gch : %.hpp
