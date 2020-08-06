@@ -73,18 +73,13 @@
                 "long-name" : "^{228}Ac - holders",
                 "units" : "cts"
             },
-            "K40-central-fiber-shroud" : {
-                "range" : [0, 3E5],
-                "long-name" : "^{40}K - central fiber shroud",
-                "units" : "cts"
-            },
             "K40-close" : {
                 "range" : [4E5, 1E6],
                 "long-name" : "^{40}K - close",
                 "units" : "cts"
             },
             "K40-far" : {
-                "range" : [1E5, 2E6],
+                "range" : [0, 8E5],
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
@@ -188,14 +183,6 @@
                             "part": "larveto/outer_fibers",
                             "components" : {
                                 "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
                                 }
                             }
@@ -318,14 +305,6 @@
                             }
                         },
                         {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -443,14 +422,6 @@
                             }
                         },
                         {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -555,14 +526,6 @@
                             "part": "larveto/outer_fibers",
                             "components" : {
                                 "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
                                 }
                             }

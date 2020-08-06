@@ -1,8 +1,8 @@
 {
-    "id" : "phIIp-raw-kmodel_2D",
+    "id" : "phIIp-raw-k_model_1D",
     "logging" : "summary",
     "precision" : "kMedium",
-    "output-dir" : "../../../results/phIIp-raw-kmodel_2D",
+    "output-dir" : "../../../results/phIIp-raw-k_model_1D",
     "global-mode-search" : {
         "method" : "kOptMinuit"
     },
@@ -42,30 +42,42 @@
                 "units" : "cts"
             },
             "K42-lar" : {
-                "range" : [0, 1e8],
+                "range" : [35e6, 60e6],
                 "long-name" : "^{42}K - lar homogeneous",
                 "units" : "cts"
             },
             "K42-lar_above" : {
-                "range" : [0, 3e7],
+                "range" : [5e6, 20e6],
                 "long-name" : "^{42}K - lar above array",
                 "units" : "cts"
             },
             "Bi214-cables" : {
-                "range" : [0, 2e5],
+                "range" : [0, 1e5],
                 "long-name" : "^{214}Bi - cables",
+                "units" : "cts"
+            },
+            "2nbb-bege" : {
+                "range" : [0, 1e5],
+                "long-name" : "2#nu#beta#beta - intrinsic BEGe",
+                "units" : "cts"
+            },
+            "2nbb-semicoax" : {
+                "range" : [0, 1e5],
+                "long-name" : "2#nu#beta#beta - intrinsic semiCoax",
+                "units" : "cts"
+            },
+            "2nbb-invcoax" : {
+                "range" : [0, 1e5],
+                "long-name" : "2#nu#beta#beta - intrinsic invCoax",
                 "units" : "cts"
             }
         },
         "theoretical-expectations" : {
-
-
-
             "../../../data/gerda-data-bkgmodel-phaseIIplus-v06.12.root" : {
-                "raw/M2_ID1vsID2_1461" : {
+                "raw/M1_all_1461" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range-x" : [0, 41], "rebin-factor" : 1,
-                    "fit-range-y" : [0, 41], "rebin-factor-y" : 1,
+                    "fit-range" : [0, 41],
+                    "rebin-factor" : 1,
                     "components" : [
                         {
                             "part": "cables/cables_all",
@@ -109,13 +121,37 @@
                                     "isotope" : "K42"
                                 }
                             }
+                        },
+                        {
+                            "part": "gedet/intrinsic_bege",
+                            "components" : {
+                                "2nbb-bege" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_semicoax",
+                            "components" : {
+                                "2nbb-semicoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "2nbb-invcoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
                         }
                     ]
                 },
-                "raw/M2_ID1vsID2_1525" : {
+                "raw/M1_all_1525" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range-x" : [0, 41], "rebin-factor" : 1,
-                    "fit-range-y" : [0, 41], "rebin-factor-y" : 1,
+                    "fit-range" : [0, 41],
+                    "rebin-factor" : 1,
                     "components" : [
                         {
                             "part": "lar/sur_array",
@@ -132,13 +168,37 @@
                                     "isotope" : "K42"
                                 }
                             }
+                        },
+                        {
+                            "part": "gedet/intrinsic_bege",
+                            "components" : {
+                                "2nbb-bege" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_semicoax",
+                            "components" : {
+                                "2nbb-semicoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "2nbb-invcoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
                         }
                     ]
                 },
-                "raw/M2_ID1vsID2_S1" : {
+                "raw/M1_all_S1" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range-x" : [0, 41], "rebin-factor" : 1,
-                    "fit-range-y" : [0, 41], "rebin-factor-y" : 1,
+                    "fit-range" : [0, 41],
+                    "rebin-factor" : 1,
                     "components" : [
                         {
                             "part": "cables/cables_all",
@@ -182,13 +242,37 @@
                                     "isotope" : "K42"
                                 }
                             }
+                        },
+                        {
+                            "part": "gedet/intrinsic_bege",
+                            "components" : {
+                                "2nbb-bege" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_semicoax",
+                            "components" : {
+                                "2nbb-semicoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "2nbb-invcoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
                         }
                     ]
                 },
-                "raw/M2_ID1vsID2_S2" : {
+                "raw/M1_all_S2" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range-x" : [0, 41], "rebin-factor" : 1,
-                    "fit-range-y" : [0, 41], "rebin-factor-y" : 1,
+                    "fit-range" : [0, 41],
+                    "rebin-factor" : 1,
                     "components" : [
                         {
                             "part": "lar/sur_array",
@@ -205,13 +289,37 @@
                                     "isotope" : "K42"
                                 }
                             }
+                        },
+                        {
+                            "part": "gedet/intrinsic_bege",
+                            "components" : {
+                                "2nbb-bege" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_semicoax",
+                            "components" : {
+                                "2nbb-semicoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "2nbb-invcoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
                         }
                     ]
                 },
-                "raw/M2_ID1vsID2_S3" : {
+                "raw/M1_all_S3" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range-x" : [0, 41], "rebin-factor" : 1,
-                    "fit-range-y" : [0, 41], "rebin-factor-y" : 1,
+                    "fit-range" : [0, 41],
+                    "rebin-factor" : 1,
                     "components" : [
                         {
                             "part": "lar/sur_array",
@@ -226,6 +334,30 @@
                             "components" : {
                                 "K42-lar_above" : {
                                     "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_bege",
+                            "components" : {
+                                "2nbb-bege" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_semicoax",
+                            "components" : {
+                                "2nbb-semicoax" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "2nbb-invcoax" : {
+                                    "isotope" : "2nbb"
                                 }
                             }
                         }

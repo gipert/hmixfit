@@ -1,8 +1,8 @@
 {
-    "id" : "phIIp-raw-kmodel_1D_2D",
+    "id" : "phIIp-raw-k_model_1D_2D",
     "logging" : "summary",
     "precision" : "kMedium",
-    "output-dir" : "../../../results/phIIp-raw-kmodel_1D_2D",
+    "output-dir" : "../../../results/phIIp-raw-k_model_1D_2D",
     "global-mode-search" : {
         "method" : "kOptMinuit"
     },

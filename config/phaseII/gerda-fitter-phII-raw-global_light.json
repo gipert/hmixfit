@@ -120,26 +120,6 @@
                 "range" : [0.9, 1.2],
                 "long-name" : "#alpha-model Coax - high energy",
                 "units" : "cts"
-            },
-            "alpha-slope-bege" : {
-                "range" : [0, 5E-5],
-                "long-name" : "#alpha-model BEGe - slope",
-                "units" : "cts"
-            },
-            "alpha-offset-bege" : {
-                "range" : [0, 0.1],
-                "long-name" : "#alpha-model BEGe - offset",
-                "units" : "cts"
-            },
-            "alpha-slope-semicoax" : {
-                "range" : [0, 1E-4],
-                "long-name" : "#alpha-model SemiCoax - slope",
-                "units" : "cts"
-            },
-            "alpha-offset-semicoax" : {
-                "range" : [0, 1],
-                "long-name" : "#alpha-model SemiCoax - offset",
-                "units" : "cts"
             }
         },
         "theoretical-expectations" : {
@@ -242,16 +222,6 @@
                                     "isotope" : "K42"
                                 }
                             }
-                        },
-                        {
-                            "components" : {
-                                "alpha-slope-bege" : {
-                                    "TFormula" : "x*(x>0 && x<5160)"
-                                },
-                                "alpha-offset-bege" : {
-                                    "TFormula" : "1"
-                                }
-                            }
                         }
                     ]
                 },
@@ -351,16 +321,6 @@
                             "components" : {
                                 "K42-nplus-semicoax" : {
                                     "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
-                            "components" : {
-                                "alpha-slope-semicoax" : {
-                                    "TFormula" : "x*(x>0 && x<5160)"
-                                },
-                                "alpha-offset-semicoax" : {
-                                    "TFormula" : "1"
                                 }
                             }
                         }
