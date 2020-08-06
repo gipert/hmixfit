@@ -1,9 +1,24 @@
-/* GerdaFitter.h
- *
- * Author: Luigi Pertoldi - pertoldi@pd.infn.it
- * Created: Sun 5 May 2019
- *
- */
+// MIT License
+//
+// Copyright (c) 2020 Luigi Pertoldi
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 
 #ifndef _GERDA_FITTER_H
 #define _GERDA_FITTER_H
@@ -66,8 +81,10 @@ NLOHMANN_JSON_SERIALIZE_ENUM(BCIntegrate::BCOptimizationMethod, {
 
 struct dataset {
     TH1* data;                               // histogram holding data
+    TH1* data_orig;                          // original input data histogram (no rebin or other stuff)
     std::vector<std::pair<int,int>> brange;  // histogram range (bin index!)
     std::map<int, TH1*> comp;                // catalog of fit components
+    std::map<int, TH1*> comp_orig;           // catalog of non-rebinned fit components
 };
 
 class GerdaFitter : public BCModel {
@@ -95,31 +112,6 @@ class GerdaFitter : public BCModel {
     double GetFastPValue(const std::vector<double>& parameters, long niter);
     double Integrate(bool enable_offset);
 
-    template<typename BasicJsonType>
-    std::vector<std::pair<double,double>> CheckAndStoreRanges(BasicJsonType& range);
-    std::vector<double> ParseBinChangePoints(std::string input);
-    // TODO : implement me
-    std::vector<std::pair<int,int>> TranslateAxisRangeToBinRange(
-        TH1* h,
-        std::vector<std::pair<double,double>> x_range,
-        std::vector<std::pair<double,double>> y_range = std::vector<std::pair<double,double>>()
-    );
-    // wrapper - ranges in axis-unit
-    double IntegrateHistogram(
-        TH1* h,
-        std::vector<std::pair<double,double>> x_range,
-        std::vector<std::pair<double,double>> y_range = std::vector<std::pair<double,double>>()
-    );
-    double IntegrateHistogram1D(TH1* h, std::vector<std::pair<double,double>> range);
-    // TODO : implement me
-    double IntegrateHistogram2D(
-        TH2* h,
-        std::vector<std::pair<double,double>> x_range,
-        std::vector<std::pair<double,double>> y_range
-    );
-    // TODO : implement me : IntegrateHistogram with range in bins
-    double IntegrateHistogramBinRange(TH1* h, std::vector<std::pair<int,int>> range);
-
     std::vector<dataset> data;
     json config;
 
@@ -128,10 +120,8 @@ class GerdaFitter : public BCModel {
     std::map<std::string,TFormula> obs_tformulas;
     double _likelihood_offset = 0.; // for easier integration
 
-    TF1 ParseTFormula(std::string prefix, std::string expr, double rangelow, double rangeup);
-    std::string SafeROOTName(const std::string original);
     void DumpData();
-    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* data, int rebin_x = 1, int rebin_y = 1, std::vector<double> change_points = {});
+    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format = nullptr);
 };
 
 #endif
