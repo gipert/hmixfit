@@ -1,0 +1,163 @@
+{
+    "id" : "phII-lar-global-BEGe",
+    "logging" : "summary",
+    "precision" : "kMedium",
+    "output-dir" : "../../results/phII-lar-global-BEGe",
+    "global-mode-search" : {
+        "method" : "kOptMinuit"
+    },
+    "p-value" : {
+        "enabled" : false,
+        "iterations" : 1E07
+    },
+    "observables": {
+        "half-life-bege": {
+            "TFormula": "1.80736e26/[2nbb]",
+            "range" : [1.8E21, 2.2E21],
+            "long-name" : "T_{1/2}^{2#nu} - BEGe",
+            "units" : "yr"
+        }
+    },
+    "fit" : {
+        "parameters" : {
+            "alpha-slope" : {
+                "range" : [0, 1E-4],
+                "long-name" : "#alpha-model - slope",
+                "units" : "cts"
+            },
+            "alpha-offset" : {
+                "range" : [0, 1E-1],
+                "long-name" : "#alpha-model - offset",
+                "units" : "cts"
+            },
+            "Th228-cables" : {
+                "range" : [0, 4E5],
+                "long-name" : "^{228}Th - cables",
+                "units" : "cts"
+            },
+            "Co60-cables" : {
+                "range" : [0, 1E5],
+                "long-name" : "^{60}Co - cables",
+                "units" : "cts"
+            },
+            "U238-cables" : {
+                "range" : [0, 1E5],
+                "long-name" : "^{238}U - cables",
+                "units" : "cts"
+            },
+            "2nbb" : {
+                "range" : [8E4, 9.2E4],
+                "long-name" : "2#nu#beta#beta",
+                "units" : "cts"
+            },
+            "Ac228-holders" : {
+                "range" : [0, 1.5E4],
+                "long-name" : "^{228}Ac - holders",
+                "units" : "cts"
+            },
+            "K40-close" : {
+                "range" : [5E4, 1.5E6],
+                "long-name" : "^{40}K - close",
+                "units" : "cts"
+            },
+            "K40-far" : {
+                "range" : [1E5, 2E8],
+                "long-name" : "^{40}K - far",
+                "units" : "cts"
+            },
+            "K42-far" : {
+                "range" : [0, 3E8],
+                "long-name" : "^{42}K - hom. in LAr",
+                "units" : "cts"
+            },
+            "K42-close" : {
+                "range" : [0, 1.2E4],
+                "long-name" : "^{42}K - n^+ (BEGe)",
+                "units" : "cts"
+            }
+        },
+        "theoretical-expectations" : {
+            "../../data/gerda-data-bkgmodel-phaseII-v07.00.root" : {
+                "lar/M1_enrBEGe" : {
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
+                    "fit-range" : [565, 2020],
+                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770:25:2020",
+                    "components" : [
+                        {
+                            "components" : {
+                                "alpha-slope" : {
+                                    "TFormula" : "x*(x>0 && x<5160)"
+                                },
+                                "alpha-offset" : {
+                                    "TFormula" : "1"
+                                }
+                            }
+                        },
+                        {
+                            "part": "cables/cables_all",
+                            "components" : {
+                                "Th228-cables" : {
+                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
+                                },
+                                "Co60-cables" : {
+                                    "isotope": "Co60"
+                                },
+                                "U238-cables" : {
+                                    "isotope" : { "Bi214" : 0.3539, "Pb214" : 1 }
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_bege",
+                            "components" : {
+                                "2nbb" : {
+                                    "isotope" : "2nbb"
+                                }
+                            }
+                        },
+                        {
+                            "part": "ge_holders/ge_holders_all",
+                            "components" : {
+                                "Ac228-holders" : {
+                                    "isotope" : "Ac228"
+                                }
+                            }
+                        },
+                        {
+                            "part": "minishroud/ms_all",
+                            "components" : {
+                                "K40-close" : {
+                                    "isotope" : "K40"
+                                }
+                            }
+                        },
+                        {
+                            "part": "electronics/cc3",
+                            "components" : {
+                                "K40-far" : {
+                                    "isotope" : "K40"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array",
+                            "components" : {
+                                "K42-far" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/nplus_bege",
+                            "components" : {
+                                "K42-close" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
