@@ -107,7 +107,8 @@ class GerdaFitter : public BCModel {
     void SetIntegrationProperties(json config);
     void PrintOptimizationSummary();
     void PrintShortMarginalizationSummary();
-    void SaveHistograms(std::string filename);
+    void SaveHistogramsROOT(std::string filename);
+    void SaveHistogramsCSV(std::string folder);
     void WriteResultsTree(std::string filename);
     double GetFastPValue(const std::vector<double>& parameters, long niter);
     double Integrate(bool enable_offset);

@@ -147,7 +147,8 @@ int main(int argc, char** argv) {
     model->WriteMarginalizedDistributions(prefix + "marginalized.root", "recreate");
     model->SetKnowledgeUpdateDrawingStyle(BCAux::kKnowledgeUpdateDetailedPosterior);
     model->PrintKnowledgeUpdatePlots(prefix + "know-update.pdf");
-    model->SaveHistograms(prefix + "histograms.root");
+    model->SaveHistogramsROOT(prefix + "histograms.root");
+    model->SaveHistogramsCSV(prefix + "histograms.csv");
     model->WriteResultsTree(prefix + "analysis.root");
 
     BCLog::OutSummary("Exiting");

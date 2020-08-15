@@ -333,6 +333,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         BCLog::OutDebug("user-specified ROOT file detected");
                         auto obj_name = iso.value().value("hist-name", elh.key());
                         auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data_orig);
+                        thh->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, thh});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
@@ -369,7 +370,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         BCLog::OutDebug("should be a gerda-pdfs PDF");
                         if (iso.value()["isotope"].is_string()) {
                             auto comp = sum_parts(iso.value()["isotope"]);
-                            comp->SetName(utils::SafeROOTName(iso.key() + "_" + std::string(comp->GetName())).c_str());
+                            comp->SetName(utils::SafeROOTName(iso.key()).c_str());
                             _current_ds.comp_orig.insert({comp_idx, comp});
                             _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(comp, _current_ds.data)});
                         }
@@ -385,7 +386,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                                 else comp->Add(sum_parts(i.key()), i.value().get<double>());
 
                             }
-                            comp->SetName(utils::SafeROOTName(iso.key() + "_" + std::string(comp->GetName())).c_str());
+                            comp->SetName(utils::SafeROOTName(iso.key()).c_str());
                             _current_ds.comp_orig.insert({comp_idx, comp});
                             _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(comp, _current_ds.data)});
                         }
@@ -630,10 +631,14 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                 // update TFormula
                 _tformula = TFormula(el.key().c_str(), _expr_.c_str());
                 // need to reset parameter names because ROOT is stupid
+                // FIXME: 'Error in <TFormula::SetParName>: Parameter p1 is not defined.'
+                // will be thrown if there are "jumps" in the parameters indices. e.g. is the TFormula
+                // is '[0]*x + [7]' then TFormula::GetNpar() will return 8, but not all parameters 0..8
+                // are really defined. I don't know how to fix this.
                 for (int p = 0; p < _tformula.GetNpar(); ++p) {
                     std::string parname = _tformula.GetParName(p);
                     // delete the p in front of the parameter name
-                    parname.erase(0,1); 
+                    parname.erase(0,1);
                     _tformula.SetParName(p, parname.c_str());
                 }
             }
@@ -867,8 +872,8 @@ void GerdaFitter::SetIntegrationProperties(json j) {
     }
 }
 
-void GerdaFitter::SaveHistograms(std::string filename) {
-    BCLog::OutSummary("Saving histograms to output file " + filename);
+void GerdaFitter::SaveHistogramsROOT(std::string filename) {
+    BCLog::OutSummary("Saving histograms (ROOT) to output file " + filename);
 
     TFile tf(filename.c_str(), "recreate");
     for (auto& it : data) {
@@ -958,6 +963,96 @@ void GerdaFitter::SaveHistograms(std::string filename) {
         }
 
         tf.cd();
+    }
+}
+
+void GerdaFitter::SaveHistogramsCSV(std::string folder) {
+
+    BCLog::OutSummary("Saving histograms (CSV) in output folder " + folder);
+    std::system(("mkdir -p " + folder + "/originals").c_str());
+
+    for (auto& it : data) {
+
+        if (it.data->GetDimension() != 1) {
+            BCLog::OutDebug(Form("GerdaFitter::SaveHistogramsCSV(): %s is not a 1D histogram, skipping.", it.data->GetName()));
+        }
+
+        std::ofstream fout(Form("%s/%s.csv", folder.c_str(), it.data->GetName()));
+
+        std::vector<TH1*> comps;
+        TH1* sum = nullptr;
+
+        for (auto& h : it.comp) {
+            auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
+            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            // compute total model without changing the components
+            if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
+            else      sum->Add(hcopy);
+            comps.push_back(hcopy);
+        }
+        sum->SetName("total_model");
+
+        fout << "xunit, xunit_low, fitted_data, total_model";
+        for (auto c : comps) fout << ", " << c->GetName();
+        fout << ", 1sig_p, 1sig_m, 2sig_p, 2sig_m, 3sig_p, 3sig_m, norm_pois_res";
+        fout << '\n';
+
+        for (int b = 0; b <= it.data->GetNbinsX()+1; ++b) {
+            fout << it.data->GetBinCenter(b)
+                 << ", " << it.data->GetBinLowEdge(b)
+                 << ", " << it.data->GetBinContent(b)/it.data->GetBinWidth(b)
+                 << ", " << sum->GetBinContent(b)/sum->GetBinWidth(b);
+            for (auto c : comps) {
+                fout << ", " << c->GetBinContent(b)/c->GetBinWidth(b);
+            }
+
+            auto sig1 = utils::smallest_poisson_interval(0.682, sum->GetBinContent(b));
+            auto sig2 = utils::smallest_poisson_interval(0.954, sum->GetBinContent(b));
+            auto sig3 = utils::smallest_poisson_interval(0.997, sum->GetBinContent(b));
+
+            fout << ", " << sig1.second/sum->GetBinWidth(b)
+                 << ", " << sig1.first/sum->GetBinWidth(b)
+                 << ", " << sig2.second/sum->GetBinWidth(b)
+                 << ", " << sig2.first/sum->GetBinWidth(b)
+                 << ", " << sig3.second/sum->GetBinWidth(b)
+                 << ", " << sig3.first/sum->GetBinWidth(b);
+
+            fout << ", " << utils::normalized_poisson_residual(sum->GetBinContent(b), it.data->GetBinContent(b));
+
+            fout << '\n';
+        }
+        for (auto c : comps) delete c;
+        comps.clear();
+        fout.close();
+
+        std::ofstream fout_orig(Form("%s/originals/%s.csv", folder.c_str(), it.data->GetName()));
+        sum = nullptr;
+
+        for (auto& h : it.comp_orig) {
+            auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
+            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            // compute total model without changing the components
+            if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
+            else      sum->Add(hcopy);
+            comps.push_back(hcopy);
+        }
+        sum->SetName("total_model");
+
+        fout_orig << "xunit, fitted_data, total_model";
+        for (auto c : comps) fout_orig << ", " << c->GetName();
+        fout_orig << '\n';
+
+        for (int b = 1; b <= it.data_orig->GetNbinsX(); ++b) {
+            fout_orig << it.data_orig->GetBinLowEdge(b)
+                 << ", " << it.data_orig->GetBinContent(b)
+                 << ", " << sum->GetBinContent(b);
+            for (auto c : comps) {
+                fout_orig << ", " << c->GetBinContent(b);
+            }
+            fout_orig << '\n';
+        }
+        for (auto c : comps) delete c;
+        fout_orig.close();
     }
 }
 

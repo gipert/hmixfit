@@ -318,6 +318,108 @@ namespace utils {
         return th_new;
     }
 
+    /*
+     * smallest_poisson_interval(prob_coverage, poisson_mean)
+     *
+     * Computes the smallest interval boundaries covering `prob_coverage` area of a
+     * discrete Poisson distribution with mean `poisson_mean` Returns a
+     * `std::pair<float,float>` holding the lower and upper range
+     */
+    std::pair<float, float> smallest_poisson_interval(double cov, double mu) {
+
+        // sanity check
+        if (cov > 1 or cov < 0 or mu < 0) throw std::runtime_error("smallest_poisson_interval(): bad input");
+
+        // initialize lower and upper edges to something
+        std::pair<float, float> res = {mu, mu};
+
+        if (mu > 50) { // gaussian approximation os OK
+            res = {
+                std::round(mu + TMath::NormQuantile((1-cov)/2)*sqrt(mu))-0.5,
+                std::round(mu - TMath::NormQuantile((1-cov)/2)*sqrt(mu))+0.5
+            };
+        }
+        else { // do the computation
+            // start from the mode, which is the integer part of the mean
+            int mode = std::floor(mu);
+            int l = mode, u = mode; // let's start from here
+            double prob = TMath::PoissonI(mode, mu); // probability covered by the interval
+
+            // check if we're undercovering
+            while (prob < cov) {
+                // compute probabilities of points just ouside interval
+                double prob_u = TMath::PoissonI(u+1, mu);
+                double prob_l = TMath::PoissonI(l > 0 ? l-1 : 0, mu);
+
+                // we expand on the right if:
+                //  - the lower edge is already at zero
+                //  - the prob of the right point is higher than the left
+                if (l == 0 or prob_u > prob_l) {
+                    u++; // expand interval
+                    prob += prob_u; // update coverage
+                }
+                // otherwhise we expand on the left
+                else if (prob_u < prob_l) {
+                    l--;
+                    prob += prob_l;
+                }
+                // if prob_u == prob_l we expand on both sides
+                else {
+                    u++; l--;
+                    prob += prob_u + prob_l;
+                }
+            }
+            res = {l == 0 ? 0 : l-0.5, u+0.5};
+        }
+        return res;
+    }
+
+    double normalized_poisson_residual(double mu, double obs) {
+
+        TF1 fu("f", "TMath::Poisson(x,[0])", 0, 15);
+        fu.SetNpx(1000);
+
+        auto median = [](double x) {
+
+            double up = x + 1./3;
+            double dw = x - std::log(2.) > 0 ? x - std::log(2.) : 0;
+            double mprec = 0.01;
+
+            TF1 f_tmp("f_tmp", "TMath::Poisson(x,[0])", 0, 1);
+            f_tmp.SetParameter(0, x);
+            f_tmp.SetNpx(1000);
+            double norm = f_tmp.Integral(0, x < 1 ? 5 : 10*x);
+
+            double I = f_tmp.Integral(0, dw)/norm;
+            while (I < 0.5) {
+                dw += mprec;
+                I = f_tmp.Integral(0, dw)/norm;
+                if (dw > up) {
+                    std::cout << "normalized_poisson_residual(): "
+                              << "WARNING: failed to calculate median" << std::endl;
+                    break;
+                }
+            }
+
+            return dw;
+        };
+
+        if (mu < 50) {
+            fu.SetParameter(0, mu);
+
+            double prob = fu.Integral(median(mu), obs);
+            if (std::abs(prob) >= 0.5) {
+                std::cout << "normalized_poisson_residual(): "
+                          << "WARNING: poisson_area(" << obs << ", " << median(mu)
+                          << ") = " << prob << std::endl;
+                return (prob == 1 ? 3.90 : -3.9);
+            }
+            else return TMath::NormQuantile(0.5+prob);
+        }
+        else {
+            return (obs-mu)/std::sqrt(mu);
+        }
+    }
 }
 
 #endif
