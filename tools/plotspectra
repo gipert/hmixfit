@@ -19,6 +19,7 @@ void usage() {
               << "  -b, --bands          : plot [1,2,3]-sigma bands (smallest intervals) onto data\n"
               << "  -R, --residuals      : plot residuals (data/model) with [1,2,3]-sigma bands\n"
               << "  -c, --collapse2D     : draw TH2s as TH1s by collapsing x and y axes together\n"
+              << "  -o, --originals      : plot original histograms, not those used in the fit\n"
               << "\n";
     gSystem->Exit(1);
 }
@@ -49,7 +50,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
         argc++;
     }
 
-    const char* const short_opts = "p:x:y:r:lbRLch";
+    const char* const short_opts = "p:x:y:r:lbRLcoh";
     const option long_opts[] = {
         {"width",      required_argument, nullptr, 'x'},
         {"height",     required_argument, nullptr, 'y'},
@@ -60,6 +61,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
         {"residuals",  no_argument,       nullptr, 'R'},
         {"legend",     no_argument,       nullptr, 'L'},
         {"collapse2D", no_argument,       nullptr, 'c'},
+        {"originals",  no_argument,       nullptr, 'o'},
         {"help",       no_argument,       nullptr, 'h'},
         {nullptr,      no_argument,       nullptr, 0  }
     };
@@ -74,6 +76,7 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
     bool residuals = false;
     bool draw_legend = false;
     bool collapse_2d = false;
+    bool originals = false;
 
     // read in with getopt
     int opt = 0;
@@ -105,6 +108,9 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                 break;
             case 'c':
                 collapse_2d = true;
+                break;
+            case 'o':
+                originals = true;
                 break;
             case 'h': // -h or --help
             case '?': // Unrecognized option
@@ -145,8 +151,8 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
         if (cl->InheritsFrom(TDirectoryFile::Class())) {
             auto d = dynamic_cast<TDirectoryFile*>(key->ReadObj());
 
-            data = dynamic_cast<TH1*>(d->Get("fitted_data"));
-            model = dynamic_cast<TH1*>(d->Get("total_model"));
+            data = dynamic_cast<TH1*>(d->Get(Form("%sfitted_data", (originals ? "originals/" : ""))));
+            model = dynamic_cast<TH1*>(d->Get(Form("%stotal_model", (originals ? "originals/" : ""))));
 
             TParameter<double>* range_low_x;
             TParameter<double>* range_upp_x;
@@ -220,7 +226,10 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
 
             auto draw_components = [&](){
                 // draw components
-                TIter nextt(d->GetListOfKeys());
+                TDirectoryFile* dir;
+                if (originals) dir = dynamic_cast<TDirectoryFile*>(d->GetDirectory("originals"));
+                else dir = d;
+                TIter nextt(dir->GetListOfKeys());
                 TKey* keyy;
                 while ((keyy = dynamic_cast<TKey*>(nextt()))) {
                     auto cll = TClass::GetClass(keyy->GetClassName());
