@@ -42,6 +42,16 @@
             "range" : [1.8E21, 2.2E21],
             "long-name" : "T_{1/2}^{2#nu} - enriched",
             "units" : "yr"
+        },
+        "2nbb-signal-to-bkg-bege" : {
+            "TFormula": "[2nbb-bege]/([Bi212Tl208-cables]+[Co60-cables]+[Pb214Bi214-cables]+[Ac228-holders]+[K40-close]+[K40-far]+[K42-outside-ms]+[K42-above-array]+[K42-nplus-bege])",
+            "range": [0, 10],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[565, 1450], [1535, 2000]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "2#nu#beta#beta S/B ratio in [565, 1450] U [1535, 2000] keV (BEGe)",
+            "units": ""
         }
     },
     "fit" : {
@@ -125,8 +135,8 @@
         "theoretical-expectations" : {
             "../../data/gerda-data-bkgmodel-phaseII-v07.00.root" : {
                 "raw/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0-rc",
-                    "fit-range" : [[560, 2014], [2064, 5260]],
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
+                    "fit-range" : [[565, 2014], [2064, 5260]],
                     "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
@@ -226,8 +236,8 @@
                     ]
                 },
                 "raw/M1_enrCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0-rc",
-                    "fit-range" : [[560, 2014], [2064, 5260]],
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
+                    "fit-range" : [[565, 2014], [2064, 5260]],
                     "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
@@ -327,7 +337,7 @@
                     ]
                 },
                 "raw/M2_enrE1plusE2" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0-rc",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
                     "fit-range" : [520, 4000],
                     "rebin-factor" : "520:20:580,588,604,612:20:722,732:22:908,915:24:962,973:28:1112,1130:28:1170,1179:30:1329,1338,1370,1384:24:1456,1466:27:1520,1530:30:1710,1725,1735,1760,1770,1832,1843,1853,2200,2208,2610,2620,3190,3205,4000",
                     "components" : [
