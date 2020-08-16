@@ -30,7 +30,7 @@
             "units" : "yr"
         },
         "2nbb-signal-to-bkg-bege" : {
-            "TFormula": "[2nbb-bege]/([Th228-cables]+[Co60-cables]+[U238-cables]+[Ac228-holders]+[K40-close]+[K40-far]+[K42-close-bege]+[K42-far])",
+            "TFormula": "[2nbb-bege]/([Th228-cables]+[Co60-cables]+[U238-cables]+[Ac228-holders]+[K40-close]+[K40-far]+[K42-far]+[K42-inside-ms]+[K42-close-coax])",
             "range": [0, 40],
             "multiply-fit-parameter-by-pdf-integral": {
                 "range" : [[565, 1450], [1535, 2000]],
@@ -48,7 +48,7 @@
                 "units" : "cts"
             },
             "Co60-cables" : {
-                "range" : [0, 1E5],
+                "range" : [0, 2E4],
                 "long-name" : "^{60}Co - cables",
                 "units" : "cts"
             },
@@ -68,7 +68,7 @@
                 "units" : "cts"
             },
             "Ac228-holders" : {
-                "range" : [0, 1.5E4],
+                "range" : [4E3, 1.6E4],
                 "long-name" : "^{228}Ac - holders",
                 "units" : "cts"
             },
@@ -84,12 +84,12 @@
             },
             "K42-far" : {
                 "range" : [1E8, 3E8],
-                "long-name" : "^{42}K - hom. in LAr",
+                "long-name" : "^{42}K - hom. in LAr (outside MS)",
                 "units" : "cts"
             },
-            "K42-close-bege" : {
-                "range" : [0, 1.2E4],
-                "long-name" : "^{42}K - n^+ (BEGe)",
+            "K42-inside-ms" : {
+                "range" : [0, 3E5],
+                "long-name" : "^{42}K - hom. in LAr (inside MS)",
                 "units" : "cts"
             },
             "K42-close-coax" : {
@@ -113,7 +113,7 @@
                 "lar/M1_enrBEGe" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
                     "fit-range" : [[565, 2014], [2064, 5260]],
-                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770:25:1995,2014,2064,2200,2208,2610,2620,4500,5260",
+                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "root-file" : "../../data/bkg-alpha-enrBEGe-results.root",
@@ -178,9 +178,9 @@
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
+                            "part": "lar/inside_ms",
                             "components" : {
-                                "K42-close-bege" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -198,7 +198,7 @@
                 "lar/M1_enrCoax" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
                     "fit-range" : [[565, 2014], [2064, 5260]],
-                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770:25:1995,2014,2064,2200,2208,2610,2620,4500,5260",
+                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "root-file" : "../../data/bkg-alpha-enrCoax-results.root",
@@ -263,17 +263,17 @@
                             }
                         },
                         {
-                            "part": "gedet/nplus_semicoax",
+                            "part": "lar/inside_ms",
                             "components" : {
-                                "K42-close-coax" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
+                            "part": "gedet/nplus_semicoax",
                             "components" : {
-                                "K42-close-bege" : {
+                                "K42-close-coax" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -332,17 +332,17 @@
                             }
                         },
                         {
-                            "part": "gedet/nplus_semicoax",
+                            "part": "lar/inside_ms",
                             "components" : {
-                                "K42-close-coax" : {
+                                "K42-inside-ms" : {
                                     "isotope" : "K42"
                                 }
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
+                            "part": "gedet/nplus_semicoax",
                             "components" : {
-                                "K42-close-bege" : {
+                                "K42-close-coax" : {
                                     "isotope" : "K42"
                                 }
                             }
