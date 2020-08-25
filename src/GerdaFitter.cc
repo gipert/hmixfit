@@ -1038,20 +1038,40 @@ void GerdaFitter::SaveHistogramsCSV(std::string folder) {
         }
         sum->SetName("total_model");
 
-        fout_orig << "xunit, fitted_data, total_model";
+        fout_orig << "xunit, xunit_low, fitted_data, total_model";
         for (auto c : comps) fout_orig << ", " << c->GetName();
+        fout_orig << ", 1sig_p, 1sig_m, 2sig_p, 2sig_m, 3sig_p, 3sig_m, norm_pois_res";
         fout_orig << '\n';
 
+        // it.data_orig->Rebin(15);
+        // for (auto c : comps) c->Rebin(15);
+        // sum->Rebin(15);
+
         for (int b = 1; b <= it.data_orig->GetNbinsX(); ++b) {
-            fout_orig << it.data_orig->GetBinLowEdge(b)
-                 << ", " << it.data_orig->GetBinContent(b)
-                 << ", " << sum->GetBinContent(b);
+            fout_orig << it.data_orig->GetBinCenter(b)
+                      << ", " << it.data_orig->GetBinLowEdge(b)
+                      << ", " << it.data_orig->GetBinContent(b)
+                      << ", " << sum->GetBinContent(b);
             for (auto c : comps) {
                 fout_orig << ", " << c->GetBinContent(b);
             }
+
+            auto sig1 = utils::smallest_poisson_interval(0.682, sum->GetBinContent(b));
+            auto sig2 = utils::smallest_poisson_interval(0.954, sum->GetBinContent(b));
+            auto sig3 = utils::smallest_poisson_interval(0.997, sum->GetBinContent(b));
+
+            fout_orig << ", " << sig1.second
+                      << ", " << sig1.first
+                      << ", " << sig2.second
+                      << ", " << sig2.first
+                      << ", " << sig3.second
+                      << ", " << sig3.first;
+
+            fout_orig << ", " << utils::normalized_poisson_residual(sum->GetBinContent(b), it.data_orig->GetBinContent(b));
             fout_orig << '\n';
         }
         for (auto c : comps) delete c;
+        comps.clear();
         fout_orig.close();
     }
 }
