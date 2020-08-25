@@ -251,7 +251,7 @@
                                 "Co60-cables" : {
                                     "isotope": "Co60"
                                 },
-                                "Ac288-cables" : {
+                                "Ac228-cables" : {
                                     "isotope": "Ac228"
                                 },
                                 "Pb214Bi214-cables" : {
@@ -415,7 +415,7 @@
                                 "Bi212Tl208-cables" : {
                                     "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
                                 },
-                                "Ac288-cables" : {
+                                "Ac228-cables" : {
                                     "isotope": "Ac228"
                                 },
                                 "Co60-cables" : {
@@ -582,7 +582,7 @@
                                 "Bi212Tl208-cables" : {
                                     "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
                                 },
-                                "Ac288-cables" : {
+                                "Ac228-cables" : {
                                     "isotope": "Ac228"
                                 },
                                 "Co60-cables" : {
@@ -741,7 +741,7 @@
                                 "Bi212Tl208-cables" : {
                                     "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
                                 },
-                                "Ac288-cables" : {
+                                "Ac228-cables" : {
                                     "isotope": "Ac228"
                                 },
                                 "Co60-cables" : {

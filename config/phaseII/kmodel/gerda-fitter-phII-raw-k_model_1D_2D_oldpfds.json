@@ -94,7 +94,7 @@
                 "units" : "cts"
             },
             "K40-far" : {
-                "range" : [1E6, 5E6],
+                "range" : [0, 5E6],
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },

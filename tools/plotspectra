@@ -38,13 +38,13 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
     args = prog + " " + args;
 
     int argc = 0;
-    char** argv = new char*[50];
+    char** argv = new char*[200];
 
     // get all arguments
     std::istringstream iss(args);
     std::string word;
     while (iss >> word) {
-        char* tmp = new char[50];
+        char* tmp = new char[200];
         strcpy(tmp, word.c_str());
         argv[argc] = tmp;
         argc++;
