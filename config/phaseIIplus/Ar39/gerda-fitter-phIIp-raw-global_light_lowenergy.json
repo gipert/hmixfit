@@ -1,7 +1,7 @@
 {
     "id" : "phIIp-raw-global_light_lowenergy",
     "logging" : "summary",
-    "precision" : "kQuick",
+    "precision" : "kMedium",
     "output-dir" : "../../../results/phIIp-raw-global_light_lowenergy",
     "global-mode-search" : {
         "method" : "kOptMinuit"
@@ -11,29 +11,17 @@
         "iterations" : 1E7
     },
     "observables": {
-        "half-life-bege": {
-            "TFormula": "1.13380E26/[2nbb-bege]",
-            "range" : [1.9E21, 2.2E21],
-            "long-name" : "T_{1/2}^{2#nu} - BEGe",
-            "units" : "yr"
+        "Ar39-activity" : {
+            "TFormula" : "[Ar39-lar]/(37032160*775.293*1.396)",
+            "range": [1.33, 1.35],
+            "long-name" : "^{39}Ar specific activity",
+            "units" : "Bq/kg"
         },
-        "half-life-semicoax": {
-            "TFormula": "8.14672e25/[2nbb-semicoax]",
-            "range" : [1.8E21, 2.0E21],
-            "long-name" : "T_{1/2}^{2#nu} - SemiCoax",
-            "units" : "yr"
-        },
-        "half-life-invcoax": {
-            "TFormula": "5.41815E25/[2nbb-invcoax]",
-            "range" : [1.8E21, 2.0E21],
-            "long-name" : "T_{1/2}^{2#nu} - InvCoax",
-            "units" : "yr"
-        },
-        "half-life-enriched": {
-            "TFormula": "2.49028E26/([2nbb-bege]+[2nbb-invcoax]+[2nbb-semicoax])",
-            "range" : [1.8E21, 2.1E21],
-            "long-name" : "T_{1/2}^{2#nu} - enriched",
-            "units" : "yr"
+        "Kr85-activity" : {
+            "TFormula" : "[Kr85-lar]/(37032160*275.888*1.396)",
+            "range": [0.0, 0.004],
+            "long-name" : "^{85}Kr specific activity",
+            "units" : "Bq/kg"
         }
     },
     "fit" : {
@@ -134,26 +122,20 @@
                 "units" : "cts"
             },
             "Ar39-lar" : {
-                "range" : [4.8E10, 4.9E10],
+                "range" : [5.36E10, 5.4E10],
                 "long-name" : "^{39}Ar - hom. in LAr",
-                "units" : "cts",
-                "prior" : {
-                    "TFormula" : "gaus:1,4E10,0.5E10"
-                }
+                "units" : "cts"
             },
             "Kr85-lar" : {
-                "range" : [2E7, 2E8],
+                "range" : [1E7, 2E8],
                 "long-name" : "^{85}Kr - hom. in LAr",
-                "units" : "cts",
-                "prior" : {
-                    "TFormula" : "gaus:1,1.009E8,0.20E8"
-                }
+                "units" : "cts"
             }
         },
         "theoretical-expectations" : {
             "../../../data/gerda-data-bkgmodel-phaseIIplus-v07.00.root" : {
                 "raw/M1_invCoax" : {
-                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc-ar39av",
                     "fit-range" : [40, 600],
                     "rebin-factor" : 2,
                     "components" : [
@@ -278,7 +260,7 @@
                     ]
                 },
                 "raw/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc-ar39av",
                     "fit-range" : [40, 600],
                     "rebin-factor" : 2,
                     "components" : [
@@ -402,7 +384,7 @@
                     ]
                 },
                 "raw/M1_enrCoax" : {
-                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc-ar39av",
                     "fit-range" : [40, 600],
                     "rebin-factor" : 2,
                     "components" : [
@@ -529,7 +511,7 @@
                     ]
                 },
                 "raw/M2_enrE1plusE2" : {
-                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-rc-ar39av",
                     "fit-range" : [80, 600],
                     "rebin-factor" : 10,
                     "components" : [
