@@ -1094,9 +1094,9 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
     tt.Branch("glob_mode",         &glob_mode,       "glob_mode/D");
     tt.Branch("glob_mode_error",   &glob_mode_error, "glob_mode_error/D");
 
-    for (unsigned int p = 0; p < this->GetNParameters(); p++) {
+    for (unsigned int p = 0; p < this->GetNVariables(); p++) {
         BCLog::OutDebug("Writing Parameter " + this->GetVariable(p).GetName() + " to tree");
-        bool isfixed = this->GetParameter(p).Fixed();
+        bool isfixed = (p < this->GetNParameters() and this->GetParameter(p).Fixed());
         par_name = std::string(this->GetVariable(p).GetName().data());
         if (!isfixed) {
             auto bch_marg = this->GetMarginalized(p);
@@ -1104,8 +1104,8 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
             marg_qt16 = bch_marg.GetQuantile(0.16);
             marg_qt84 = bch_marg.GetQuantile(0.84);
             marg_qt90 = bch_marg.GetQuantile(0.90);
-            glob_mode = this->GetBestFitParameters()[p];
-            glob_mode_error = this->GetBestFitParameterErrors()[p];
+            glob_mode = p < this->GetNParameters() ? this->GetBestFitParameters()[p] : 0;
+            glob_mode_error = p < this->GetNParameters() ? this->GetBestFitParameterErrors()[p] : 0;
         }
         else {
             marg_mode = this->GetParameter(p).GetFixedValue();
