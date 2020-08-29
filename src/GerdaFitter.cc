@@ -1121,6 +1121,7 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
     tt.Write();
 
     // calculate integral of raw histogram in fit range
+    // from the original histogram, *not* the rebinned one!
     for (auto ds : data) {
         std::string comp_name;
         double orig_range, orig_bi;
@@ -1150,14 +1151,17 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
 
         for (auto c : ds.comp_orig) {
             comp_name = std::string(this->GetVariable(c.first).GetName().data());
-            auto & ch = c.second;
+            auto ch = c.second;
             bool isfixed   = this->GetParameter(c.first).Fixed();
             double best    = isfixed ? this->GetParameter(c.first).GetFixedValue() : this->GetBestFitParameters()[c.first];
             double bestErr = isfixed ? 0 : this->GetBestFitParameterErrors()[c.first];
             auto bch_marg  = this->GetMarginalized(c.first);
-            orig_range = 0.;
+            orig_range = 0;
             for (auto r : ds.brange) {
-                orig_range += ch->Integral(r.first, r.second);
+                // this trick here is needed to find the right bin indices
+                auto bl_ = ch->FindBin(ds.comp[c.first]->GetBinLowEdge(r.first));
+                auto bu_ = ch->FindBin(ds.comp[c.first]->GetBinLowEdge(r.second) + ds.comp[c.first]->GetBinWidth(r.second));
+                orig_range += ch->Integral(bl_, bu_);
             }
             best_range    = orig_range*best;
             bestErr_range = orig_range*bestErr;
