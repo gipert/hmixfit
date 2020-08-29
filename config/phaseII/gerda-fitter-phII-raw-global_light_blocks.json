@@ -1,7 +1,7 @@
 {
     "id" : "phII-raw-global_light_blocks",
     "logging" : "summary",
-    "precision" : "kMedium",
+    "precision" : "kHigh",
     "output-dir" : "../../results/phII-raw-global_light_blocks",
     "global-mode-search" : {
         "method" : "kOptMinuit"
@@ -44,14 +44,157 @@
             "units" : "yr"
         },
         "2nbb-signal-to-bkg-bege" : {
-            "TFormula": "[2nbb-bege]/([Bi212Tl208-cables]+[Co60-cables]+[Pb214Bi214-cables]+[Ac228-holders]+[K40-close]+[K40-far]+[K42-outside-ms]+[K42-above-array]+[K42-nplus-bege])",
-            "range": [0, 10],
+            "TFormula": "[2nbb-bege]/([Bi212Tl208-cables]+[Co60-cables]+[Pb214Bi214-cables]+[Ac228-holders]+[K40-close]+[K40-far]+[K42-outside-ms]+[K42-above-array])",
+            "range": [1, 3],
             "multiply-fit-parameter-by-pdf-integral": {
                 "range" : [[565, 1450], [1535, 2000]],
                 "dataset" : "M1_enrBEGe"
             },
             "long-name": "2#nu#beta#beta S/B ratio in [565, 1450] U [1535, 2000] keV (BEGe)",
             "units": ""
+        },
+
+        "K42-BI-bege" : {
+            "TFormula": "([K42-outside-ms]+[K42-inside-ms]+[K42-above-array]+[K42-nplus-semicoax])/330/32.7",
+            "range": [0, 8E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{42}K",
+            "units": "cts/(keV kg yr)"
+        },
+        "Th228-BI-bege" : {
+            "TFormula": "([Bi212Tl208-cables])/330/32.7",
+            "range": [2E-3, 4E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{228}Th",
+            "units": "cts/(keV kg yr)"
+        },
+        "U238-BI-bege" : {
+            "TFormula": "([Pb214Bi214-cables])/330/32.7",
+            "range": [2E-3, 4E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{238}U",
+            "units": "cts/(keV kg yr)"
+        },
+        "Ac228-BI-bege" : {
+            "TFormula": "([Ac228-holders])/330/32.7",
+            "range": [0, 4E-5],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{228}Ac",
+            "units": "cts/(keV kg yr)"
+        },
+        "Co60-BI-bege" : {
+            "TFormula": "([Co60-cables])/330/32.7",
+            "range": [0, 6E-4],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{60}Co",
+            "units": "cts/(keV kg yr)"
+        },
+        "alpha-BI-bege" : {
+            "TFormula": "([alpha-high-energy-bege])/330/32.7",
+            "range": [4E-3, 6E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - #alpha model",
+            "units": "cts/(keV kg yr)"
+        },
+
+        "K42-BI-coax" : {
+            "TFormula": "([K42-outside-ms]+[K42-inside-ms]+[K42-above-array]+[K42-nplus-semicoax])/330/28.6",
+            "range": [0, 8E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{42}K",
+            "units": "cts/(keV kg yr)"
+        },
+        "Th228-BI-coax" : {
+            "TFormula": "([Bi212Tl208-cables])/330/28.6",
+            "range": [1E-3, 3E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{228}Th",
+            "units": "cts/(keV kg yr)"
+        },
+        "U238-BI-coax" : {
+            "TFormula": "([Pb214Bi214-cables])/330/28.6",
+            "range": [1E-3, 3E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{238}U",
+            "units": "cts/(keV kg yr)"
+        },
+        "Ac228-BI-coax" : {
+            "TFormula": "([Ac228-holders])/330/28.6",
+            "range": [0, 4E-5],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{228}Ac",
+            "units": "cts/(keV kg yr)"
+        },
+        "Co60-BI-coax" : {
+            "TFormula": "([Co60-cables])/330/28.6",
+            "range": [0, 6E-4],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{60}Co",
+            "units": "cts/(keV kg yr)"
+        },
+        "alpha-BI-coax" : {
+            "TFormula": "([alpha-high-energy-coax])/330/28.6",
+            "range": [2.6E-3, 3.4E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - #alpha model",
+            "units": "cts/(keV kg yr)"
+        },
+
+        "BI-bege" : {
+            "TFormula": "([K42-outside-ms]+[K42-inside-ms]+[K42-above-array]+[K42-nplus-semicoax]+[Bi212Tl208-cables]+[Pb214Bi214-cables]+[Co60-cables]+[Ac228-holders]+[alpha-high-energy-bege])/330/32.7",
+            "range": [1E-2, 2E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index",
+            "units": "cts/(keV kg yr)"
+        },
+        "BI-coax" : {
+            "TFormula": "([K42-outside-ms]+[K42-inside-ms]+[K42-above-array]+[K42-nplus-semicoax]+[Bi212Tl208-cables]+[Pb214Bi214-cables]+[Co60-cables]+[Ac228-holders]+[alpha-high-energy-coax])/330/28.6",
+            "range": [1E-2, 1.5E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2019, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index",
+            "units": "cts/(keV kg yr)"
         }
     },
     "fit" : {
@@ -109,11 +252,6 @@
             "K42-above-array" : {
                 "range" : [0, 1E8],
                 "long-name" : "^{42}K - hom. in LAr above array",
-                "units" : "cts"
-            },
-            "K42-nplus-bege" : {
-                "range" : [0, 5E3],
-                "long-name" : "^{42}K - n^+ (BEGe)",
                 "units" : "cts"
             },
             "K42-nplus-semicoax" : {
@@ -218,14 +356,6 @@
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
-                            "components" : {
-                                "K42-nplus-bege" : {
-                                    "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
                             "part": "gedet/nplus_semicoax",
                             "components" : {
                                 "K42-nplus-semicoax" : {
@@ -319,14 +449,6 @@
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
-                            "components" : {
-                                "K42-nplus-bege" : {
-                                    "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
                             "part": "gedet/nplus_semicoax",
                             "components" : {
                                 "K42-nplus-semicoax" : {
@@ -399,14 +521,6 @@
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
-                                    "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
-                            "part": "gedet/nplus_bege",
-                            "components" : {
-                                "K42-nplus-bege" : {
                                     "isotope" : "K42"
                                 }
                             }
