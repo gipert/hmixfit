@@ -611,21 +611,22 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         "Integral range for observable " + el.key() + " needs association to dataset."
                     );
                 }
-                // for each parameter in formula now calculate the integral of the corresponding pdf
-                // and substitute [par] with ([par]*integral).
-                // all parameters are already checked and exist
+                // for each parameter in formula now calculate the integral of
+                // the corresponding pdf (the original histogram!) and
+                // substitute [par] with ([par]*integral). all parameters are
+                // already checked and exist
                 BCLog::OutDetail("In observable TFormula scaling parameters : ");
                 std::string _expr_ = _tformula.GetExpFormula().Data();
                 BCLog::OutDetail(" ┌ original formula : " + _expr_);
                 for (int p = 0; p < _tformula.GetNpar(); ++p) {
                     std::string parname = std::string("[") + _tformula.GetParName(p) + "]";
                     int idx = std::stoi(_tformula.GetParName(p));
-                    double integral = utils::IntegrateHistogram(this->data[_ds_number].comp[idx], _scale_range);
+                    double integral = utils::IntegrateHistogram(this->data[_ds_number].comp_orig[idx], _scale_range);
                     auto _pos = _expr_.find(parname);
                     auto _len = parname.size();
-                    _expr_.replace(_pos,_len,Form("(%.5e*%s)",integral,parname.c_str()));
+                    _expr_.replace(_pos, _len, Form("(%.5e*%s)", integral, parname.c_str()));
                     auto msg = (p == _tformula.GetNpar()-1 ? " └─ " : " ├─ ")
-                        + parname + " -> " + Form("(%.5e*%s)",integral,parname.c_str());
+                        + parname + " -> " + Form("(%.5e*%s)", integral, parname.c_str());
                     BCLog::OutDetail(msg);
                 }
                 // update TFormula
@@ -1147,7 +1148,7 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
         ttds.Branch("bi_range_qt84",           &qt84_bi,       "bi_range_qt84/D");
         ttds.Branch("bi_range_qt90",           &qt90_bi,       "bi_range_qt90/D");
 
-        for (auto c : ds.comp) {
+        for (auto c : ds.comp_orig) {
             comp_name = std::string(this->GetVariable(c.first).GetName().data());
             auto & ch = c.second;
             bool isfixed   = this->GetParameter(c.first).Fixed();
@@ -1165,7 +1166,7 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
             qt84_range    = isfixed ? 0 : orig_range*bch_marg.GetQuantile(0.84);
             qt90_range    = isfixed ? 0 : orig_range*bch_marg.GetQuantile(0.90);
             orig_bi = 0., best_bi = 0., bestErr_bi = 0.;
-            if (!ds.data->InheritsFrom(TH2::Class())) {
+            if (!ds.data_orig->InheritsFrom(TH2::Class())) {
                 std::vector<int> bins = { // BI window
                     ch->FindBin(1930), ch->FindBin(2099),
                     ch->FindBin(2109), ch->FindBin(2114),
