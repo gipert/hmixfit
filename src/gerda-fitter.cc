@@ -24,6 +24,8 @@
 
 // STL
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <getopt.h>
 #include <chrono>
 
@@ -150,6 +152,10 @@ int main(int argc, char** argv) {
     model->SaveHistogramsROOT(prefix + "histograms.root");
     model->SaveHistogramsCSV(prefix + "histograms.csv");
     model->WriteResultsTree(prefix + "analysis.root");
+
+    std::ofstream fcfg_copy(prefix + "config.json");
+    fcfg_copy << std::setw(4) << config;
+    fcfg_copy.close();
 
     BCLog::OutSummary("Exiting");
     // close log file

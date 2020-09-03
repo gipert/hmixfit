@@ -20,6 +20,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
+#include <cassert>
+
 #include "GerdaFitter.hh"
 #include "utils.hpp"
 
@@ -40,6 +42,9 @@
 #include "TParameter.h"
 
 GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
+
+    TH1::AddDirectory(false);
+
     // open log file
     auto outdir = config["output-dir"].get<std::string>();
     std::system(("mkdir -p " + outdir).c_str());
@@ -152,7 +157,6 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                 for (int j = 1; j <= prior_hist->GetNbinsX(); j++) {
                     prior_hist->SetBinContent(j, _tformula.Eval(prior_hist->GetBinCenter(j)));
                 }
-                prior_hist->SetDirectory(nullptr);
                 BCLog::OutDebug("produced temporary prior 1000-bin histogram for parameter '" + el.key() + "'");
             }
             else throw std::runtime_error("supported prior types: 'histogram', 'TFormula'");
@@ -219,8 +223,6 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                     el.key().find_last_of('.') - el.key().find_last_of('/') - 1);
             basename += "_" + std::string(th_orig->GetName());
 
-            // please ROOT do not auto-delete this object
-            th_orig->SetDirectory(nullptr);
             th_orig->SetName((utils::SafeROOTName(basename) + "_orig").c_str());
 
             dataset _current_ds;
@@ -245,8 +247,6 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                     ));
             }
 
-            // please ROOT do not auto-delete this object
-            th->SetDirectory(nullptr);
             _current_ds.data = th;
 
             // eventually get a global value for the gerda-pdfs path
@@ -283,10 +283,12 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                             // add it with weight
                             if (!sum) {
                                 sum = thh;
-                                sum->SetDirectory(nullptr); // please do not delete it when the TFile goes out of scope
                                 sum->Scale(p.value().get<double>());
                             }
-                            else sum->Add(thh, p.value().get<double>());
+                            else {
+                                sum->Add(thh, p.value().get<double>());
+                                delete thh;
+                            }
                         }
                         return sum;
                     }
@@ -361,7 +363,6 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         for (int b = 1; b < thh->GetNbinsX(); ++b) {
                             thh->SetBinContent(b, _tfunc.Eval(thh->GetBinCenter(b)));
                         }
-                        thh->SetDirectory(nullptr);
                         thh->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, thh});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
@@ -383,7 +384,11 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                                     comp = sum_parts(i.key());
                                     comp->Scale(i.value().get<double>());
                                 }
-                                else comp->Add(sum_parts(i.key()), i.value().get<double>());
+                                else {
+                                    auto _htmp = sum_parts(i.key());
+                                    comp->Add(_htmp, i.value().get<double>());
+                                    delete _htmp;
+                                }
 
                             }
                             comp->SetName(utils::SafeROOTName(iso.key()).c_str());
@@ -393,7 +398,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                         else throw std::runtime_error("unexpected entry " + iso.value()["isotope"].dump() + "found in [\"fit\"][\""
                                 + el.key() + "\"][\"" + elh.key() + "\"][\"components\"][\"" + iso.key() + "\"][\"isotope\"]");
 
-                        if (!_current_ds.comp[comp_idx]) {
+                        if (!_current_ds.comp[comp_idx] or !_current_ds.comp_orig[comp_idx]) {
                             throw std::runtime_error("invalid pointer found in component list at position " + std::to_string(comp_idx));
                         }
                     }
@@ -621,6 +626,14 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                 for (int p = 0; p < _tformula.GetNpar(); ++p) {
                     std::string parname = std::string("[") + _tformula.GetParName(p) + "]";
                     int idx = std::stoi(_tformula.GetParName(p));
+                    BCLog::OutDebug("considering parameter " + parname + ". Will compute integral of component nr. "
+                        + std::to_string(idx) + " in data set nr. " + std::to_string(_ds_number));
+                    if (!this->data[_ds_number].comp_orig[idx]) {
+                        throw std::runtime_error("histogram for component nr. " + std::to_string(idx)
+                            + " in data set nr. " + std::to_string(_ds_number)
+                            + " is null. The problem might be in the definition of observable '"
+                            + el.key() + "'. Turn on debug mode for details.");
+                    }
                     double integral = utils::IntegrateHistogram(this->data[_ds_number].comp_orig[idx], _scale_range);
                     auto _pos = _expr_.find(parname);
                     auto _len = parname.size();
@@ -718,8 +731,6 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
     if (obj->InheritsFrom(TH1::Class())) {
 
         auto th_orig = dynamic_cast<TH1*>(obj);
-        // please do not delete it when the TFile goes out of scope
-        th_orig->SetDirectory(nullptr);
 
         // custom stuff for GERDA pdfs
         TParameter<Long64_t>* _nprim = nullptr;
@@ -736,6 +747,7 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
         }
         else th_orig->Scale(1./_nprim->GetVal());
 
+        if (_nprim) delete _nprim;
         return th_orig;
     }
     else if (obj->InheritsFrom(TF1::Class())) {
@@ -763,7 +775,7 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
             // now we can evaluate the TF1
             th_new->SetBinContent(b, dynamic_cast<TF1*>(obj)->Eval(x, y, z));
         }
-        th_new->SetDirectory(nullptr);
+        delete obj;
         return th_new;
     }
     else {
@@ -1199,12 +1211,18 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
 
 void GerdaFitter::DumpData() {
     for (auto& it : data) {
-        BCLog::OutDebug(it.data->GetName());
+        std::ostringstream addr;
+        addr << " (" << it.data << "), orig (" << it.data_orig << ")";
+        BCLog::OutDebug(it.data->GetName() + addr.str());
+        addr.str(""); addr.clear();
         size_t i = 0;
         for (auto& comp : it.comp) {
+            addr << " (" << comp.second << "), orig (" << it.comp_orig[comp.first] << ")";
             auto msg = (i == it.comp.size()-1 ? " └─ [" : " ├─ [")
-                + std::to_string(comp.first) + "] " + std::string(comp.second->GetName());
+                + std::to_string(comp.first) + "] " + std::string(comp.second->GetName())
+                + addr.str();
             BCLog::OutDebug(msg);
+            addr.str(""); addr.clear();
             i++;
         }
     }
