@@ -200,9 +200,10 @@ namespace utils {
         for (auto _r : range) {
             int _b_min = h->FindBin(_r.first);
             int _b_max = h->FindBin(_r.second);
-            BCLog::OutDebug(" -> IntegrateHistogram1D ["
-                + std::to_string(_b_min) + "," + std::to_string(_b_max)
-                + "] n-bins : " + std::to_string(_b_max-_b_min+1)
+            BCLog::OutDebug("IntegrateHistogram1D(): about to integrate "
+                + std::string(h->GetName()) + " in ["
+                + std::to_string(_b_min) + ", " + std::to_string(_b_max)
+                + "] (" + std::to_string(_b_max-_b_min+1) + " bins)"
             );
             integral += h->Integral(_b_min, _b_max);
         }
@@ -224,6 +225,8 @@ namespace utils {
         std::vector<std::pair<double,double>> x_range,
         std::vector<std::pair<double,double>> y_range = {}
     ) {
+        if (!h) throw std::invalid_argument("IntegrateHistogram(): input histogram is null");
+
         if (h->GetDimension() > 2) {
             throw std::runtime_error("IntegrateHistogram(): not implemeted for TH3.");
         }
