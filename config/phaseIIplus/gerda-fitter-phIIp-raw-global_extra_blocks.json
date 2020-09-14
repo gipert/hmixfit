@@ -7,7 +7,7 @@
         "method" : "kOptMinuit"
     },
     "p-value": {
-        "enabled" : true,
+        "enabled" : false,
         "iterations" : 1E7
     },
     "observables": {
@@ -34,6 +34,220 @@
             "range" : [1.8E21, 2.2E21],
             "long-name" : "T_{1/2}^{2#nu} - enriched",
             "units" : "yr"
+        },
+
+        "K42-BI-bege" : {
+            "TFormula": "([K42-above-array]+[K42-inside-ms]+[K42-nplus-bege]+[K42-nplus-invcoax]+[K42-nplus-semicoax]+[K42-outside-ms])/240/22.2",
+            "range": [0, 1E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{42}K",
+            "units": "cts/(keV kg yr)"
+        },
+        "Th228-BI-bege" : {
+            "TFormula": "([Bi212Tl208-holders]+[Bi212Tl208-central-fiber-shroud]+[Bi212Tl208-mini-shrouds]+[Bi212Tl208-outer-fiber-shroud])/240/22.2",
+            "range": [0.003, 0.005],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{228}Th",
+            "units": "cts/(keV kg yr)"
+        },
+        "U238-BI-bege" : {
+            "TFormula": "([Pb214Bi214-cables]+[Pb214Bi214-mini-shrouds]+[Pb214Bi214-central-fiber-shroud]+[Pb214Bi214-outer-fiber-shroud])/240/22.2",
+            "range": [0, 5E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{238}U",
+            "units": "cts/(keV kg yr)"
+        },
+        "Ac228-BI-bege" : {
+            "TFormula": "([Ac228-central-fiber-shroud]+[Ac228-holders]+[Ac228-mini-shrouds])/240/22.2",
+            "range": [0, 4E-5],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{228}Ac",
+            "units": "cts/(keV kg yr)"
+        },
+        "Co60-BI-bege" : {
+            "TFormula": "([Co60-holders])/240/22.2",
+            "range": [0, 1E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - ^{60}Co",
+            "units": "cts/(keV kg yr)"
+        },
+        "alpha-BI-bege" : {
+            "TFormula": "([alpha-high-energy-bege])/240/22.2",
+            "range": [3.5E-3, 5E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index - #alpha model",
+            "units": "cts/(keV kg yr)"
+        },
+
+        "K42-BI-scoax" : {
+            "TFormula": "([K42-above-array]+[K42-inside-ms]+[K42-nplus-bege]+[K42-nplus-invcoax]+[K42-nplus-semicoax]+[K42-outside-ms])/240/13.2",
+            "range": [0, 8E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{42}K",
+            "units": "cts/(keV kg yr)"
+        },
+        "Th228-BI-scoax" : {
+            "TFormula": "([Bi212Tl208-holders]+[Bi212Tl208-central-fiber-shroud]+[Bi212Tl208-mini-shrouds]+[Bi212Tl208-outer-fiber-shroud])/240/13.2",
+            "range": [2E-3, 4E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{228}Th",
+            "units": "cts/(keV kg yr)"
+        },
+        "U238-BI-scoax" : {
+            "TFormula": "([Pb214Bi214-cables]+[Pb214Bi214-mini-shrouds]+[Pb214Bi214-central-fiber-shroud]+[Pb214Bi214-outer-fiber-shroud])/240/13.2",
+            "range": [0, 3E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{238}U",
+            "units": "cts/(keV kg yr)"
+        },
+        "Ac228-BI-scoax" : {
+            "TFormula": "([Ac228-central-fiber-shroud]+[Ac228-holders]+[Ac228-mini-shrouds])/240/13.2",
+            "range": [0, 4E-5],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{228}Ac",
+            "units": "cts/(keV kg yr)"
+        },
+        "Co60-BI-scoax" : {
+            "TFormula": "([Co60-holders])/240/13.2",
+            "range": [0, 1E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - ^{60}Co",
+            "units": "cts/(keV kg yr)"
+        },
+        "alpha-BI-scoax" : {
+            "TFormula": "([alpha-high-energy-coax])/240/13.2",
+            "range": [1E-3, 2E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index - #alpha model",
+            "units": "cts/(keV kg yr)"
+        },
+
+        "K42-BI-icoax" : {
+            "TFormula": "([K42-above-array]+[K42-inside-ms]+[K42-nplus-bege]+[K42-nplus-invcoax]+[K42-nplus-semicoax]+[K42-outside-ms])/240/8.8",
+            "range": [7E-3, 2E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index - ^{42}K",
+            "units": "cts/(keV kg yr)"
+        },
+        "Th228-BI-icoax" : {
+            "TFormula": "([Bi212Tl208-holders]+[Bi212Tl208-central-fiber-shroud]+[Bi212Tl208-mini-shrouds]+[Bi212Tl208-outer-fiber-shroud])/240/8.8",
+            "range": [2E-3, 4E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index - ^{228}Th",
+            "units": "cts/(keV kg yr)"
+        },
+        "U238-BI-icoax" : {
+            "TFormula": "([Pb214Bi214-cables]+[Pb214Bi214-mini-shrouds]+[Pb214Bi214-central-fiber-shroud]+[Pb214Bi214-outer-fiber-shroud])/240/8.8",
+            "range": [0, 3E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index - ^{238}U",
+            "units": "cts/(keV kg yr)"
+        },
+        "Ac228-BI-icoax" : {
+            "TFormula": "([Ac228-central-fiber-shroud]+[Ac228-holders]+[Ac228-mini-shrouds])/240/8.8",
+            "range": [0, 7E-5],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index - ^{228}Ac",
+            "units": "cts/(keV kg yr)"
+        },
+        "Co60-BI-icoax" : {
+            "TFormula": "([Co60-holders])/240/8.8",
+            "range": [0, 1E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index - ^{60}Co",
+            "units": "cts/(keV kg yr)"
+        },
+        "alpha-BI-icoax" : {
+            "TFormula": "([alpha-high-energy-invcoax])/240/8.8",
+            "range": [7E-4, 2E-3],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index - #alpha model",
+            "units": "cts/(keV kg yr)"
+        },
+
+        "BI-bege" : {
+            "TFormula": "([K42-above-array]+[K42-inside-ms]+[K42-nplus-bege]+[K42-nplus-invcoax]+[K42-nplus-semicoax]+[K42-outside-ms]+[Bi212Tl208-holders]+[Bi212Tl208-central-fiber-shroud]+[Bi212Tl208-mini-shrouds]+[Bi212Tl208-outer-fiber-shroud]+[Pb214Bi214-cables]+[Pb214Bi214-mini-shrouds]+[Pb214Bi214-central-fiber-shroud]+[Pb214Bi214-outer-fiber-shroud]+[Ac228-central-fiber-shroud]+[Ac228-holders]+[Ac228-mini-shrouds]+[Co60-holders]+[alpha-high-energy-bege])/240/22.2",
+            "range": [1E-2, 2E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "M1_enrBEGe background index",
+            "units": "cts/(keV kg yr)"
+        },
+        "BI-scoax" : {
+            "TFormula": "([K42-above-array]+[K42-inside-ms]+[K42-nplus-bege]+[K42-nplus-invcoax]+[K42-nplus-semicoax]+[K42-outside-ms]+[Bi212Tl208-holders]+[Bi212Tl208-central-fiber-shroud]+[Bi212Tl208-mini-shrouds]+[Bi212Tl208-outer-fiber-shroud]+[Pb214Bi214-cables]+[Pb214Bi214-mini-shrouds]+[Pb214Bi214-central-fiber-shroud]+[Pb214Bi214-outer-fiber-shroud]+[Ac228-central-fiber-shroud]+[Ac228-holders]+[Ac228-mini-shrouds]+[Co60-holders]+[alpha-high-energy-coax])/240/13.2",
+            "range": [9E-3, 1.5E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_enrCoax"
+            },
+            "long-name": "M1_enrCoax background index",
+            "units": "cts/(keV kg yr)"
+        },
+        "BI-icoax" : {
+            "TFormula": "([K42-above-array]+[K42-inside-ms]+[K42-nplus-bege]+[K42-nplus-invcoax]+[K42-nplus-semicoax]+[K42-outside-ms]+[Bi212Tl208-holders]+[Bi212Tl208-central-fiber-shroud]+[Bi212Tl208-mini-shrouds]+[Bi212Tl208-outer-fiber-shroud]+[Pb214Bi214-cables]+[Pb214Bi214-mini-shrouds]+[Pb214Bi214-central-fiber-shroud]+[Pb214Bi214-outer-fiber-shroud]+[Ac228-central-fiber-shroud]+[Ac228-holders]+[Ac228-mini-shrouds]+[Co60-holders]+[alpha-high-energy-invcoax])/240/8.8",
+            "range": [1E-3, 3E-2],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[1930, 2099], [2109, 2114], [2124, 2190]],
+                "dataset" : "M1_invCoax"
+            },
+            "long-name": "M1_invCoax background index",
+            "units": "cts/(keV kg yr)"
         }
     },
     "fit" : {
@@ -52,24 +266,6 @@
                 "range" : [2.4E4, 3.2E4],
                 "long-name" : "2#nu#beta#beta - InvCoax",
                 "units" : "cts"
-            },
-            "Ac228-cables" : {
-                "range" : [0, 7E4],
-                "long-name" : "^{228}Ac - cables",
-                "units" : "cts",
-                "prior" : { "TFormula" : "exp(-x*2.3/5666)" }
-            },
-            "Bi212Tl208-cables" : {
-                "range" : [0, 3E4],
-                "long-name" : "^{212}Bi + ^{208}Tl - cables",
-                "units" : "cts",
-                "prior" : { "TFormula" : "exp(-x*2.3/4666)" }
-            },
-            "Co60-cables" : {
-                "range" : [0, 8E3],
-                "long-name" : "^{60}Co - cables",
-                "units" : "cts",
-                "prior" : { "TFormula" : "exp(-x*2.3/777)" }
             },
             "Pb214Bi214-cables" : {
                 "range" : [0, 3.5E4],
@@ -148,6 +344,12 @@
                 "units" : "cts",
                 "prior" : { "TFormula" : "gaus:1,1.1E5,3.3E4" }
             },
+            "K40-mini-shrouds" : {
+                "range" : [1E4, 1E5],
+                "long-name" : "^{40}K - mini-shrouds",
+                "units" : "cts",
+                "prior" : { "TFormula" : "gaus:1,67851,23947" }
+            },
             "Ac228-mini-shrouds" : {
                 "range" : [0, 1.5E3],
                 "long-name" : "^{228}Ac - mini shrouds",
@@ -169,11 +371,6 @@
             "K40-close" : {
                 "range" : [0, 2E6],
                 "long-name" : "^{40}K - close",
-                "units" : "cts"
-            },
-            "K40-far" : {
-                "range" : [0, 2E6],
-                "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
             "K42-outside-ms" : {
@@ -228,11 +425,11 @@
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseIIplus-v07.00.root" : {
+            "../../data/gerda-data-bkgmodel-phaseIIplus-v07.01-orig.root" : {
                 "raw/M1_invCoax" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[565, 2014], [2064, 5260]],
-                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
+                    "fit-range" : [565, 5260],
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_invcoax",
@@ -245,15 +442,6 @@
                         {
                             "part": "cables/cables_all",
                             "components" : {
-                                "Bi212Tl208-cables" : {
-                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
-                                },
-                                "Co60-cables" : {
-                                    "isotope": "Co60"
-                                },
-                                "Ac228-cables" : {
-                                    "isotope": "Ac228"
-                                },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 },
@@ -285,6 +473,9 @@
                                 "K40-close" : {
                                     "isotope" : "K40"
                                 },
+                                "K40-mini-shrouds" : {
+                                    "isotope" : "K40"
+                                },
                                 "Ac228-mini-shrouds" : {
                                     "isotope" : "Ac228"
                                 },
@@ -299,9 +490,6 @@
                         {
                             "part": "larveto/outer_fibers",
                             "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                },
                                 "K40-outer-fiber-shroud" : {
                                     "isotope" : "K40"
                                 },
@@ -398,8 +586,8 @@
                 },
                 "raw/M1_enrBEGe" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[565, 2014], [2064, 5260]],
-                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
+                    "fit-range" : [565, 5260],
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_bege",
@@ -412,15 +600,6 @@
                         {
                             "part": "cables/cables_all",
                             "components" : {
-                                "Bi212Tl208-cables" : {
-                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
-                                },
-                                "Ac228-cables" : {
-                                    "isotope": "Ac228"
-                                },
-                                "Co60-cables" : {
-                                    "isotope": "Co60"
-                                },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 },
@@ -452,6 +631,9 @@
                                 "K40-close" : {
                                     "isotope" : "K40"
                                 },
+                                "K40-mini-shrouds" : {
+                                    "isotope" : "K40"
+                                },
                                 "Ac228-mini-shrouds" : {
                                     "isotope" : "Ac228"
                                 },
@@ -466,9 +648,6 @@
                         {
                             "part": "larveto/outer_fibers",
                             "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                },
                                 "K40-outer-fiber-shroud" : {
                                     "isotope" : "K40"
                                 },
@@ -565,8 +744,8 @@
                 },
                 "raw/M1_enrCoax" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
-                    "fit-range" : [[565, 2014], [2064, 5260]],
-                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2014,2064,2200,2208,2610,2620,4500,5260",
+                    "fit-range" : [565, 5260],
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_semicoax",
@@ -579,15 +758,6 @@
                         {
                             "part": "cables/cables_all",
                             "components" : {
-                                "Bi212Tl208-cables" : {
-                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
-                                },
-                                "Ac228-cables" : {
-                                    "isotope": "Ac228"
-                                },
-                                "Co60-cables" : {
-                                    "isotope": "Co60"
-                                },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 },
@@ -619,6 +789,9 @@
                                 "K40-close" : {
                                     "isotope" : "K40"
                                 },
+                                "K40-mini-shrouds" : {
+                                    "isotope" : "K40"
+                                },
                                 "Ac228-mini-shrouds" : {
                                     "isotope" : "Ac228"
                                 },
@@ -633,9 +806,6 @@
                         {
                             "part": "larveto/outer_fibers",
                             "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                },
                                 "K40-outer-fiber-shroud" : {
                                     "isotope" : "K40"
                                 },
@@ -738,15 +908,6 @@
                         {
                             "part": "cables/cables_all",
                             "components" : {
-                                "Bi212Tl208-cables" : {
-                                    "isotope" : { "Tl208" : 0.3539, "Bi212" : 1 }
-                                },
-                                "Ac228-cables" : {
-                                    "isotope": "Ac228"
-                                },
-                                "Co60-cables" : {
-                                    "isotope": "Co60"
-                                },
                                 "Pb214Bi214-cables" : {
                                     "isotope" : { "Bi214" : 1, "Pb214" : 1 }
                                 },
@@ -778,6 +939,9 @@
                                 "K40-close" : {
                                     "isotope" : "K40"
                                 },
+                                "K40-mini-shrouds" : {
+                                    "isotope" : "K40"
+                                },
                                 "Ac228-mini-shrouds" : {
                                     "isotope" : "Ac228"
                                 },
@@ -792,9 +956,6 @@
                         {
                             "part": "larveto/outer_fibers",
                             "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                },
                                 "K40-outer-fiber-shroud" : {
                                     "isotope" : "K40"
                                 },

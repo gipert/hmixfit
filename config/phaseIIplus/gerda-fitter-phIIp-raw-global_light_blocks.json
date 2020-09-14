@@ -1,7 +1,7 @@
 {
     "id" : "phIIp-raw-global_light_blocks",
     "logging" : "summary",
-    "precision" : "kMedium",
+    "precision" : "kHigh",
     "output-dir" : "../../results/phIIp-raw-global_light_blocks",
     "global-mode-search" : {
         "method" : "kOptMinuit"
@@ -78,11 +78,6 @@
                 "long-name" : "^{40}K - close",
                 "units" : "cts"
             },
-            "K40-far" : {
-                "range" : [0, 8E5],
-                "long-name" : "^{40}K - far",
-                "units" : "cts"
-            },
             "K42-outside-ms" : {
                 "range" : [1E6, 2E8],
                 "long-name" : "^{42}K - in LAr outside mini-shrouds",
@@ -106,11 +101,6 @@
             "K42-nplus-invcoax" : {
                 "range" : [0, 2E4],
                 "long-name" : "^{42}K on n+ - InvCoax",
-                "units" : "cts"
-            },
-            "K42-nplus-bege" : {
-                "range" : [0, 1E4],
-                "long-name" : "^{42}K - n^+ (BEGe)",
                 "units" : "cts"
             },
             "K42-nplus-semicoax" : {
@@ -180,14 +170,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -216,14 +198,6 @@
                             "components" : {
                                 "Zn65-invcoax" : {
                                     "isotope" : "Zn65"
-                                }
-                            }
-                        },
-                        {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
-                                    "isotope" : "K42"
                                 }
                             }
                         },
@@ -297,14 +271,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -324,14 +290,6 @@
                             "part": "lar/inside_ms",
                             "components" : {
                                 "K42-inside-ms" : {
-                                    "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -414,14 +372,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -441,14 +391,6 @@
                             "part": "lar/inside_ms",
                             "components" : {
                                 "K42-inside-ms" : {
-                                    "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
                                     "isotope" : "K42"
                                 }
                             }
@@ -523,14 +465,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -550,14 +484,6 @@
                             "part": "lar/inside_ms",
                             "components" : {
                                 "K42-inside-ms" : {
-                                    "isotope" : "K42"
-                                }
-                            }
-                        },
-                        {
-                            "part": "gedet/nplus_bege",
-                            "components": {
-                                "K42-nplus-bege" : {
                                     "isotope" : "K42"
                                 }
                             }

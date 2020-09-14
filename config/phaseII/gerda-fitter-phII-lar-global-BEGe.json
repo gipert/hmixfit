@@ -12,26 +12,26 @@
     },
     "observables": {
         "half-life-bege": {
-            "TFormula": "1.80736e26/[2nbb]",
+            "TFormula": "1.80736e26/[2nbb-bege]",
             "range" : [1.8E21, 2.2E21],
             "long-name" : "T_{1/2}^{2#nu} - BEGe",
             "units" : "yr"
+        },
+        "2nbb-signal-to-bkg-bege" : {
+            "TFormula": "[2nbb-bege]/([Th228-cables]+[Co60-cables]+[U238-cables]+[Ac228-holders]+[K40-close]+[K42-far]+[K42-close])",
+            "range": [0, 40],
+            "multiply-fit-parameter-by-pdf-integral": {
+                "range" : [[565, 1450], [1535, 2000]],
+                "dataset" : "M1_enrBEGe"
+            },
+            "long-name": "2#nu#beta#beta S/B ratio in [565, 1450] U [1535, 2000] keV (BEGe)",
+            "units": ""
         }
     },
     "fit" : {
         "parameters" : {
-            "alpha-slope" : {
-                "range" : [0, 1E-4],
-                "long-name" : "#alpha-model - slope",
-                "units" : "cts"
-            },
-            "alpha-offset" : {
-                "range" : [0, 1E-1],
-                "long-name" : "#alpha-model - offset",
-                "units" : "cts"
-            },
             "Th228-cables" : {
-                "range" : [0, 4E5],
+                "range" : [0, 2E5],
                 "long-name" : "^{228}Th - cables",
                 "units" : "cts"
             },
@@ -41,11 +41,11 @@
                 "units" : "cts"
             },
             "U238-cables" : {
-                "range" : [0, 1E5],
+                "range" : [0, 2E5],
                 "long-name" : "^{238}U - cables",
                 "units" : "cts"
             },
-            "2nbb" : {
+            "2nbb-bege" : {
                 "range" : [8E4, 9.2E4],
                 "long-name" : "2#nu#beta#beta",
                 "units" : "cts"
@@ -56,43 +56,28 @@
                 "units" : "cts"
             },
             "K40-close" : {
-                "range" : [5E4, 1.5E6],
+                "range" : [1E6, 1.5E6],
                 "long-name" : "^{40}K - close",
-                "units" : "cts"
-            },
-            "K40-far" : {
-                "range" : [1E5, 2E8],
-                "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
             "K42-far" : {
                 "range" : [0, 3E8],
-                "long-name" : "^{42}K - hom. in LAr",
+                "long-name" : "^{42}K - outside mini-shrouds",
                 "units" : "cts"
             },
             "K42-close" : {
-                "range" : [0, 1.2E4],
-                "long-name" : "^{42}K - n^+ (BEGe)",
+                "range" : [0, 1E6],
+                "long-name" : "^{42}K - inside mini-shrouds",
                 "units" : "cts"
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseII-v07.00.root" : {
+            "../../data/gerda-data-bkgmodel-phaseII-v07.01.root" : {
                 "lar/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.0",
-                    "fit-range" : [565, 2020],
-                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770:25:2020",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
+                    "fit-range" : [565, 2000],
+                    "rebin-factor" : 5,
                     "components" : [
-                        {
-                            "components" : {
-                                "alpha-slope" : {
-                                    "TFormula" : "x*(x>0 && x<5160)"
-                                },
-                                "alpha-offset" : {
-                                    "TFormula" : "1"
-                                }
-                            }
-                        },
                         {
                             "part": "cables/cables_all",
                             "components" : {
@@ -110,7 +95,7 @@
                         {
                             "part": "gedet/intrinsic_bege",
                             "components" : {
-                                "2nbb" : {
+                                "2nbb-bege" : {
                                     "isotope" : "2nbb"
                                 }
                             }
@@ -132,15 +117,7 @@
                             }
                         },
                         {
-                            "part": "electronics/cc3",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "lar/sur_array",
+                            "part": "lar/outside_ms",
                             "components" : {
                                 "K42-far" : {
                                     "isotope" : "K42"
@@ -148,7 +125,7 @@
                             }
                         },
                         {
-                            "part": "gedet/nplus_bege",
+                            "part": "lar/inside_ms",
                             "components" : {
                                 "K42-close" : {
                                     "isotope" : "K42"
