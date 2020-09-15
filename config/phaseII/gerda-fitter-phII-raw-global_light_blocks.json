@@ -271,7 +271,7 @@
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseII-v07.00.root" : {
+            "../../data/gerda-data-bkgmodel-phaseII-v07.01-orig.root" : {
                 "raw/M1_enrBEGe" : {
                     "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
                     "fit-range" : [565, 5260],
