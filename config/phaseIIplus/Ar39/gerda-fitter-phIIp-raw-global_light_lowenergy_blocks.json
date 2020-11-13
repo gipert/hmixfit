@@ -1,8 +1,8 @@
 {
-    "id" : "phIIp-raw-global_light_lowenergy",
+    "id" : "phIIp-raw-global_light_lowenergy_blocks",
     "logging" : "summary",
     "precision" : "kMedium",
-    "output-dir" : "../../../results/phIIp-raw-global_light_lowenergy",
+    "output-dir" : "../../../results/phIIp-raw-global_light_lowenergy_blocks",
     "global-mode-search" : {
         "method" : "kOptMinuit"
     },
@@ -11,6 +11,30 @@
         "iterations" : 1E7
     },
     "observables": {
+        "half-life-bege": {
+            "TFormula": "1.13380E26/[2nbb-bege]",
+            "range" : [1.8E21, 2.2E21],
+            "long-name" : "T_{1/2}^{2#nu} - BEGe",
+            "units" : "yr"
+        },
+        "half-life-semicoax": {
+            "TFormula": "8.14672e25/[2nbb-semicoax]",
+            "range" : [1.8E21, 2.2E21],
+            "long-name" : "T_{1/2}^{2#nu} - SemiCoax",
+            "units" : "yr"
+        },
+        "half-life-invcoax": {
+            "TFormula": "5.41815E25/[2nbb-invcoax]",
+            "range" : [1.8E21, 2.2E21],
+            "long-name" : "T_{1/2}^{2#nu} - InvCoax",
+            "units" : "yr"
+        },
+        "half-life-enriched": {
+            "TFormula": "2.49028E26/([2nbb-bege]+[2nbb-invcoax]+[2nbb-semicoax])",
+            "range" : [1.8E21, 2.2E21],
+            "long-name" : "T_{1/2}^{2#nu} - enriched",
+            "units" : "yr"
+        },
         "Ar39-activity" : {
             "TFormula" : "[Ar39-lar]/(37032160*775.293*1.396)",
             "range": [1.33, 1.35],
@@ -27,98 +51,88 @@
     "fit" : {
         "parameters" : {
             "2nbb-semicoax" : {
-                "fixed" : 43107,
+                "range" : [4E4, 4.6E4],
                 "long-name" : "2#nu#beta#beta - SemiCoax",
                 "units" : "cts"
             },
             "2nbb-bege" : {
-                "fixed" : 54601,
+                "range" : [5E4, 6E4],
                 "long-name" : "2#nu#beta#beta - BEGe",
                 "units" : "cts"
             },
             "2nbb-invcoax" : {
-                "fixed" : 27814,
+                "range" : [2.4E4, 3.2E4],
                 "long-name" : "2#nu#beta#beta - InvCoax",
                 "units" : "cts"
             },
             "Bi212Tl208-cables" : {
-                "fixed" : 1.923e+04,
+                "range" : [0, 3E4],
                 "long-name" : "^{212}Bi + ^{208}Tl - cables",
                 "units" : "cts"
             },
             "Co60-cables" : {
-                "fixed" : 4467.2,
+                "range" : [5E2, 8E3],
                 "long-name" : "^{60}Co - cables",
                 "units" : "cts"
             },
             "Pb214Bi214-cables" : {
-                "fixed" : 24562,
+                "range" : [2E4, 3.5E4],
                 "long-name" : "^{214}Pb + ^{214}Bi - cables",
                 "units" : "cts"
             },
             "Ac228-holders" : {
-                "fixed" : 5430.8,
+                "range" : [1E3, 1.5E4],
                 "long-name" : "^{228}Ac - holders",
                 "units" : "cts"
             },
-            "K40-central-fiber-shroud" : {
-                "fixed" : 2.379e+05,
-                "long-name" : "^{40}K - central fiber shroud",
-                "units" : "cts"
-            },
             "K40-close" : {
-                "fixed" : 4.6165e+05,
+                "range" : [4E5, 1E6],
                 "long-name" : "^{40}K - close",
                 "units" : "cts"
             },
-            "K40-far" : {
-                "fixed" : 7.8913e+05,
-                "long-name" : "^{40}K - far",
-                "units" : "cts"
-            },
             "K42-outside-ms" : {
-                "fixed" : 8.8152e+06,
+                "range" : [1E6, 2E8],
                 "long-name" : "^{42}K - in LAr outside mini-shrouds",
                 "units" : "cts"
             },
             "K42-inside-ms" : {
-                "fixed" : 8.647e+04,
+                "range" : [0, 3E5],
                 "long-name" : "^{42}K - in LAr inside mini-shrouds",
                 "units" : "cts"
             },
             "K42-above-array" : {
-                "fixed" : 3.252e+07,
+                "range" : [0, 1E8],
                 "long-name" : "^{42}K - hom. in LAr above the array",
                 "units" : "cts"
             },
             "Zn65-invcoax" : {
-                "fixed" : 1840,
+                "range" : [0, 4E3],
                 "long-name" : "^{65}Zn - InvCoax",
                 "units" : "cts"
             },
             "K42-nplus-invcoax" : {
-                "fixed" : 8244,
+                "range" : [0, 2E4],
                 "long-name" : "^{42}K on n+ - InvCoax",
                 "units" : "cts"
             },
             "K42-nplus-semicoax" : {
-                "fixed" : 5.069e+04,
+                "range" : [0, 1E5],
                 "long-name" : "^{42}K - n^+ (Coax)",
                 "units" : "cts"
             },
-            "alpha-slope-bege" : {
-                "fixed" : 0.0001022,
-                "long-name" : "#alpha-model BEGe - slope",
+            "alpha-high-energy-invcoax" : {
+                "range" : [0, 0.2],
+                "long-name" : "#alpha-model InvCoax - high energy",
                 "units" : "cts"
             },
-            "alpha-slope-coax" : {
-                "fixed" : 3.091e-05,
-                "long-name" : "#alpha-model SemiCoax - slope",
+            "alpha-high-energy-bege" : {
+                "range" : [0.4, 0.7],
+                "long-name" : "#alpha-model BEGe - high energy",
                 "units" : "cts"
             },
-            "alpha-offset-coax" : {
-                "fixed" : 0.05865,
-                "long-name" : "#alpha-model SemiCoax - offset",
+            "alpha-high-energy-coax" : {
+                "range" : [0.2, 0.4],
+                "long-name" : "#alpha-model SemiCoax - high energy",
                 "units" : "cts"
             },
             "Ar39-lar" : {
@@ -133,11 +147,11 @@
             }
         },
         "theoretical-expectations" : {
-            "../../../data/gerda-data-bkgmodel-phaseIIplus-v07.00.root" : {
+            "../../../data/gerda-data-bkgmodel-phaseIIplus-v07.01-orig.root" : {
                 "raw/M1_invCoax" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-ar39av",
-                    "fit-range" : [40, 600],
-                    "rebin-factor" : 2,
+                    "fit-range" : [40, 5260],
+                    "rebin-factor" : "40:5:565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_invcoax",
@@ -173,22 +187,6 @@
                             "part": "minishroud/ms_all",
                             "components" : {
                                 "K40-close" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
                                     "isotope" : "K40"
                                 }
                             }
@@ -242,6 +240,14 @@
                             }
                         },
                         {
+                            "root-file" : "../../../data/bkg-alpha-enrBEGe-results.root",
+                            "components" : {
+                                "alpha-high-energy-invcoax" : {
+                                    "hist-name" : "alpha_model/hMC_all_enrBEGe"
+                                }
+                            }
+                        },
+                        {
                             "part": "lar/sur_array_1",
                             "components" : {
                                 "Ar39-lar" : {
@@ -261,8 +267,8 @@
                 },
                 "raw/M1_enrBEGe" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-ar39av",
-                    "fit-range" : [40, 600],
-                    "rebin-factor" : 2,
+                    "fit-range" : [40, 5260],
+                    "rebin-factor" : "40:5:565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_bege",
@@ -303,22 +309,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -359,9 +349,18 @@
                             }
                         },
                         {
+                            "root-file" : "../../../data/bkg-alpha-enrBEGe-results.root",
                             "components" : {
-                                "alpha-slope-bege" : {
-                                    "TFormula" : "x*(x>0 && x<5160)"
+                                "alpha-high-energy-bege" : {
+                                    "hist-name" : "alpha_model/hMC_all_enrBEGe"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "Zn65-invcoax" : {
+                                    "isotope" : "Zn65"
                                 }
                             }
                         },
@@ -385,8 +384,8 @@
                 },
                 "raw/M1_enrCoax" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-ar39av",
-                    "fit-range" : [40, 600],
-                    "rebin-factor" : 2,
+                    "fit-range" : [40, 5260],
+                    "rebin-factor" : "40:5:565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
                             "part": "gedet/intrinsic_semicoax",
@@ -427,22 +426,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -483,12 +466,18 @@
                             }
                         },
                         {
+                            "root-file" : "../../../data/bkg-alpha-enrCoax-results.root",
                             "components" : {
-                                "alpha-slope-coax" : {
-                                    "TFormula" : "x*(x>0 && x<5160)"
-                                },
-                                "alpha-offset-coax" : {
-                                    "TFormula" : "1"
+                                "alpha-high-energy-coax" : {
+                                    "hist-name" : "alpha_model/hMC_all_enrCoax"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "Zn65-invcoax" : {
+                                    "isotope" : "Zn65"
                                 }
                             }
                         },
@@ -512,8 +501,8 @@
                 },
                 "raw/M2_enrE1plusE2" : {
                     "gerda-pdfs" : "../../../data/gerda-pdfs/ph2p-v1.0-ar39av",
-                    "fit-range" : [80, 600],
-                    "rebin-factor" : 10,
+                    "fit-range" : [80, 4000],
+                    "rebin-factor" : "80:10:520:20:580,588,604,612:20:722,732:22:908,915:24:962,973:28:1112,1130:28:1170,1179:30:1329,1338,1370,1384:24:1456,1466:27:1520,1530:30:1710,1725,1735,1760,1770,1832,1843,1853,2200,2208,2610,2620,3190,3205,4000",
                     "components" : [
                         {
                             "part": "cables/cables_all",
@@ -546,22 +535,6 @@
                             }
                         },
                         {
-                            "part": "larveto/outer_fibers",
-                            "components" : {
-                                "K40-far" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
-                            "part": "larveto/inner_fibers",
-                            "components" : {
-                                "K40-central-fiber-shroud" : {
-                                    "isotope" : "K40"
-                                }
-                            }
-                        },
-                        {
                             "part": "lar/above_array",
                             "components" : {
                                 "K42-above-array" : {
@@ -598,6 +571,14 @@
                             "components": {
                                 "K42-nplus-invcoax" : {
                                     "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "gedet/intrinsic_invcoax",
+                            "components" : {
+                                "Zn65-invcoax" : {
+                                    "isotope" : "Zn65"
                                 }
                             }
                         },

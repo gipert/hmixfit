@@ -12,8 +12,8 @@
     },
     "observables": {
         "half-life-bege": {
-            "TFormula": "1.80736e26/[2nbb-bege]",
-            "range" : [1.8E21, 2.2E21],
+            "TFormula": "9.52e25/[2nbb-bege]",
+            "range" : [1E21, 2.2E21],
             "long-name" : "T_{1/2}^{2#nu} - BEGe",
             "units" : "yr"
         },
@@ -72,11 +72,11 @@
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseII-v07.01.root" : {
+            "../../data/gerda-data-bkgmodel-phaseII-v07.01-orig.root" : {
                 "lar/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/2nufit-best",
                     "fit-range" : [565, 2000],
-                    "rebin-factor" : 5,
+                    "rebin-factor" : 10,
                     "components" : [
                         {
                             "part": "cables/cables_all",
