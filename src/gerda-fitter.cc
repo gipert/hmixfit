@@ -96,6 +96,9 @@ int main(int argc, char** argv) {
     // set precision (number of samples in Markov chain)
     model->SetPrecision(config.value("precision", BCEngineMCMC::kMedium));
 
+    // let's be more generous (default 100)
+    model->SetInitialPositionAttemptLimit(1000);
+
     // run MCMC and marginalize posterior w/r/t all parameters
     // An estimation of the global mode is available but without uncertainties
     auto start = std::chrono::system_clock::now();
