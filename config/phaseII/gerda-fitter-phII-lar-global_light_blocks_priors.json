@@ -124,7 +124,7 @@
         "theoretical-expectations" : {
             "../../data/gerda-data-bkgmodel-phaseII-v07.01-orig.root" : {
                 "lar/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/2nufit-best-unnorm",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
                     "fit-range" : [565, 5260],
                     "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
@@ -217,7 +217,7 @@
                     ]
                 },
                 "lar/M1_enrCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/2nufit-best-unnorm",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
                     "fit-range" : [565, 5260],
                     "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
@@ -310,7 +310,7 @@
                     ]
                 },
                 "lar/M2_enrE1plusE2" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/2nufit-best-unnorm",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
                     "fit-range" : [535, 3000],
                     "rebin-factor" : "535:40:1455,1465,1520,1530,2000,3000",
                     "components" : [
