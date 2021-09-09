@@ -1236,11 +1236,17 @@ double GerdaFitter::GetFastPValue(const std::vector<double>& parameters, long ni
         throw std::runtime_error("GetFastPValue: input number of parameters does not match the number of defined model parameters");
     }
 
-    std::vector<unsigned> observed;
-    std::vector<double>   expected;
-    int nbins = 0;
+    TRandom3 rnd(0);
+    std::vector<unsigned> observed_comb;
+    std::vector<double>   expected_comb;
+    int nbins_comb = 0;
 
     for (auto& it : data) {
+
+        std::vector<unsigned> observed;
+        std::vector<double>   expected;
+        int nbins = 0;
+
         // compute total model
         TH1* sum = nullptr;
         for (auto& h : it.comp) {
@@ -1254,17 +1260,26 @@ double GerdaFitter::GetFastPValue(const std::vector<double>& parameters, long ni
         for (auto& r : it.brange) {
             for (int b = r.first; b <= r.second; ++b) {
                 observed.push_back(it.data->GetBinContent(b));
+                observed_comb.push_back(it.data->GetBinContent(b));
                 expected.push_back(sum->GetBinContent(b));
+                expected_comb.push_back(sum->GetBinContent(b));
                 nbins++;
+                nbins_comb++;
             }
         }
         delete sum;
+
+        double p = BCMath::CorrectPValue(
+            BCMath::FastPValue(observed, expected, niter, rnd.GetSeed()),
+            this->GetNFreeParameters(), nbins
+        );
+
+        BCLog::OutSummary(Form("p-value for data set '%s' => %g", it.data->GetName(), p));
     }
 
-    TRandom3 rnd(0);
     double pvalue = BCMath::CorrectPValue(
-        BCMath::FastPValue(observed, expected, niter, rnd.GetSeed()),
-        this->GetNFreeParameters(), nbins
+        BCMath::FastPValue(observed_comb, expected_comb, niter, rnd.GetSeed()),
+        this->GetNFreeParameters(), nbins_comb
     );
 
     return pvalue;

@@ -22,6 +22,7 @@
  */
 #include <utility>
 #include <cmath>
+#include <stdexcept>
 
 #include "TMath.h"
 #include "TColor.h"
@@ -101,7 +102,7 @@ namespace poiband {
     void draw_poisson_bands(double mu, double x_low, double x_size, bool residuals = false, double scale = 1., TH1* h = nullptr) {
 
         if (h != nullptr and h->GetDimension() != 1) {
-            throw runtime_error("draw_poisson_bands(): only 1D histograms are supported");
+            throw std::runtime_error("draw_poisson_bands(): only 1D histograms are supported");
         }
 
         int col_idx = 9000;
