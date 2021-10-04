@@ -236,7 +236,8 @@ void plotspectra(std::string prog = "plotspectra", std::string args = "") {
                     // make sure it's a histogram (whatever dim)
                     if (cll->InheritsFrom(TH1::Class())) {
                         auto obj = keyy->ReadObj();
-                        if (std::string(obj->GetName()) == std::string(d->GetName())) continue;
+                        if (std::string(obj->GetName()) == std::string(d->GetName()) or
+                            std::string(obj->GetName()) == std::string(d->GetName()) + "_orig") continue;
                         if (is_th2) {
                             h = dynamic_cast<TH2*>(obj)->Rebin2D(rebin);
                             h->SetLineColor(kGray+1);
