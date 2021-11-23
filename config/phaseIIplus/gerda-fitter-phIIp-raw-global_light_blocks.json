@@ -1,7 +1,7 @@
 {
     "id" : "phIIp-raw-global_light_blocks",
     "logging" : "summary",
-    "precision" : "kHigh",
+    "precision" : "kMedium",
     "output-dir" : "../../results/phIIp-raw-global_light_blocks",
     "global-mode-search" : {
         "method" : "kOptMinuit"
@@ -127,7 +127,7 @@
         "theoretical-expectations" : {
             "../../data/gerda-data-bkgmodel-phaseIIplus-v07.01-orig.root" : {
                 "raw/M1_invCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-ar39fit-thickpplus",
                     "fit-range" : [565, 5260],
                     "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
@@ -228,7 +228,7 @@
                     ]
                 },
                 "raw/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-ar39fit-thickpplus",
                     "fit-range" : [565, 5260],
                     "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
@@ -329,7 +329,7 @@
                     ]
                 },
                 "raw/M1_enrCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-ar39fit-thickpplus",
                     "fit-range" : [565, 5260],
                     "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
@@ -430,7 +430,7 @@
                     ]
                 },
                 "raw/M2_enrE1plusE2" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-v1.0-rc",
+                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2p-ar39fit-thickpplus",
                     "fit-range" : [520, 4000],
                     "rebin-factor" : "520:20:580,588,604,612:20:722,732:22:908,915:24:962,973:28:1112,1130:28:1170,1179:30:1329,1338,1370,1384:24:1456,1466:27:1520,1530:30:1710,1725,1735,1760,1770,1832,1843,1853,2200,2208,2610,2620,3190,3205,4000",
                     "components" : [

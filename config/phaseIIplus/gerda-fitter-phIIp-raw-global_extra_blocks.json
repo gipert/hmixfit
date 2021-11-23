@@ -1,7 +1,7 @@
 {
     "id" : "phIIp-raw-global_extra_blocks",
     "logging" : "summary",
-    "precision" : "kHigh",
+    "precision" : "kMedium",
     "output-dir" : "../../results/phIIp-raw-global_extra_blocks",
     "global-mode-search" : {
         "method" : "kOptMinuit"

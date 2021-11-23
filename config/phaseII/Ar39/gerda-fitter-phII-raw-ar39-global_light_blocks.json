@@ -1,93 +1,105 @@
 {
-    "id" : "phII-lar-global_light_blocks_fixed",
+    "id" : "phII-raw-ar39-global_light_blocks",
     "logging" : "summary",
-    "precision" : "kQuick",
-    "output-dir" : "../../results/phII-lar-global_light_blocks_fixed",
-    "global-mode-search" : {
-        "method" : "kOptMinuit"
-    },
-    "fit" : {
+    "precision" : "kMedium",
+    "output-dir" : "../../../results/phII-raw-ar39-global_light_blocks",
+        "fit" : {
         "parameters" : {
             "2nbb-bege" : {
-                "fixed" : 86766.5,
+                "range" : [9.2E4, 1.0E5],
                 "long-name" : "2#nu#beta#beta - enrBEGe",
                 "units" : "cts"
             },
             "2nbb-semicoax" : {
-                "fixed" : 71925.5,
+                "range" : [6.5E4, 7.5E4],
                 "long-name" : "2#nu#beta#beta - enrCoax",
                 "units" : "cts"
             },
             "Bi212Tl208-cables" : {
-                "fixed" : 21776.5,
+                "range" : [1E4, 4E4],
                 "long-name" : "^{212}Bi + ^{208}Tl - cables",
                 "units" : "cts"
             },
             "Co60-cables" : {
-                "fixed" : 6259.992,
+                "range" : [1E1, 1E4],
                 "long-name" : "^{60}Co - cables",
                 "units" : "cts"
             },
             "Pb214Bi214-cables" : {
-                "fixed" : 34139.15,
+                "range" : [3E3, 5E4],
                 "long-name" : "^{214}Pb + ^{214}Bi - cables",
                 "units" : "cts"
             },
             "Ac228-holders" : {
-                "fixed" : 10912.5,
+                "range" : [0, 3E4],
                 "long-name" : "^{228}Ac - holders",
                 "units" : "cts"
             },
             "K40-close" : {
-                "fixed" : 649900.0,
+                "range" : [0, 2E6],
                 "long-name" : "^{40}K - close",
                 "units" : "cts"
             },
             "K40-far" : {
-                "fixed" : 4.37955e6,
+                "range" : [1E6, 2E7],
                 "long-name" : "^{40}K - far",
                 "units" : "cts"
             },
             "K42-outside-ms" : {
-                "fixed" : 6.949565e7,
+                "range" : [1E6, 2E8],
                 "long-name" : "^{42}K - in LAr outside mini-shrouds",
                 "units" : "cts"
             },
             "K42-inside-ms" : {
-                "fixed" : 138225.0,
+                "range" : [0, 3E5],
                 "long-name" : "^{42}K - in LAr inside mini-shrouds",
                 "units" : "cts"
             },
             "K42-above-array" : {
-                "fixed" : 2.5705e7,
+                "range" : [0, 1E8],
                 "long-name" : "^{42}K - hom. in LAr above array",
                 "units" : "cts"
             },
+            "K42-nplus-bege" : {
+                "range" : [0, 1E5],
+                "long-name" : "^{42}K - n^+ (BEGe)",
+                "units" : "cts"
+            },
             "K42-nplus-semicoax" : {
-                "fixed" : 48015.0,
+                "range" : [0, 1E4],
                 "long-name" : "^{42}K - n^+ (Coax)",
                 "units" : "cts"
             },
             "alpha-high-energy-bege" : {
-                "fixed" : 0.91665,
+                "range" : [0.6, 1.2],
                 "long-name" : "#alpha-model BEGe - high energy",
                 "units" : "cts"
             },
             "alpha-high-energy-coax" : {
-                "fixed" : 0.985035,
+                "range" : [0.9, 1.2],
                 "long-name" : "#alpha-model Coax - high energy",
+                "units" : "cts"
+            },
+            "Ar39-lar" : {
+                "fixed" : 6.49e10,
+                "long-name" : "^{39}Ar - hom. in LAr",
+                "units" : "cts"
+            },
+            "Kr85-lar" : {
+                "fixed" : 9.23e7,
+                "long-name" : "^{85}Kr - hom. in LAr",
                 "units" : "cts"
             }
         },
         "theoretical-expectations" : {
-            "../../data/gerda-data-bkgmodel-phaseII-v07.01-orig.root" : {
-                "lar/M1_enrBEGe" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
+            "../../../data/gerda-data-bkgmodel-phaseII-v07.01-orig.root" : {
+                "raw/M1_enrBEGe" : {
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2-ar39fit",
                     "fit-range" : [565, 5260],
-                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770,1843,1853,2200,2208,2610,2620,4500,5260",
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:11:1456,1466:18:1520,1530:30:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
-                            "root-file" : "../../data/bkg-alpha-enrBEGe-results.root",
+                            "root-file" : "../../../data/bkg-alpha-enrBEGe-results.root",
                             "components" : {
                                 "alpha-high-energy-bege" : {
                                     "hist-name" : "alpha_model/hMC_all_enrBEGe"
@@ -171,16 +183,36 @@
                                     "isotope" : "K42"
                                 }
                             }
+                        },
+                        {
+                            "part": "gedet/nplus_bege",
+                            "components" : {
+                                "K42-nplus-bege" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array_1",
+                            "components" : {
+                                "Ar39-lar" : { "isotope" : "Ar39" }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array_2",
+                            "components" : {
+                                "Kr85-lar" : { "isotope" : "Kr85" }
+                            }
                         }
                     ]
                 },
-                "lar/M1_enrCoax" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
+                "raw/M1_enrCoax" : {
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2-ar39fit",
                     "fit-range" : [565, 5260],
-                    "rebin-factor" : "565:10:1455,1465:15:1520,1530:15:1725,1735,1760,1770,1843,1853,2200,2208,2610,2620,4500,5260",
+                    "rebin-factor" : "565,580,588,604,612:10:722,732:11:908,915:12:962,973:14:1112,1130:14:1170,1179:15:1329,1338:17:1452,1471:11:1515,1535:25:1710,1725,1735,1760,1770,1835,1843,1853,2200,2208,2610,2620,4500,5260",
                     "components" : [
                         {
-                            "root-file" : "../../data/bkg-alpha-enrCoax-results.root",
+                            "root-file" : "../../../data/bkg-alpha-enrCoax-results.root",
                             "components" : {
                                 "alpha-high-energy-coax" : {
                                     "hist-name" : "alpha_model/hMC_all_enrCoax"
@@ -264,13 +296,33 @@
                                     "isotope" : "K42"
                                 }
                             }
+                        },
+                        {
+                            "part": "gedet/nplus_bege",
+                            "components" : {
+                                "K42-nplus-bege" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array_1",
+                            "components" : {
+                                "Ar39-lar" : { "isotope" : "Ar39" }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array_2",
+                            "components" : {
+                                "Kr85-lar" : { "isotope" : "Kr85" }
+                            }
                         }
                     ]
                 },
-                "lar/M2_enrE1plusE2" : {
-                    "gerda-pdfs" : "../../data/gerda-pdfs/ph2-v3.1",
-                    "fit-range" : [535, 3000],
-                    "rebin-factor" : "535:40:1455,1465,1520,1530,2000,3000",
+                "raw/M2_enrE1plusE2" : {
+                    "gerda-pdfs" : "../../../data/gerda-pdfs/ph2-ar39fit",
+                    "fit-range" : [520, 4000],
+                    "rebin-factor" : "520:20:580,588,604,612:20:722,732:22:908,915:24:962,973:28:1112,1130:28:1170,1179:30:1329,1338,1370,1384:24:1456,1466:27:1520,1530:30:1710,1725,1735,1760,1770,1832,1843,1853,2200,2208,2610,2620,3190,3205,4000",
                     "components" : [
                         {
                             "part": "cables/cables_all",
@@ -340,6 +392,26 @@
                                 "K42-nplus-semicoax" : {
                                     "isotope" : "K42"
                                 }
+                            }
+                        },
+                        {
+                            "part": "gedet/nplus_bege",
+                            "components" : {
+                                "K42-nplus-bege" : {
+                                    "isotope" : "K42"
+                                }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array_1",
+                            "components" : {
+                                "Ar39-lar" : { "isotope" : "Ar39" }
+                            }
+                        },
+                        {
+                            "part": "lar/sur_array_2",
+                            "components" : {
+                                "Kr85-lar" : { "isotope" : "Kr85" }
                             }
                         }
                     ]
