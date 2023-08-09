@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
 
@@ -29,7 +29,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build gerda-fitter executable
+    - name: Build hmixfit executable
       working-directory: src
       run: make
     - name: Generate test data
@@ -39,8 +39,8 @@ jobs:
       working-directory: test
       run: |
         for j in *.json; do
-          echo "gerda-fitter $j"
-          ../src/gerda-fitter $j;
+          echo "hmixfit $j"
+          ../src/hmixfit $j;
         done
 
 # vim: expandtab tabstop=2 shiftwidth=2

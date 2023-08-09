@@ -1,28 +1,21 @@
-// MIT License
+// Copyright (C) 2023 Luigi Pertoldi <gipert@pm.me>
 //
-// Copyright (c) 2020 Luigi Pertoldi
+// This program is free software: you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option) any
+// later version.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+// details.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <cassert>
 
-#include "GerdaFitter.hh"
+#include "HMixFit.hh"
 #include "utils.hpp"
 
 // BAT
@@ -41,14 +34,14 @@
 #include "TCanvas.h"
 #include "TParameter.h"
 
-GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
+HMixFit::HMixFit(json outconfig) : config(outconfig) {
 
     TH1::AddDirectory(false);
 
     // open log file
     auto outdir = config["output-dir"].get<std::string>();
     std::system(("mkdir -p " + outdir).c_str());
-    auto prefix = outdir + "/gerda-fitter-" + config["id"].get<std::string>() + "-";
+    auto prefix = outdir + "/hmixfit-" + config["id"].get<std::string>() + "-";
 
     BCLog::SetLogLevelFile(BCLog::debug);
     BCLog::OpenLog(prefix + "output.log");
@@ -568,7 +561,7 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                     if (this->GetParameters().At(idx).GetName() == parname) {
                         exists = true;
                         // we do this here because we'd rather save BAT's internal parameter index
-                        // to access it later in GerdaFitter::CalculateObservables
+                        // to access it later in HMixFit::CalculateObservables
                         _tformula.SetParName(p, std::to_string(idx).c_str());
                         break;
                     }
@@ -672,20 +665,20 @@ GerdaFitter::GerdaFitter(json outconfig) : config(outconfig) {
                 "(" + el.value().value("units", "") + ")"
             );
 
-            // save TFormula for later use in GerdaFitter::CalculateObservables
+            // save TFormula for later use in HMixFit::CalculateObservables
             obs_tformulas.emplace(el.key(), _tformula);
         }
     }
 }
 
-GerdaFitter::~GerdaFitter() {
+HMixFit::~HMixFit() {
     for (auto& h : data) {
         delete h.data;
         for (auto& hh : h.comp) delete hh.second;
     }
 }
 
-double GerdaFitter::LogLikelihood(const std::vector<double>& parameters) {
+double HMixFit::LogLikelihood(const std::vector<double>& parameters) {
     double logprob = -1.*_likelihood_offset;
     // loop over datasets
     for (auto& it : data) {
@@ -704,7 +697,7 @@ double GerdaFitter::LogLikelihood(const std::vector<double>& parameters) {
     return logprob;
 }
 
-void GerdaFitter::CalculateObservables(const std::vector<double>& parameters) {
+void HMixFit::CalculateObservables(const std::vector<double>& parameters) {
     // loop over registered observables
     for (unsigned int i = 0; i < this->GetNObservables(); ++i) {
         // get definition
@@ -719,13 +712,13 @@ void GerdaFitter::CalculateObservables(const std::vector<double>& parameters) {
     }
 }
 
-TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format) {
+TH1* HMixFit::GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format) {
 
     // get object
     TFile _tf(filename.c_str());
     if (!_tf.IsOpen()) throw std::runtime_error("invalid ROOT file: " + filename);
     auto obj = _tf.Get(objectname.c_str());
-    if (!obj) throw std::runtime_error("GerdaFitter::GetFitComponent(): could not find object '" +
+    if (!obj) throw std::runtime_error("HMixFit::GetFitComponent(): could not find object '" +
                                         objectname + "' in file " + filename);
 
     if (obj->InheritsFrom(TH1::Class())) {
@@ -762,7 +755,7 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
             th_new->SetTitle(obj->GetTitle());
         }
         else {
-            throw std::runtime_error("GerdaFitter::GetFitComponent(): a data format is strictly needed if source is a TF1");
+            throw std::runtime_error("HMixFit::GetFitComponent(): a data format is strictly needed if source is a TF1");
         }
 
         for (int b = 1; b < th_new->GetNcells(); ++b) {
@@ -779,14 +772,14 @@ TH1* GerdaFitter::GetFitComponent(std::string filename, std::string objectname, 
         return th_new;
     }
     else {
-        throw std::runtime_error("GerdaFitter::GetFitComponent(): object '" + objectname +
+        throw std::runtime_error("HMixFit::GetFitComponent(): object '" + objectname +
                                  "' in file " + filename + " isn't of type TH1 or TF1");
     }
 
     return nullptr;
 }
 
-void GerdaFitter::SetIntegrationProperties(json j) {
+void HMixFit::SetIntegrationProperties(json j) {
     if (j.is_null()) return;
 
     this->SetIntegrationMethod(j.value("method", BCIntegrate::BCIntegrationMethod::kIntDefault));
@@ -885,7 +878,7 @@ void GerdaFitter::SetIntegrationProperties(json j) {
     }
 }
 
-void GerdaFitter::SaveHistogramsROOT(std::string filename) {
+void HMixFit::SaveHistogramsROOT(std::string filename) {
     BCLog::OutSummary("Saving histograms (ROOT) to output file " + filename);
 
     TFile tf(filename.c_str(), "recreate");
@@ -979,7 +972,7 @@ void GerdaFitter::SaveHistogramsROOT(std::string filename) {
     }
 }
 
-void GerdaFitter::SaveHistogramsCSV(std::string folder) {
+void HMixFit::SaveHistogramsCSV(std::string folder) {
 
     BCLog::OutSummary("Saving histograms (CSV) in output folder " + folder);
     std::system(("mkdir -p " + folder + "/originals").c_str());
@@ -987,7 +980,7 @@ void GerdaFitter::SaveHistogramsCSV(std::string folder) {
     for (auto& it : data) {
 
         if (it.data->GetDimension() != 1) {
-            BCLog::OutDebug(Form("GerdaFitter::SaveHistogramsCSV(): %s is not a 1D histogram, skipping.", it.data->GetName()));
+            BCLog::OutDebug(Form("HMixFit::SaveHistogramsCSV(): %s is not a 1D histogram, skipping.", it.data->GetName()));
         }
 
         std::ofstream fout(Form("%s/%s.csv", folder.c_str(), it.data->GetName()));
@@ -1089,7 +1082,7 @@ void GerdaFitter::SaveHistogramsCSV(std::string folder) {
     }
 }
 
-void GerdaFitter::WriteResultsTree(std::string filename) {
+void HMixFit::WriteResultsTree(std::string filename) {
     BCLog::OutSummary("Writing Parameters to output Tree in " + filename);
     TFile tf(filename.c_str(), "recreate");
     // define parameters
@@ -1209,7 +1202,7 @@ void GerdaFitter::WriteResultsTree(std::string filename) {
     }
 }
 
-void GerdaFitter::DumpData() {
+void HMixFit::DumpData() {
     for (auto& it : data) {
         std::ostringstream addr;
         addr << " (" << it.data << "), orig (" << it.data_orig << ")";
@@ -1228,7 +1221,7 @@ void GerdaFitter::DumpData() {
     }
 }
 
-double GerdaFitter::GetFastPValue(const std::vector<double>& parameters, long niter) {
+double HMixFit::GetFastPValue(const std::vector<double>& parameters, long niter) {
 
     BCLog::OutSummary("Computing fast (corrected) p-value with " + std::to_string(niter) + " iterations");
 
@@ -1285,7 +1278,7 @@ double GerdaFitter::GetFastPValue(const std::vector<double>& parameters, long ni
     return pvalue;
 }
 
-double GerdaFitter::Integrate(bool enable_offset) {
+double HMixFit::Integrate(bool enable_offset) {
     // sanity check
     if (GetBestFitParameters().size() != GetNParameters() &&
         GetBestFitParameters().size() != GetNVariables()) {
@@ -1307,7 +1300,7 @@ double GerdaFitter::Integrate(bool enable_offset) {
     return _likelihood_integral;
 }
 
-void GerdaFitter::PrintOptimizationSummary() {
+void HMixFit::PrintOptimizationSummary() {
     // ┌─┬┐
     // │ ││
     // ├─┼┤
@@ -1343,7 +1336,7 @@ void GerdaFitter::PrintOptimizationSummary() {
     BCLog::OutSummary(line);
 }
 
-void GerdaFitter::PrintShortMarginalizationSummary() {
+void HMixFit::PrintShortMarginalizationSummary() {
     // ┌─┬┐
     // │ ││
     // ├─┼┤

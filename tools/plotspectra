@@ -7,7 +7,7 @@ using namespace poiband;
 
 void usage() {
     std::cerr << "\n"
-              << "USAGE: plotspectra gerda-fitter-*-histograms.root\n"
+              << "USAGE: plotspectra hmixfit-*-histograms.root\n"
               << "\n"
               << "options:\n"
               << "  -h, --help           : print this help message and exit\n"

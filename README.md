@@ -1,6 +1,4 @@
-<img src=".github/gerda-logo.png" align="left"  height="80"/>
-
-# gerda-fitter ![CI](https://github.com/gipert/gerda-fitter/workflows/CI/badge.svg)
+# hmixfit ![CI](https://github.com/gipert/hmixfit/workflows/CI/badge.svg)
 
 A fully JSON-configurable bayesian fitting engine (based on
 [BAT](https://github.com/bat/bat) and
@@ -17,14 +15,14 @@ Then just `PREFIX=/path/to/prefix make install`.
 
 Alternatively, a Singularity container can be used:
 ```console
-$ sudo singularity build gerda-fitter.sif Singularity.def
-$ singularity exec gerda-fitter.sif gerda-fitter -h
-USAGE: gerda-fitter [-h|--help] json-config
+$ sudo singularity build hmixfit.sif Singularity.def
+$ singularity exec hmixfit.sif hmixfit -h
+USAGE: hmixfit [-h|--help] json-config
 ```
 
 ### Usage
 
-The `gerda-fitter` executable acceps a JSON config file as the only argument.
+The `hmixfit` executable acceps a JSON config file as the only argument.
 Examples can be found in this repository under `config/`.
 
 The JSON config file begins with some general settings:
@@ -213,7 +211,3 @@ defined via JSON file with the following syntax:
 ```
 Model parameters must be specified as they were a `TFormula` parameter,
 enclosing their name in square brackets.
-
-### Related projects
-
-- [gerda-factory](https://github.com/gipert/gerda-factory)
