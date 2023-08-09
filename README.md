@@ -3,7 +3,18 @@
 A fully JSON-configurable bayesian fitting engine (based on
 [BAT](https://github.com/bat/bat) and
 [ROOT](https://github.com/root-project/root)) for data in the form of ROOT
-histograms. Taylored on GERDA data and Probability Density Functions.
+histograms.
+
+*hmixfit* defines the following Poissonian likelihood function:
+
+$$
+  \mathcal{L}(p_1, \ldots, p_m \ |\ \text{data}) =
+  \prod^\text{data set}_i \prod^\text{bins}_j \ \text{Poisson} \big[ n_{ij} \ |\ \sum_k p_k \ \nu_{ij} \big] \quad
+  \text{where:} \quad n = \text{data} \ /\ \nu = \text{pdf}
+$$
+
+where $p_1, \ldots, p_m$ are the weights of the linear combination of histograms (the model) on which statistical inference is performed.
+Multiple data histograms (labeled by $i$) can be fit simultaneously. The $p_k$ can be common to each dataset model.
 
 ### Compile and install
 
