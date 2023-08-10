@@ -16,20 +16,42 @@ histograms.
 where $p_1, \ldots, p_m$ are the weights of the linear combination of histograms (the model) on which statistical inference is performed.
 Multiple data histograms (labeled by $i$) can be fit simultaneously. The $p_k$ can be common to each dataset model.
 
+### Run with a Linux container
+
+#### Docker
+
+Pre-built container images are available [on Docker Hub](https://hub.docker.com/repository/docker/gipert/hmixfit).
+
+```console
+> docker run gipert/hmixfit:latest
+USAGE: /opt/hmixfit/bin/hmixfit [-h|--help] json-config
+> docker run gipert/hmixfit:latest <config.json>
+ +------------------------------------------------------+
+ |                                                      |
+ | BAT version 1.0.0                                    |
+ | Copyright (C) 2007-2018, the BAT core developer team |
+ | All rights reserved.                                 |
+...
+```
+
+#### Apptainer
+
+```console
+> apptainer build hmixfit_latest.sif docker://gipert/hmixfit:latest
+> apptainer run hmixfit_latest.sif <config.json>
+...
+```
+
 ### Compile and install
 
 Requirements
  - [ROOT](https://github.com/root-project/root) ≥ v6.12/04
  - [BAT](https://github.com/bat/bat) ≥ v1.0.0 (with Cuba enabled)
 
-Then just `PREFIX=/path/to/prefix make install`.
+> **Note**
+> Pre-built container images with BAT and ROOT are available [on Docker Hub](https://hub.docker.com/repository/docker/gipert/bat/).
 
-Alternatively, a Singularity container can be used:
-```console
-$ sudo singularity build hmixfit.sif Singularity.def
-$ singularity exec hmixfit.sif hmixfit -h
-USAGE: hmixfit [-h|--help] json-config
-```
+Then just `PREFIX=/path/to/prefix make install`.
 
 ### Usage
 
