@@ -30,7 +30,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build hmixfit executable
-      working-directory: src
       run: make
     - name: Generate test data
       working-directory: test/data
@@ -40,7 +39,7 @@ jobs:
       run: |
         for j in *.json; do
           echo "hmixfit $j"
-          ../src/hmixfit $j;
+          ../build/hmixfit $j;
         done
 
 # vim: expandtab tabstop=2 shiftwidth=2
