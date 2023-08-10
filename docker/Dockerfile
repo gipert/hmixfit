@@ -18,4 +18,5 @@ RUN mkdir -p src /opt/hmixfit && \
 
 ENV PATH="/opt/hmixfit/bin:$PATH"
 
-CMD "/opt/hmixfit/bin/hmixfit"
+ENTRYPOINT ["/opt/hmixfit/bin/hmixfit"]
+CMD ["--help"]
