@@ -724,23 +724,37 @@ TH1* HMixFit::GetFitComponent(std::string filename, std::string objectname, TH1*
     if (obj->InheritsFrom(TH1::Class())) {
 
         auto th_orig = dynamic_cast<TH1*>(obj);
+        Long64_t _nprim = 1;
+
+        // custom stuff for LEGEND pdfs
+        TObjString* _nprim_lgnd = dynamic_cast<TObjString*>(_tf.Get("number_of_primaries"));
+        if (_nprim_lgnd) {
+            _nprim = std::stoll(std::string(_nprim_lgnd->GetString()));
+            delete _nprim_lgnd;
+        }
 
         // custom stuff for GERDA pdfs
-        TParameter<Long64_t>* _nprim = nullptr;
+        TParameter<Long64_t>* _nprim_gerda = nullptr;
         auto _name_nodir = objectname.substr(objectname.find_last_of('/')+1, std::string::npos);
         if (_name_nodir.substr(0, 3) == "M1_") {
-            _nprim = dynamic_cast<TParameter<Long64_t>*>(_tf.Get("NumberOfPrimariesEdep"));
+            _nprim_gerda = dynamic_cast<TParameter<Long64_t>*>(_tf.Get("NumberOfPrimariesEdep"));
         }
         else if (_name_nodir.substr(0, 3) == "M2_") {
-            _nprim = dynamic_cast<TParameter<Long64_t>*>(_tf.Get("NumberOfPrimariesCoin"));
+            _nprim_gerda = dynamic_cast<TParameter<Long64_t>*>(_tf.Get("NumberOfPrimariesCoin"));
         }
-        if (!_nprim) {
-            BCLog::OutWarning("could not find suitable 'NumberOfPrimaries' object in '"
+
+        if (_nprim_gerda) {
+            _nprim = _nprim_gerda->GetVal();
+            delete _nprim_gerda;
+        }
+
+        // normalize!
+        if (_nprim == 1) {
+            BCLog::OutWarning("could not find suitable 'number of primaries' object in '"
                 + filename + "', skipping normalization");
         }
-        else th_orig->Scale(1./_nprim->GetVal());
+        else th_orig->Scale(1./_nprim);
 
-        if (_nprim) delete _nprim;
         return th_orig;
     }
     else if (obj->InheritsFrom(TF1::Class())) {
