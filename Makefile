@@ -33,3 +33,4 @@ clean :
 install : dirs | build/hmixfit
 	install -d $(PREFIX)/bin
 	install build/hmixfit $(PREFIX)/bin
+	install tools/plotspectra $(PREFIX)/bin
