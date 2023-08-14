@@ -85,7 +85,7 @@ settings about the numerical integration needed to compute the evidence:
                     "niter-max" : 1E07,
                     "niter-min" : 0,
                     "flags" : 0
-                }
+                },
                 "kCubaVegas" : {         // here for Vegas...
                     // ...
                 }
