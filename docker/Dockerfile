@@ -3,7 +3,7 @@ FROM gipert/bat:1.0.0
 LABEL maintainer.name="Luigi Pertoldi"
 LABEL maintainer.email="gipert@pm.me"
 
-ARG HMIXFIT_VERSION="1.0.2"
+ARG HMIXFIT_VERSION="1.0.3"
 
 USER root
 WORKDIR /root
