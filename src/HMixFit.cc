@@ -332,6 +332,35 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                         _current_ds.comp_orig.insert({comp_idx, thh});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
+                    // it's a user defined file list with weights
+                    else if (!iso.value().contains("TFormula") and it.contains("root-files")) {
+                        BCLog::OutDebug("user-specified ROOT file list (with weights) detected");
+                        auto obj_name = iso.value().value("hist-name", elh.key());
+
+                        TH1* sum = nullptr;
+                        if (it["root-files"].is_object()) {
+                            for (auto& p : it["root-files"].items()) {
+                                // get histogram
+                                BCLog::OutDebug("opening file " + p.key());
+                                BCLog::OutDebug("summing object '" + obj_name + " with weight "
+                                        + std::to_string(p.value().get<double>()));
+                                auto thh = this->GetFitComponent(p.key(), obj_name, _current_ds.data_orig);
+                                // add it with weight
+                                if (!sum) {
+                                    sum = thh;
+                                    sum->Scale(p.value().get<double>());
+                                }
+                                else {
+                                    sum->Add(thh, p.value().get<double>());
+                                    delete thh;
+                                }
+                            }
+                        }
+                        else throw std::runtime_error("\"root-files\" must be a dictionary");
+                        sum->SetName(utils::SafeROOTName(iso.key()).c_str());
+                        _current_ds.comp_orig.insert({comp_idx, sum});
+                        _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(sum, _current_ds.data)});
+                    }
                     // it's a explicit TFormula
                     else if (iso.value().contains("TFormula")) {
                         BCLog::OutDebug("TFormula expression detected");
