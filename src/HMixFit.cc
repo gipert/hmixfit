@@ -33,20 +33,28 @@
 #include "TRandom3.h"
 #include "TCanvas.h"
 #include "TParameter.h"
-
+#include "TObjString.h"
 HMixFit::HMixFit(json outconfig) : config(outconfig) {
 
     TH1::AddDirectory(false);
 
     // open log file
+
     auto outdir = config["output-dir"].get<std::string>();
+    auto data_path =config.value("data-path","");
+    auto mc_path =config.value("pdf-path","");
+    auto hist_name =config.value("hist-dir","raw");
+    auto use_priors = config.value("use-priors",true);
     std::system(("mkdir -p " + outdir).c_str());
     auto prefix = outdir + "/hmixfit-" + config["id"].get<std::string>() + "-";
 
-    BCLog::SetLogLevelFile(BCLog::debug);
+    //    int n_bins = std::stoi(config["n-bins"].get<std::string>());
+    int n_bins = config.value("n-bins", 1000);
+    
+    //    BCLog::SetLogLevelFile(BCLog::debug);
     BCLog::OpenLog(prefix + "output.log");
     BCLog::OutSummary("Saving results in " + outdir);
-    BCLog::SetLogLevelScreen(config.value("logging", BCLog::summary));
+    //BCLog::SetLogLevelScreen(config.value("logging", BCLog::summary));
 
     this->SetName(config["id"]);
 
@@ -99,46 +107,50 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
             }
         }
 
+	// binning of parameters
+	this->GetParameters().SetNBins(n_bins);
+	
         // assign prior
-        if (el.value().contains("prior")) {
-            auto& prior_cfg = el.value()["prior"];
-            TH1* prior_hist = nullptr;
-            BCPrior* prior = nullptr;
-            std::string expr;
 
-            if (prior_cfg.contains("TFormula") and prior_cfg.contains("histogram")) {
-                throw std::runtime_error("please choose either \"TFormula\" or \"histogram\" for parameter " + el.key());
-            }
-            // a ROOT histogram is given
-            if (prior_cfg.contains("histogram")) {
-                expr = prior_cfg["histogram"].get<std::string>();
-                if (expr.find(':') == std::string::npos) {
-                    throw std::runtime_error("invalid \"histogram\" format for parameter " + el.key());
+	if (use_priors==true &&el.value().contains("prior")) {
+	  auto& prior_cfg = el.value()["prior"];
+	  TH1* prior_hist = nullptr;
+	  BCPrior* prior = nullptr;
+	  std::string expr;
+
+	  if (prior_cfg.contains("TFormula") and prior_cfg.contains("histogram")) {
+	    throw std::runtime_error("please choose either \"TFormula\" or \"histogram\" for parameter " + el.key());
+	  }
+	  // a ROOT histogram is given
+	  if (prior_cfg.contains("histogram")) {
+	    expr = prior_cfg["histogram"].get<std::string>();
+	    if (expr.find(':') == std::string::npos) {
+		  throw std::runtime_error("invalid \"histogram\" format for parameter " + el.key());
+	    }
+	    auto filename = expr.substr(0, expr.find_first_of(':'));
+	    auto objname = expr.substr(expr.find_first_of(':')+1, std::string::npos);
+	    TFile _tff(filename.c_str());
+	    if (!_tff.IsOpen()) throw std::runtime_error("invalid ROOT file: " + filename);
+	    auto obj = _tff.Get(objname.c_str());
+	    if (!obj) throw std::runtime_error("could not find object '" + objname + "' in file " + filename);
+	    if (obj->InheritsFrom(TH1::Class())) {
+	      prior_hist = dynamic_cast<TH1*>(obj);
+	      // the following is a workaround for BAT's bad implementation of the BCTH1Prior constructor
+	      prior_hist->SetDirectory(nullptr);
+	      _tff.Close();
                 }
-                auto filename = expr.substr(0, expr.find_first_of(':'));
-                auto objname = expr.substr(expr.find_first_of(':')+1, std::string::npos);
-                TFile _tff(filename.c_str());
-                if (!_tff.IsOpen()) throw std::runtime_error("invalid ROOT file: " + filename);
-                auto obj = _tff.Get(objname.c_str());
-                if (!obj) throw std::runtime_error("could not find object '" + objname + "' in file " + filename);
-                if (obj->InheritsFrom(TH1::Class())) {
-                    prior_hist = dynamic_cast<TH1*>(obj);
-                    // the following is a workaround for BAT's bad implementation of the BCTH1Prior constructor
-                    prior_hist->SetDirectory(nullptr);
-                    _tff.Close();
-                }
-                else throw std::runtime_error("object '" + objname + "' in file " + filename + " is not an histogram");
-                BCLog::OutDebug("found histogram prior '" + expr + "' for parameter '" + el.key() + "'");
+	    else throw std::runtime_error("object '" + objname + "' in file " + filename + " is not an histogram");
+	    BCLog::OutDebug("found histogram prior '" + expr + "' for parameter '" + el.key() + "'");
             }
-            // is a tformula
-            else if (prior_cfg.contains("TFormula")) {
-                expr = prior_cfg["TFormula"].get<std::string>();
-                TF1 _tformula = utils::ParseTFormula(
-                    el.key(),
-                    expr,
-                    el.value()["range"][0].get<double>(),
-                    el.value()["range"][1].get<double>()
-                );
+	  // is a tformula
+	  else if (prior_cfg.contains("TFormula")) {
+	    expr = prior_cfg["TFormula"].get<std::string>();
+	    TF1 _tformula = utils::ParseTFormula(
+						 el.key(),
+						 expr,
+						 el.value()["range"][0].get<double>(),
+						 el.value()["range"][1].get<double>()
+						 );
                 BCLog::OutDebug("found TFormula prior '" + expr + "' for parameter '" + el.key() + "'");
 
                 // I did not manage to use BCTF1Prior from BAT, it segfaults for misterious reasons
@@ -182,7 +194,8 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
     // loop over files with data histograms
     for (auto& el : config["fit"]["theoretical-expectations"].items()) {
         BCLog::OutDebug("opening data file " + el.key());
-        TFile _tf(el.key().c_str());
+	std::string file_name = data_path+el.key();
+        TFile _tf(file_name.c_str());
         if (!_tf.IsOpen()) throw std::runtime_error("invalid ROOT file: " + el.key());
 
         // loop over requested histograms in file
@@ -327,7 +340,7 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                     if (!iso.value().contains("TFormula") and it.contains("root-file")) {
                         BCLog::OutDebug("user-specified ROOT file detected");
                         auto obj_name = iso.value().value("hist-name", elh.key());
-                        auto thh = this->GetFitComponent(it["root-file"].get<std::string>(), obj_name, _current_ds.data_orig);
+                        auto thh = this->GetFitComponent(mc_path+it["root-file"].get<std::string>(), obj_name, _current_ds.data_orig);
                         thh->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, thh});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});

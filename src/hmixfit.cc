@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    BCLog::SetLogLevelScreen(config.value("logging", BCLog::summary));
+      BCLog::SetLogLevelScreen(config.value("logging", BCLog::summary));
 
     // set precision (number of samples in Markov chain)
     model->SetPrecision(config.value("precision", BCEngineMCMC::kMedium));
@@ -140,6 +140,7 @@ int main(int argc, char** argv) {
     model->PrintParameterPlot(prefix + "parameters.pdf");
     model->PrintParameterLatex(prefix + "parameters.tex");
     model->PrintCorrelationPlot(prefix + "par-correlation.pdf");
+    model->PrintCorrelationMatrix(prefix + "correlation-matrix.pdf");
 
     // draw/save all marginalized distributions
     model->WriteMarginalizedDistributions(prefix + "marginalized.root", "recreate");
