@@ -8,7 +8,8 @@ inputs/pdfs/*
 tools/*
 *.root
 *.sif
-
+*.jpg
+*.png
 # junk
 .DS_Store
 *.swp
