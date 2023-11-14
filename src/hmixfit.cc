@@ -144,6 +144,7 @@ int main(int argc, char** argv) {
 
     // draw/save all marginalized distributions
     model->WriteMarginalizedDistributions(prefix + "marginalized.root", "recreate");
+    model->WriteMarkovChain(prefix+"_mcmc.root", "RECREATE");
     model->SetKnowledgeUpdateDrawingStyle(BCAux::kKnowledgeUpdateDetailedPosterior);
     model->PrintKnowledgeUpdatePlots(prefix + "know-update.pdf");
     model->SaveHistogramsROOT(prefix + "histograms.root");
