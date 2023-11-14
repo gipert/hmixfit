@@ -109,7 +109,7 @@
         "prior": { "TFormula": "gaus:1,2.97E3,1.27E3" }
       },
       "Pb214Bi214-pen-plates": {
-        "range": [0, 5e4],
+        "range": [0, 5e3],
         "long-name": "^{214}Pb + ^{214}Bi - PEN plates",
         "units": "cts",
         "prior": { "TFormula": "exp(-x*2.3/9.22E2)" }

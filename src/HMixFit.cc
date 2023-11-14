@@ -45,8 +45,11 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
     auto mc_path =config.value("pdf-path","");
     auto hist_name =config.value("hist-dir","raw");
     auto use_priors = config.value("use-priors",true);
-    fLivetime = config.value("livetime",1);
-
+    auto livetime =config["livetime"].get<double>();
+    
+    std::cout<<"Livetime = "<<livetime<<std::endl;
+    fLivetime = livetime;
+    
     std::system(("mkdir -p " + outdir).c_str());
     auto prefix = outdir + "/hmixfit-" + config["id"].get<std::string>() + "-";
 
