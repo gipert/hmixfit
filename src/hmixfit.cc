@@ -94,6 +94,10 @@ int main(int argc, char** argv) {
 
     // run MCMC and marginalize posterior w/r/t all parameters
     // An estimation of the global mode is available but without uncertainties
+    
+    // save markov chain
+    model->WriteMarkovChain(prefix+"_mcmc.root", "RECREATE");
+
     auto start = std::chrono::system_clock::now();
     model->MarginalizeAll();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
@@ -144,7 +148,6 @@ int main(int argc, char** argv) {
 
     // draw/save all marginalized distributions
     model->WriteMarginalizedDistributions(prefix + "marginalized.root", "recreate");
-    model->WriteMarkovChain(prefix+"_mcmc.root", "RECREATE");
     model->SetKnowledgeUpdateDrawingStyle(BCAux::kKnowledgeUpdateDetailedPosterior);
     model->PrintKnowledgeUpdatePlots(prefix + "know-update.pdf");
     model->SaveHistogramsROOT(prefix + "histograms.root");
