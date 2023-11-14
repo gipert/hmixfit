@@ -3,6 +3,9 @@ hmixfit
 results
 /data
 /src/obj
+inputs/data/*
+inputs/pdfs/*
+tools/*
 *.root
 *.sif
 
@@ -10,3 +13,5 @@ results
 .DS_Store
 *.swp
 *.swo
+*~
+*#
