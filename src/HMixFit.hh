@@ -108,7 +108,8 @@ class HMixFit : public BCModel {
 
     std::vector<dataset> data;
     json config;
-
+    double fLivetime;
+    
     private:
 
     std::map<std::string,TFormula> obs_tformulas;

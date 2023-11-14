@@ -45,6 +45,8 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
     auto mc_path =config.value("pdf-path","");
     auto hist_name =config.value("hist-dir","raw");
     auto use_priors = config.value("use-priors",true);
+    fLivetime = config.value("livetime",1);
+
     std::system(("mkdir -p " + outdir).c_str());
     auto prefix = outdir + "/hmixfit-" + config["id"].get<std::string>() + "-";
 
@@ -730,7 +732,7 @@ double HMixFit::LogLikelihood(const std::vector<double>& parameters) {
                 // compute theoretical prediction for bin 'b'
                 double pred = 0;
                 for (auto& h : it.comp) {
-                    pred += parameters[h.first]*h.second->GetBinContent(b);
+                    pred += fLivetime*parameters[h.first]*h.second->GetBinContent(b);
                 }
                 logprob += BCMath::LogPoisson(it.data->GetBinContent(b), pred);
             }
@@ -953,7 +955,7 @@ void HMixFit::SaveHistogramsROOT(std::string filename) {
         it.data->Write("fitted_data");
         for (auto& h : it.comp) {
             auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
-            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            hcopy->Scale(fLivetime*this->GetBestFitParameters()[h.first]);
             // compute total model without changing the components
             if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
             else      sum->Add(hcopy);
@@ -969,7 +971,7 @@ void HMixFit::SaveHistogramsROOT(std::string filename) {
         it.data_orig->Write("fitted_data");
         for (auto& h : it.comp_orig) {
             auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
-            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            hcopy->Scale(fLivetime*this->GetBestFitParameters()[h.first]);
             // compute total model without changing the components
             if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
             else      sum->Add(hcopy);
@@ -1046,7 +1048,7 @@ void HMixFit::SaveHistogramsCSV(std::string folder) {
 
         for (auto& h : it.comp) {
             auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
-            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            hcopy->Scale(fLivetime*this->GetBestFitParameters()[h.first]);
             // compute total model without changing the components
             if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
             else      sum->Add(hcopy);
@@ -1092,7 +1094,7 @@ void HMixFit::SaveHistogramsCSV(std::string folder) {
 
         for (auto& h : it.comp_orig) {
             auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
-            hcopy->Scale(this->GetBestFitParameters()[h.first]);
+            hcopy->Scale(fLivetime*this->GetBestFitParameters()[h.first]);
             // compute total model without changing the components
             if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
             else      sum->Add(hcopy);
@@ -1300,7 +1302,7 @@ double HMixFit::GetFastPValue(const std::vector<double>& parameters, long niter)
         TH1* sum = nullptr;
         for (auto& h : it.comp) {
             auto hcopy = dynamic_cast<TH1*>(h.second->Clone());
-            hcopy->Scale(parameters[h.first]);
+            hcopy->Scale(fLivetime*parameters[h.first]);
             // compute total model
             if (!sum) sum = dynamic_cast<TH1*>(hcopy->Clone());
             else      sum->Add(hcopy);
