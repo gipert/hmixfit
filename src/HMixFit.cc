@@ -417,6 +417,7 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                         }
                         thh->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, thh});
+                        _current_ds.number_simulated.insert({comp_idx,std::numeric_limits<double>::max()});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
                     else { // look into gerda-pdfs database
@@ -445,6 +446,7 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                             }
                             comp->SetName(utils::SafeROOTName(iso.key()).c_str());
                             _current_ds.comp_orig.insert({comp_idx, comp});
+                            _current_ds.number_simulated.insert({comp_idx,std::numeric_limits<double>::max()});
                             _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(comp, _current_ds.data)});
                         }
                         else throw std::runtime_error("unexpected entry " + iso.value()["isotope"].dump() + "found in [\"fit\"][\""
@@ -1211,7 +1213,7 @@ void HMixFit::WriteResultsTree(std::string filename) {
         double qt16_range, qt16_bi;
         double qt84_range, qt84_bi;
         double qt90_range, qt90_bi;
-
+        double num_sim;
         TTree ttds(Form("counts_%s", ds.data->GetName()), "counts in selected regions for each parameter");
         ttds.Branch("comp_name",               &comp_name);
         ttds.Branch("fit_range_orig",          &orig_range,    "fit_range_orig/D");
@@ -1228,10 +1230,12 @@ void HMixFit::WriteResultsTree(std::string filename) {
         ttds.Branch("bi_range_qt16",           &qt16_bi,       "bi_range_qt16/D");
         ttds.Branch("bi_range_qt84",           &qt84_bi,       "bi_range_qt84/D");
         ttds.Branch("bi_range_qt90",           &qt90_bi,       "bi_range_qt90/D");
+        ttds.Branch("number_simulated",        &num_sim,       "number_simulated/D");
 
         for (auto c : ds.comp_orig) {
             comp_name = std::string(this->GetVariable(c.first).GetName().data());
             auto ch = c.second;
+            num_sim= ds.number_simulated[c.first];
             bool isfixed   = this->GetParameter(c.first).Fixed();
             double best    = isfixed ? this->GetParameter(c.first).GetFixedValue() : this->GetBestFitParameters()[c.first];
             double bestErr = isfixed ? 0 : this->GetBestFitParameterErrors()[c.first];
