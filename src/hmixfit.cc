@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-      BCLog::SetLogLevelScreen(config.value("logging", BCLog::summary));
+    BCLog::SetLogLevelScreen(config.value("logging", BCLog::summary));
 
     // set precision (number of samples in Markov chain)
     model->SetPrecision(config.value("precision", BCEngineMCMC::kMedium));
@@ -96,7 +96,16 @@ int main(int argc, char** argv) {
     // An estimation of the global mode is available but without uncertainties
     
     // save markov chain
-    model->WriteMarkovChain(prefix+"_mcmc.root", "RECREATE");
+    
+    auto outdir = config["output-dir"].get<std::string>();
+
+    auto prefix = outdir + "/hmixfit-" + config["id"].get<std::string>() ;
+    
+    std::system(("mkdir -p " + outdir).c_str());
+
+    std::system(("mkdir -p " + prefix ).c_str());
+
+    model->WriteMarkovChain(prefix+"/mcmc.root", "RECREATE");
 
     auto start = std::chrono::system_clock::now();
     model->MarginalizeAll();
@@ -136,23 +145,20 @@ int main(int argc, char** argv) {
     }
 
     // OUTPUT
-    auto outdir = config["output-dir"].get<std::string>();
-    std::system(("mkdir -p " + outdir).c_str());
-    auto prefix = outdir + "/hmixfit-" + config["id"].get<std::string>() + "-";
 
     // draw parameter plot
-    model->PrintParameterPlot(prefix + "parameters.pdf");
-    model->PrintParameterLatex(prefix + "parameters.tex");
-    model->PrintCorrelationPlot(prefix + "par-correlation.pdf");
-    model->PrintCorrelationMatrix(prefix + "correlation-matrix.pdf");
+    model->PrintParameterPlot(prefix + "/parameters.pdf");
+    model->PrintParameterLatex(prefix + "/parameters.tex");
+    model->PrintCorrelationPlot(prefix + "/par-correlation.pdf");
+    model->PrintCorrelationMatrix(prefix + "/correlation-matrix.pdf");
 
     // draw/save all marginalized distributions
-    model->WriteMarginalizedDistributions(prefix + "marginalized.root", "recreate");
+    model->WriteMarginalizedDistributions(prefix + "/marginalized.root", "recreate");
     model->SetKnowledgeUpdateDrawingStyle(BCAux::kKnowledgeUpdateDetailedPosterior);
-    model->PrintKnowledgeUpdatePlots(prefix + "know-update.pdf");
-    model->SaveHistogramsROOT(prefix + "histograms.root");
-    model->SaveHistogramsCSV(prefix + "histograms.csv");
-    model->WriteResultsTree(prefix + "analysis.root");
+    model->PrintKnowledgeUpdatePlots(prefix + "/know-update.pdf");
+    model->SaveHistogramsROOT(prefix + "/histograms.root");
+    model->SaveHistogramsCSV(prefix + "/histograms.csv");
+    model->WriteResultsTree(prefix + "/analysis.root");
 
     std::ofstream fcfg_copy(prefix + "config.json");
     fcfg_copy << std::setw(4) << config;

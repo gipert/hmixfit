@@ -78,6 +78,7 @@ struct dataset {
     std::vector<std::pair<int,int>> brange;  // histogram range (bin index!)
     std::map<int, TH1*> comp;                // catalog of fit components
     std::map<int, TH1*> comp_orig;           // catalog of non-rebinned fit components
+    std::map<int,int> number_simulated;      // catolog of number of simulated MC events
 };
 
 class HMixFit : public BCModel {
@@ -116,7 +117,7 @@ class HMixFit : public BCModel {
     double _likelihood_offset = 0.; // for easier integration
 
     void DumpData();
-    TH1* GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format = nullptr);
+    TH1* GetFitComponent(std::string filename, std::string objectname, int &nprim,TH1* tf1_hist_format = nullptr);
 };
 
 #endif

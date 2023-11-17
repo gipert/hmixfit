@@ -34,6 +34,8 @@
 #include "TCanvas.h"
 #include "TParameter.h"
 #include "TObjString.h"
+#include <limits>
+
 HMixFit::HMixFit(json outconfig) : config(outconfig) {
 
     TH1::AddDirectory(false);
@@ -276,6 +278,7 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                     if (i.find('-') != std::string::npos) true_iso = i.substr(0, i.find('-'));
 
                     TH1* sum = nullptr;
+                    double sum_prim=0;
                     if (it["part"].is_object()) {
                         for (auto& p : it["part"].items()) {
                             // get volume name
@@ -290,14 +293,17 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                             BCLog::OutDebug("summing object '" + elh.key() + " with weight "
                                     + std::to_string(p.value().get<double>()));
                             // get histogram
-                            auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data_orig);
+                            int nprim_tmp;
+                            auto thh = this->GetFitComponent(filename, elh.key(),nprim_tmp, _current_ds.data_orig);
                             // add it with weight
                             if (!sum) {
                                 sum = thh;
                                 sum->Scale(p.value().get<double>());
+                                sum_prim=nprim_tmp*p.value().get<double>();
                             }
                             else {
                                 sum->Add(thh, p.value().get<double>());
+                                sum_prim+=nprim_tmp*p.value().get<double>();
                                 delete thh;
                             }
                         }
@@ -314,7 +320,8 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                             + volume + "-" + part + "-" + i + ".root";
                         BCLog::OutDebug("getting object '" + elh.key() + "' in file " + filename);
                         // get histogram
-                        auto thh = this->GetFitComponent(filename, elh.key(), _current_ds.data_orig);
+                        int nprim=0;
+                        auto thh = this->GetFitComponent(filename, elh.key(),nprim, _current_ds.data_orig);
 
                         return thh;
                     }
@@ -345,9 +352,11 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                     if (!iso.value().contains("TFormula") and it.contains("root-file")) {
                         BCLog::OutDebug("user-specified ROOT file detected");
                         auto obj_name = iso.value().value("hist-name", elh.key());
-                        auto thh = this->GetFitComponent(mc_path+it["root-file"].get<std::string>(), obj_name, _current_ds.data_orig);
+                        int nprim;
+                        auto thh = this->GetFitComponent(mc_path+it["root-file"].get<std::string>(), obj_name,nprim, _current_ds.data_orig);
                         thh->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, thh});
+                        _current_ds.number_simulated.insert({comp_idx,nprim});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
                     // it's a user defined file list with weights
@@ -356,13 +365,15 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                         auto obj_name = iso.value().value("hist-name", elh.key());
 
                         TH1* sum = nullptr;
+                      
                         if (it["root-files"].is_object()) {
                             for (auto& p : it["root-files"].items()) {
                                 // get histogram
                                 BCLog::OutDebug("opening file " + p.key());
                                 BCLog::OutDebug("summing object '" + obj_name + " with weight "
                                         + std::to_string(p.value().get<double>()));
-                                auto thh = this->GetFitComponent(p.key(), obj_name, _current_ds.data_orig);
+                                int nprim_tmp;
+                                auto thh = this->GetFitComponent(p.key(), obj_name,nprim_tmp, _current_ds.data_orig);
                                 // add it with weight
                                 if (!sum) {
                                     sum = thh;
@@ -377,6 +388,7 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                         else throw std::runtime_error("\"root-files\" must be a dictionary");
                         sum->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, sum});
+                        _current_ds.number_simulated.insert({comp_idx,std::numeric_limits<double>::max()});
                         _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(sum, _current_ds.data)});
                     }
                     // it's a explicit TFormula
@@ -759,7 +771,7 @@ void HMixFit::CalculateObservables(const std::vector<double>& parameters) {
     }
 }
 
-TH1* HMixFit::GetFitComponent(std::string filename, std::string objectname, TH1* tf1_hist_format) {
+TH1* HMixFit::GetFitComponent(std::string filename, std::string objectname,int &num_prim, TH1* tf1_hist_format) {
 
     // get object
     TFile _tf(filename.c_str());
@@ -801,7 +813,8 @@ TH1* HMixFit::GetFitComponent(std::string filename, std::string objectname, TH1*
                 + filename + "', skipping normalization");
         }
         else th_orig->Scale(1./_nprim);
-
+        
+        num_prim =_nprim;
         return th_orig;
     }
     else if (obj->InheritsFrom(TF1::Class())) {
@@ -830,6 +843,7 @@ TH1* HMixFit::GetFitComponent(std::string filename, std::string objectname, TH1*
             th_new->SetBinContent(b, dynamic_cast<TF1*>(obj)->Eval(x, y, z));
         }
         delete obj;
+        num_prim=0;
         return th_new;
     }
     else {
