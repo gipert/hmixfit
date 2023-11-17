@@ -1214,6 +1214,9 @@ void HMixFit::WriteResultsTree(std::string filename) {
         double qt84_range, qt84_bi;
         double qt90_range, qt90_bi;
         double num_sim;
+        double best_scaling_factor,bestErr_scaling_factor;
+        double marg_scaling_factor,qt16_scaling_factor,qt84_scaling_factor,qt90_scaling_factor;
+
         TTree ttds(Form("counts_%s", ds.data->GetName()), "counts in selected regions for each parameter");
         ttds.Branch("comp_name",               &comp_name);
         ttds.Branch("fit_range_orig",          &orig_range,    "fit_range_orig/D");
@@ -1231,8 +1234,14 @@ void HMixFit::WriteResultsTree(std::string filename) {
         ttds.Branch("bi_range_qt84",           &qt84_bi,       "bi_range_qt84/D");
         ttds.Branch("bi_range_qt90",           &qt90_bi,       "bi_range_qt90/D");
         ttds.Branch("number_simulated",        &num_sim,       "number_simulated/D");
-
-        for (auto c : ds.comp_orig) {
+        ttds.Branch("scaling_factor_glob_mode",     &best_scaling_factor,    "scaling_factor_glob_mode/D");
+        ttds.Branch("scaling_factor_glob_mode_err", &bestErr_scaling_factor, "scaling_factor_glob_mode_err/D");
+        ttds.Branch("scaling_factor_marg_mod",      &marg_scaling_factor,    "scaling_factor_marg_mod/D");
+        ttds.Branch("scaling_factor_qt16",          &qt16_scaling_factor,    "scaling_factor_qt16/D");
+        ttds.Branch("scaling_factor_qt84",          &qt84_scaling_factor,    "scaling_factor_qt84/D");
+        ttds.Branch("scaling_factor_qt90",          &qt90_scaling_factor,    "scaling_factor_qt90/D");
+        
+        for (auto c : ds.comp_orig) {in
             comp_name = std::string(this->GetVariable(c.first).GetName().data());
             auto ch = c.second;
             num_sim= ds.number_simulated[c.first];
@@ -1254,6 +1263,14 @@ void HMixFit::WriteResultsTree(std::string filename) {
             qt84_range    = isfixed ? 0 : orig_range*bch_marg.GetQuantile(0.84);
             qt90_range    = isfixed ? 0 : orig_range*bch_marg.GetQuantile(0.90);
             orig_bi = 0., best_bi = 0., bestErr_bi = 0.;
+
+            best_scaling_factor=best/number_simulated;
+            bestErr_scaling_factor=bestErr/number_simulated;
+            marg_scaling_factor=marg_range/(orig_range*number_simulated);
+            qt16_scaling_factor=qt16_range/(orig_range*number_simulated);
+            qt84_scaling_factor=qt84_range/(orig_range*number_simulated);
+            qt90_scaling_factor=qt90_range/(orig_range*number_simulated);
+
             if (!ds.data_orig->InheritsFrom(TH2::Class())) {
                 std::vector<int> bins = { // BI window
                     ch->FindBin(1930), ch->FindBin(2099),
