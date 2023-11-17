@@ -1241,7 +1241,7 @@ void HMixFit::WriteResultsTree(std::string filename) {
         ttds.Branch("scaling_factor_qt84",          &qt84_scaling_factor,    "scaling_factor_qt84/D");
         ttds.Branch("scaling_factor_qt90",          &qt90_scaling_factor,    "scaling_factor_qt90/D");
         
-        for (auto c : ds.comp_orig) {in
+        for (auto c : ds.comp_orig) {
             comp_name = std::string(this->GetVariable(c.first).GetName().data());
             auto ch = c.second;
             num_sim= ds.number_simulated[c.first];
@@ -1264,12 +1264,13 @@ void HMixFit::WriteResultsTree(std::string filename) {
             qt90_range    = isfixed ? 0 : orig_range*bch_marg.GetQuantile(0.90);
             orig_bi = 0., best_bi = 0., bestErr_bi = 0.;
 
-            best_scaling_factor=best/number_simulated;
-            bestErr_scaling_factor=bestErr/number_simulated;
-            marg_scaling_factor=marg_range/(orig_range*number_simulated);
-            qt16_scaling_factor=qt16_range/(orig_range*number_simulated);
-            qt84_scaling_factor=qt84_range/(orig_range*number_simulated);
-            qt90_scaling_factor=qt90_range/(orig_range*number_simulated);
+            // Save also the scaling factors
+            best_scaling_factor=best/num_sim;
+            bestErr_scaling_factor=bestErr/num_sim;
+            marg_scaling_factor=marg_range/(orig_range*num_sim);
+            qt16_scaling_factor=qt16_range/(orig_range*num_sim);
+            qt84_scaling_factor=qt84_range/(orig_range*num_sim);
+            qt90_scaling_factor=qt90_range/(orig_range*num_sim);
 
             if (!ds.data_orig->InheritsFrom(TH2::Class())) {
                 std::vector<int> bins = { // BI window
