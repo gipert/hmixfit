@@ -1,5 +1,5 @@
 {
-  "id": "l200a_taup_silver_dataset_m1_no_priors",
+  "id": "l200a_taup_silver_dataset_raw_no_priors",
   "logging": "detail",
   "precision": "kHigh",
     "output-dir": "results",
@@ -188,7 +188,7 @@
     },
     "theoretical-expectations": {
       "l200a-taup-silver-dataset.root": {
-        "mul/bege": {
+        "raw/bege": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
@@ -308,7 +308,7 @@
             }
           ]
         },
-        "mul/icpc": {
+        "raw/icpc": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
@@ -428,7 +428,7 @@
             }
           ]
         },
-        "mul/coax": {
+        "raw/coax": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
@@ -548,7 +548,7 @@
             }
           ]
         },
-        "mul/ppc": {
+        "raw/ppc": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
