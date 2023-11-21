@@ -1,5 +1,5 @@
 {
-  "id": "l200a_taup_silver_dataset_m1_norm",
+  "id": "l200a_taup_silver_dataset_m1",
   "logging": "detail",
   "precision": "kHigh",
     "output-dir": "results",
@@ -32,7 +32,7 @@
         "units": "cts"
       },
       "2vbb_ppc": {
-        "range": [2e5, 5e5],
+        "range": [2e5, 7e5],
         "long-name": "2#nu#beta#beta - PPC",
         "units": "cts"
       },
