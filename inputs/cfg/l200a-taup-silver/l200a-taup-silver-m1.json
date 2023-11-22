@@ -1,11 +1,11 @@
 {
-  "id": "l200a_taup_silver_dataset_raw_norm",
+  "id": "l200a_taup_silver_dataset_m1_fix",
   "logging": "detail",
   "precision": "kHigh",
     "output-dir": "results",
-    "livetime":1,
+    "livetime":0.1273,
     "n-bins":200,
-  "data-path":"/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/data/",	
+  "data-path":"/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/data/datasets/",	
   "pdf-path": "/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/pdfs/l200a-pdfs-v0.3.0-silver/",	
   "global-mode-search": {
     "method": "kOptMinuit"
@@ -32,7 +32,7 @@
         "units": "cts"
       },
       "2vbb_ppc": {
-        "range": [2e5, 5e5],
+        "range": [2e5, 7e5],
         "long-name": "2#nu#beta#beta - PPC",
         "units": "cts"
       },
@@ -186,8 +186,8 @@
       }
     },
     "theoretical-expectations": {
-      "l200a-taup-silver-dataset.root": {
-        "raw/bege": {
+      "l200a-taup23-silver-dataset-v0.1.root": {
+        "mul/bege": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
@@ -307,7 +307,7 @@
             }
           ]
         },
-        "raw/icpc": {
+        "mul/icpc": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
@@ -427,7 +427,7 @@
             }
           ]
         },
-        "raw/coax": {
+        "mul/coax": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
@@ -547,7 +547,7 @@
             }
           ]
         },
-        "raw/ppc": {
+        "mul/ppc": {
           "fit-range": [565, 2995],
           "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
           "components": [
