@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <cassert>
+#include <unistd.h>
 
 #include "HMixFit.hh"
 #include "utils.hpp"
@@ -203,20 +204,38 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
         BCLog::OutDebug("opening data file " + el.key());
 	std::string file_name = data_path+el.key();
         TFile _tf(file_name.c_str());
+     
         if (!_tf.IsOpen()) throw std::runtime_error("invalid ROOT file: " + el.key());
 
         // loop over requested histograms in file
         for (auto& elh : el.value().items()) {
             // get rebin factor before reading all histograms
             std::vector<double> change_points;
+            std::vector<double> change_points_x;
+            std::vector<double> change_points_y;
+            bool variable_bin=false;
             int rebin_x = 1, rebin_y = 1;
-            if (elh.value().contains("rebin-factor") and elh.value()["rebin-factor"].is_string()) {
+	    if (elh.value().contains("rebin-factor") and elh.value()["rebin-factor"].is_string()) {
                 BCLog::OutDetail("using specified variable-sized rebin for dataset '" + el.key() + "'");
                 change_points = utils::ParseBinChangePoints(elh.value()["rebin-factor"].get<std::string>());
+                variable_bin=true;
+            }
+            else if (elh.value().contains("rebin-factor") and elh.value()["rebin-factor-x"].is_string()) {
+                change_points_x = utils::ParseBinChangePoints(elh.value()["rebin-factor-x"].get<std::string>());
+                variable_bin=true;
+
+            }
+            else if (elh.value().contains("rebin-factor") and elh.value()["rebin-factor-y"].is_string()) {
+                change_points_y = utils::ParseBinChangePoints(elh.value()["rebin-factor-y"].get<std::string>());
+                variable_bin=true;
+
             }
             else {
                 rebin_x = elh.value().value("rebin-factor-x", 1) * elh.value().value("rebin-factor", 1);
                 rebin_y = elh.value().value("rebin-factor-y", 1);
+
+               
+
                 if (rebin_x != 1)
                     BCLog::OutDetail("using rebin X factor = " + std::to_string(rebin_x) + " for dataset '" + elh.key() + "'");
                 if (rebin_y != 1)
@@ -226,9 +245,9 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
             BCLog::OutDebug("getting data histogram '" + elh.key() + "' from " + el.key());
             auto th_orig = dynamic_cast<TH1*>(_tf.Get(elh.key().c_str()));
             if (!th_orig) throw std::runtime_error("could not find object '" + elh.key() + "' in file " + el.key());
-            if (th_orig->GetDimension() != 1 and !change_points.empty()) {
-                throw std::runtime_error("cannot apply variable-sized rebin to TH2 or TH3");
-            }
+            //if (th_orig->GetDimension() != 1 and !change_points.empty()) {
+            //    throw std::runtime_error("cannot apply variable-sized rebin to TH2 or TH3");
+            //}
 
             // set explicative histogram names
             auto basename = el.key().substr(
@@ -243,7 +262,8 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
 
             // rebin if requested
             TH1* th = nullptr;
-            if (change_points.empty()) {
+	    TH2D *th2=nullptr;
+            if (variable_bin==false) {
                 th = dynamic_cast<TH1*>(th_orig->Clone(utils::SafeROOTName(basename).c_str()));
                 th->Rebin(rebin_x);
                 if ((rebin_y != 1) and th->InheritsFrom(TH2::Class())) {
@@ -252,14 +272,39 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
             }
             else {
                 // do variable rebin
-                th = dynamic_cast<TH1*>(
-                    th_orig->Rebin(
-                        change_points.size()-1,
-                        utils::SafeROOTName(basename).c_str(),
-                        &change_points[0]
-                    ));
-            }
+	        if (th_orig->GetDimension() ==1){
+                        th = dynamic_cast<TH1*>(
+                        th_orig->Rebin(
+                                change_points.size()-1,
+                                utils::SafeROOTName(basename).c_str(),
+                                &change_points[0]
+                                ));
+                } 
+                else if (th_orig->GetDimension() != 1){
+                    // 2D variable binning
+                    if (change_points_x.empty())
+                        change_points_x=change_points;
+                    if (change_points_y.empty())
+                        change_points_y=change_points;
 
+		    th2=new TH2D(utils::SafeROOTName(basename).c_str(),
+                                        utils::SafeROOTName(basename).c_str(),
+                                        change_points_x.size()-1,
+                                        &change_points_x[0],
+                                        change_points_y.size()-1, &change_points_y[0]);
+		    
+                    TAxis *xaxis = th_orig->GetXaxis(); TAxis *yaxis = th_orig->GetYaxis();
+	            for (int j=1; j<=yaxis->GetNbins();j++) {
+                        for (int i=1; i<=xaxis->GetNbins();i++){ 
+			  th2->Fill(xaxis->GetBinCenter(i),yaxis->GetBinCenter(j),th_orig->GetBinContent(i,j)); 
+                                    } 
+                                }
+		    th=dynamic_cast<TH2*>(th2);
+                    }
+                else{
+                    throw std::runtime_error("Variable binning cannot be applied (yet?) to TH3");
+                    }
+            }
             _current_ds.data = th;
 
             // eventually get a global value for the gerda-pdfs path
@@ -357,7 +402,8 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                         thh->SetName(utils::SafeROOTName(iso.key()).c_str());
                         _current_ds.comp_orig.insert({comp_idx, thh});
                         _current_ds.number_simulated.insert({comp_idx,nprim});
-                        _current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
+			
+			_current_ds.comp.insert({comp_idx, utils::ReformatHistogram(thh, _current_ds.data)});
                     }
                     // it's a user defined file list with weights
                     else if (!iso.value().contains("TFormula") and it.contains("root-files")) {
@@ -470,7 +516,8 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
             }
             else { // sanity check x-range
                 auto x_range = elh.value().contains("fit-range-x") ? elh.value()["fit-range-x"] : elh.value()["fit-range"];
-                if (!x_range.is_array())
+
+		if (!x_range.is_array())
                     throw std::runtime_error("wrong \"fit-range-x\" format, array expected");
                 if (!(x_range[0].is_array() or x_range[0].is_number()))
                     throw std::runtime_error("wrong \"fit-range-x\" format, array of arrays or numbers expected");
@@ -547,22 +594,26 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
                     // translate ranges in global bin ranges
                     auto _y_bin_width = _current_ds.data->GetYaxis()->GetBinWidth(1);
                     for (auto x : _vxr) {
+		      
                         // no under or overflow bins allowed
                         auto _x_ll = _current_ds.data->GetXaxis()->FindBin(x.first);
                         auto _x_ul = _current_ds.data->GetXaxis()->FindBin(x.second);
                         while (_x_ll <= 0)                            _x_ll++;
                         while (_x_ul > _current_ds.data->GetNbinsX()) _x_ul--;
-                        for (auto y : _vyr) {
-                            // no under or overflow bins allowed
+
+			for (auto y : _vyr) {
+
+			    // no under or overflow bins allowed
                             auto _y_ll = _current_ds.data->GetYaxis()->FindBin(y.first);
                             auto _y_ul = _current_ds.data->GetYaxis()->FindBin(y.second);
-                            while (_y_ll <= 0)                            _y_ll++;
+			    while (_y_ll <= 0)                            _y_ll++;
                             while (_y_ul > _current_ds.data->GetNbinsY()) _y_ul--;
                             while (_y_ll <= _y_ul) {
                                 _current_ds.brange.push_back({
-                                    _current_ds.data->FindBin(_x_ll,_y_ll),
-                                    _current_ds.data->FindBin(_x_ul,_y_ll)
+				    _current_ds.data->FindBin(_current_ds.data->GetXaxis()->GetBinCenter(_x_ll),_current_ds.data->GetYaxis()->GetBinCenter(_y_ll)),
+                                    _current_ds.data->FindBin(_current_ds.data->GetXaxis()->GetBinCenter(_x_ul),_current_ds.data->GetYaxis()->GetBinCenter(_y_ul))
                                 });
+			
                                 BCLog::OutDetail("Adding fit range TH2 global [" +
                                     std::to_string(_current_ds.brange.back().first) + ", " +
                                     std::to_string(_current_ds.brange.back().second) + "] (bins) [" +
@@ -584,7 +635,7 @@ HMixFit::HMixFit(json outconfig) : config(outconfig) {
             // now sanity checks on the range
             double _last = - std::numeric_limits<double>::infinity();
             for (auto& r : _current_ds.brange) {
-                if (r.first > _last) _last = r.first;
+	        if (r.first > _last) _last = r.first;
                 else throw std::runtime_error("illegal ranges in \"fit-range-x\" detected, did you specify them in ascending order?");
                 if (r.second > _last) _last = r.second;
                 else throw std::runtime_error("illegal ranges in \"fit-range-x\" detected, did you specify them in ascending order?");
@@ -746,6 +797,8 @@ double HMixFit::LogLikelihood(const std::vector<double>& parameters) {
         for (auto& r : it.brange) {
             // ranges are inclusive
             for (int b = r.first; b <= r.second; ++b) {
+
+	      
                 // compute theoretical prediction for bin 'b'
                 double pred = 0;
                 for (auto& h : it.comp) {
@@ -1358,12 +1411,16 @@ double HMixFit::GetFastPValue(const std::vector<double>& parameters, long niter)
             }
         }
         delete sum;
+        double p=BCMath::FastPValue(observed, expected, niter, rnd.GetSeed());
+        if (nbins <= this->GetNFreeParameters()){
+         BCLog::OutSummary(Form("cannot correct p-value for '%s' since nbins ('%i') < npars ('%i')", it.data->GetName(), nbins,this->GetNFreeParameters()));
 
-        double p = BCMath::CorrectPValue(
-            BCMath::FastPValue(observed, expected, niter, rnd.GetSeed()),
+        }
+        else{
+        double p = BCMath::CorrectPValue(p,
             this->GetNFreeParameters(), nbins
         );
-
+        }
         BCLog::OutSummary(Form("p-value for data set '%s' => %g", it.data->GetName(), p));
     }
 
