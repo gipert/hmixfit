@@ -1,0 +1,207 @@
+{
+  "id": "l200a_minimal_example",
+  "logging": "detail",
+  "precision": "kMedium",
+    "output-dir": "results",
+    "livetime":0.36445,
+    "n-bins":200,
+      "use-priors":true,
+
+  "data-path":"/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/data/datasets/",	
+  "pdf-path": "/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/pdfs/l200a-pdfs_vancouver23_v4.0/l200a-pdfs/",	
+  "global-mode-search": {
+    "method": "kOptMinuit"
+  },
+  "p-value": {
+    "enabled": true,
+    "iterations": 1e6
+  },
+  "fit": {
+    "parameters": {
+      "2vbb_bege": {
+        "range": [2e5, 5e5],
+        "long-name": "2#nu#beta#beta - BEGe",
+        "units": "cts"
+      },
+      "2vbb_icpc": {
+        "range": [2e5, 5e5],
+        "long-name": "2#nu#beta#beta - ICPC",
+        "units": "cts"
+      },
+    
+      "alpha_bege": {
+        "range" : [0,200],
+        "long-name":"#alpha events in bege",
+        "units": "cts"
+      },
+  
+      "alpha_icpc": {
+                "range" : [0,500],
+                "long-name":"#alpha events in icpc",
+                "units": "cts"
+      },
+    
+      "Bi212Tl208_cables": {
+        "range": [0, 2e4],
+          "long-name": "^{212}Bi + ^{208}Tl - cables",
+	        "prior":{"TFormula":"gaus:1,1.2E4,2.5E3"},
+        "units": "cts"
+      },
+    
+      "Bi212Tl208_fiber_shroud": {
+        "range": [0, 5e5],
+        "long-name": "^{212}Bi + ^{208}Tl - fiber shroud",
+        "units": "cts"
+      },
+  
+      "Pb214Bi214_cables": {
+        "range": [0, 2e4],
+          "long-name": "^{214}Pb + ^{214}Bi - cables",
+	    "prior":{"TFormula":"gaus:1,1.4E4,2.5E3"},
+        "units": "cts"
+      },
+   
+      "Pb214Bi214_fiber_shroud": {
+        "range": [0, 5e5],
+        "long-name": "^{214}Pb + ^{214}Bi - fiber shroud",
+        "units": "cts"
+      },
+   
+
+      "Ac228_pen_plates": {
+        "range": [0, 2e5],
+        "long-name": "^{228}Ac - PEN plates",
+        "units": "cts"
+      },
+
+      "K40_wls_reflector": {
+        "range": [0, 2e9],
+        "long-name": "^{40}K - WLS Reflector",
+        "units": "cts"
+      },
+  
+      "K42_inside": {
+        "range": [0, 3e8],
+        "long-name": "^{42}K - inside mini-shroud",
+        "units": "cts"
+      }
+      
+    },
+    "theoretical-expectations": {
+      "l200a-vancouver23-dataset-v0.3.root": {
+        "mul_surv/icpc": {
+          "fit-range": [565, 4000],
+          "rebin-factor": "565:10:1465,1465:11:1520,1520:10:4000",
+          "components": [
+            {
+              "root-file": "l200a-hpge-bulk-2vbb-tier_pdf.root",
+		          "components": { "2vbb_icpc": {}}
+            },
+
+            {
+              "root-file": "l200a-hv-signal-cables-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208_cables": {} }
+            },
+            {
+              "root-file": "l200a-fibers-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208_fiber_shroud": {} }
+            },
+            {
+              "root-file": "l200a-hv-signal-cables-Rn222-to-Pb214-tier_pdf.root",
+              "components": { "Pb214Bi214_cables": {} }
+            },
+           {
+              "root-file": "l200a-fibers-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214_fiber_shroud": {} }
+            },
+          
+            {
+              "root-file": "l200a-pen-plates-Ra228-to-Ac228-tier_pdf.root",
+              "components": { "Ac228_pen_plates": {} }
+            }, 
+         
+            {
+              "root-file": "l200a-wls-reflector-K40-tier_pdf.root",
+              "components": { "K40_wls_reflector": {} }
+            },
+            {
+              "root-file": "l200a-lar-inside-ms-K42-tier_pdf.root",
+              "components": { "K42_inside": {} }
+            },
+          
+            {
+
+              "components": {
+                  "alpha_icpc" : {
+                      "TFormula" : "pol1:0.000112626,6.86869E-8"
+                  }
+              }
+
+            }
+
+          ]
+     
+        },
+        "mul_surv/bege": {
+          "fit-range": [565, 4000],
+          "rebin-factor": "565:10:1465,1465:11:1520,1520:10:4000",
+          "components": [
+            {
+              "root-file": "l200a-hpge-bulk-2vbb-tier_pdf.root",
+		          "components": { "2vbb_bege": {}}
+            },
+
+            {
+              "root-file": "l200a-hv-signal-cables-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208_cables": {} }
+            },
+           
+            {
+              "root-file": "l200a-fibers-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208_fiber_shroud": {} }
+            },
+          
+            {
+              "root-file": "l200a-hv-signal-cables-Rn222-to-Pb214-tier_pdf.root",
+              "components": { "Pb214Bi214_cables": {} }
+            },
+           
+            {
+              "root-file": "l200a-fibers-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214_fiber_shroud": {} }
+            },
+           
+            {
+              "root-file": "l200a-pen-plates-Ra228-to-Ac228-tier_pdf.root",
+              "components": { "Ac228_pen_plates": {} }
+            },
+           
+            {
+              "root-file": "l200a-wls-reflector-K40-tier_pdf.root",
+              "components": { "K40_wls_reflector": {} }
+            },
+         
+            {
+              "root-file": "l200a-lar-inside-ms-K42-tier_pdf.root",
+              "components": { "K42_inside": {} }
+            },
+          
+
+            {
+
+              "components": {
+                  "alpha_bege" : {
+                      "TFormula" : "pol1:0.000182239,3.38806E-8"
+                  }
+              }
+
+            }
+
+          ]
+     
+        }
+      
+      }
+    }
+  }
+}
