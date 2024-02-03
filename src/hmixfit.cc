@@ -88,10 +88,10 @@ int main(int argc, char** argv) {
 
     // set precision (number of samples in Markov chain)
     model->SetPrecision(config.value("precision", BCEngineMCMC::kMedium));
-
+    model->SetNIterationsPreRunMax(1e7);
     // let's be more generous (default 100)
     model->SetInitialPositionAttemptLimit(1000);
-
+    
     // run MCMC and marginalize posterior w/r/t all parameters
     // An estimation of the global mode is available but without uncertainties
     
@@ -149,8 +149,8 @@ int main(int argc, char** argv) {
     // draw parameter plot
     model->PrintParameterPlot(prefix + "/parameters.pdf");
     model->PrintParameterLatex(prefix + "/parameters.tex");
-    model->PrintCorrelationPlot(prefix + "/par-correlation.pdf");
-    model->PrintCorrelationMatrix(prefix + "/correlation-matrix.pdf");
+    /// model->PrintCorrelationPlot(prefix + "/par-correlation.pdf");
+    // model->PrintCorrelationMatrix(prefix + "/correlation-matrix.pdf");
 
     // draw/save all marginalized distributions
     model->WriteMarginalizedDistributions(prefix + "/marginalized.root", "recreate");
