@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 
     // set precision (number of samples in Markov chain)
     model->SetPrecision(config.value("precision", BCEngineMCMC::kMedium));
-    model->SetNIterationsPreRunMax(1e7);
+    model->SetNIterationsPreRunMax(3e7);
     // let's be more generous (default 100)
     model->SetInitialPositionAttemptLimit(1000);
     
