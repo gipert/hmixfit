@@ -235,8 +235,7 @@ namespace utils {
         return 0.;
     }
 
-    TH1* ReformatHistogram(TH1* original, TH1* htemplate) {
-
+    TH1* ReformatHistogram( TH1* original, TH1* htemplate) {
         if (!original or !htemplate) {
             throw std::invalid_argument("ReformatHistogram(): invalid (nullptr) input");
         }
@@ -279,7 +278,7 @@ namespace utils {
                 auto th_new = dynamic_cast<TH1*>(original->Clone());
                 th_new->SetDirectory(nullptr);
                 return th_new;
-            }
+	    }
             else {
                 BCLog::OutDebug("ReformatHistogram(): template histogram looks different from original, proceeding. No consistency checks will be performed! (FIXME)");
                 // FIXME: check whether the original histogram can be legitimately cast into new one
@@ -311,6 +310,7 @@ namespace utils {
             th_new->SetBinContent(newbin, th_new->GetBinContent(newbin) + original->GetBinContent(b));
         }
 
+	delete original;
         return th_new;
     }
 
@@ -405,9 +405,9 @@ namespace utils {
 
             double prob = fu.Integral(median(mu), obs);
             if (std::abs(prob) >= 0.5) {
-                std::cout << "normalized_poisson_residual(): "
-                          << "WARNING: poisson_area(" << obs << ", " << median(mu)
-                          << ") = " << prob << std::endl;
+	      //std::cout << "normalized_poisson_residual(): "
+	      //          << "WARNING: poisson_area(" << obs << ", " << median(mu)
+	      //          << ") = " << prob << std::endl;
                 return (prob == 1 ? 3.90 : -3.9);
             }
             else return TMath::NormQuantile(0.5+prob);

@@ -1,0 +1,578 @@
+{
+  "id": "l200a-taup-silver-dataset",
+  "logging": "summary",
+  "precision": "kHigh",
+    "output-dir": "results",
+    "n-bins":1000,
+    "data-path":"/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/data/",
+    "pdf-path": "/home/tdixon/LEGEND/BackgroundModel/hmixfit/inputs/pdfs/",
+  "global-mode-search": {
+    "method": "kOptMinuit"
+  },
+  "p-value": {
+    "enabled": false,
+    "iterations": 1e6
+  },
+  "observables": {
+      "2vbb-half-life": {
+          "TFormula": "8.9342e25/[2vbb]",
+          "range" : [1.5E21, 2.0E21],
+          "long-name" : "T_{1/2}^{2#nu}",
+          "units" : "yr"
+      },
+      "2vbb-half-life-ppc": {
+          "TFormula": "8.9342e25/[2vbb-ppc]",
+          "range" : [1.0E21, 1.7E21],
+          "long-name" : "T_{1/2}^{2#nu}",
+          "units" : "yr"
+      }
+  },
+  "fit": {
+    "parameters": {
+      "2vbb": {
+        "range": [3e4, 6e4],
+        "long-name": "2#nu#beta#beta - ICPC, BEGe, Coax",
+        "units": "cts"
+      },
+      "2vbb-ppc": {
+        "range": [5e4, 1e5],
+        "long-name": "2#nu#beta#beta - PPC",
+        "units": "cts"
+      },
+      "K42-homogeneous": {
+        "range": [0, 7e6],
+        "long-name": "^{42}K - homogeneous in LAr",
+        "units": "cts"
+      },
+      "K42-hpge-surface": {
+        "range": [0, 3e4],
+        "long-name": "^{42}K - on HPGe surface",
+        "units": "cts"
+      },
+      "K42-hpge-shell": {
+        "range": [0, 2e5],
+        "long-name": "^{42}K - in a 1 cm shell of LAr around HPGes",
+        "units": "cts"
+      },
+      "K42-mini-shroud": {
+        "range": [0, 2e5],
+        "long-name": "^{42}K - on mini-shroud surface",
+        "units": "cts"
+      },
+      "Bi212Tl208-cables": {
+        "range": [0, 1e3],
+        "long-name": "^{212}Bi + ^{208}Tl - cables",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,1.44E2,3.03E2" }
+      },
+      "Bi212Tl208-hpge-support-copper": {
+        "range": [0, 20],
+        "long-name": "^{212}Bi + ^{208}Tl - HPGe mounting, copper",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,5.18,2.34" }
+      },
+      "Bi212Tl208-fiber-shroud": {
+        "range": [0, 2e3],
+        "long-name": "^{212}Bi + ^{208}Tl - fiber shroud",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,6.32E2,2.08E2" }
+      },
+      "Bi212Tl208-mini-shroud": {
+        "range": [0, 1e3],
+        "long-name": "^{212}Bi + ^{208}Tl - Nylon mini-shroud and calibration tubes",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,2.59E2,9.67E1" }
+      },
+      "Bi212Tl208-pen-plates": {
+        "range": [0, 1e2],
+        "long-name": "^{212}Bi + ^{208}Tl - PEN plates",
+        "units": "cts",
+        "prior": { "TFormula": "exp(-x*2.3/2.15E1)" }
+      },
+      "Bi212Tl208-birds-nest": {
+        "range": [0, 3e3],
+        "long-name": "^{212}Bi + ^{208}Tl - bird's nest",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,1.16E3,1.82E2" }
+      },
+      "Bi212Tl208-front-end-electronics": {
+        "range": [8e3, 2e4],
+        "long-name": "^{212}Bi + ^{208}Tl - front-end electronics",
+        "units": "cts"
+      },
+
+      "Pb214Bi214-cables": {
+        "range": [1e3, 3e3],
+        "long-name": "^{214}Pb + ^{214}Bi - cables",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,1.63E3,1.35E3" }
+      },
+      "Pb214Bi214-hpge-support-copper": {
+        "range": [0, 20],
+        "long-name": "^{214}Pb + ^{214}Bi - HPGe mounting, copper",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,7.14,3.50" }
+      },
+      "Pb214Bi214-fiber-shroud": {
+        "range": [1e2, 2e3],
+        "long-name": "^{214}Pb + ^{214}Bi - fiber shroud",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,8.16E2,1.37E2" }
+      },
+      "Pb214Bi214-mini-shroud": {
+        "range": [1e2, 1e3],
+        "long-name": "^{214}Pb + ^{214}Bi - nylon mini-shroud and calibration tubes",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,3.77E2,1.62E2" }
+      },
+      "Pb214Bi214-pen-plates": {
+        "range": [0, 5e2],
+        "long-name": "^{214}Pb + ^{214}Bi - PEN plates",
+        "units": "cts",
+        "prior": { "TFormula": "exp(-x*2.3/1.17E2)" }
+      },
+      "Pb214Bi214-birds-nest": {
+        "range": [1e2, 3e3],
+        "long-name": "^{214}Pb + ^{214}Bi - bird's nest",
+        "units": "cts",
+        "prior": { "TFormula": "gaus:1,1.63E3,1.40E2" }
+      },
+      "Pb214Bi214-front-end-electronics": {
+        "range": [0, 1e4],
+        "long-name": "^{214}Pb + ^{214}Bi - front-end electronics",
+        "units": "cts"
+      },
+      "Ac228-pen-plates": {
+        "range": [0, 2e4],
+        "long-name": "^{228}Ac - PEN plates",
+        "units": "cts"
+      },
+      "K40-hpge-support-copper": {
+        "range": [2, 4e5],
+        "long-name": "^{40}K - HPGe support copper",
+        "units": "cts"
+      },
+      "K40-pen-plates": {
+        "range": [0, 5e5],
+        "long-name": "^{40}K - PEN plates",
+        "units": "cts"
+      },
+      "Ar39-homogeneous": {
+        "fixed": 5.4e9,
+        "long-name": "^{39}Ar - homogeneous in LAr",
+        "units": "cts"
+      }
+    },
+    "theoretical-expectations": {
+      "l200a-taup-silver-dataset.root": {
+        "raw/bege": {
+          "fit-range": [565, 2995],
+          "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
+          "components": [
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-bulk-2vbb-tier_pdf.root",
+              "components": { "2vbb": { "hist-name": "raw/bege" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-K42-tier_pdf.root",
+              "components": { "K42-homogeneous": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-surface-K42-tier_pdf.root",
+              "components": { "K42-hpge-surface": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-hpge-shell-K42-tier_pdf.root",
+              "components": { "K42-hpge-shell": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-surface-K42-tier_pdf.root",
+              "components": { "K42-mini-shroud": { "hist-name": "raw/bege" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-cables": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-hpge-support-copper": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-fiber-shroud": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-mini-shroud": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-pen-plates": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-birds-nest": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-front-end-electronics": { "hist-name": "raw/bege" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Rn222-to-Pb214-tier_pdf.root",
+              "components": { "Pb214Bi214-cables": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-hpge-support-copper": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-fiber-shroud": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-mini-shroud": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-pen-plates": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-birds-nest": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-front-end-electronics": { "hist-name": "raw/bege" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra228-to-Ac228-tier_pdf.root",
+              "components": { "Ac228-pen-plates": { "hist-name": "raw/bege" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-K40-tier_pdf.root",
+              "components": { "K40-hpge-support-copper": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-K40-tier_pdf.root",
+              "components": { "K40-pen-plates": { "hist-name": "raw/bege" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-Ar39-tier_pdf.root",
+              "components": { "Ar39-homogeneous": { "hist-name": "raw/bege" } }
+            }
+          ]
+        },
+        "raw/icpc": {
+          "fit-range": [565, 2995],
+          "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
+          "components": [
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-bulk-2vbb-tier_pdf.root",
+              "components": { "2vbb": { "hist-name": "raw/icpc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-K42-tier_pdf.root",
+              "components": { "K42-homogeneous": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-surface-K42-tier_pdf.root",
+              "components": { "K42-hpge-surface": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-hpge-shell-K42-tier_pdf.root",
+              "components": { "K42-hpge-shell": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-surface-K42-tier_pdf.root",
+              "components": { "K42-mini-shroud": { "hist-name": "raw/icpc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-cables": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-hpge-support-copper": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-fiber-shroud": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-mini-shroud": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-pen-plates": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-birds-nest": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-front-end-electronics": { "hist-name": "raw/icpc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Rn222-to-Pb214-tier_pdf.root",
+              "components": { "Pb214Bi214-cables": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-hpge-support-copper": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-fiber-shroud": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-mini-shroud": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-pen-plates": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-birds-nest": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-front-end-electronics": { "hist-name": "raw/icpc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra228-to-Ac228-tier_pdf.root",
+              "components": { "Ac228-pen-plates": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-K40-tier_pdf.root",
+              "components": { "K40-hpge-support-copper": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-K40-tier_pdf.root",
+              "components": { "K40-pen-plates": { "hist-name": "raw/icpc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-Ar39-tier_pdf.root",
+              "components": { "Ar39-homogeneous": { "hist-name": "raw/icpc" } }
+            }
+          ]
+        },
+        "raw/coax": {
+          "fit-range": [565, 2995],
+          "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
+          "components": [
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-bulk-2vbb-tier_pdf.root",
+              "components": { "2vbb": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-K42-tier_pdf.root",
+              "components": { "K42-homogeneous": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-surface-K42-tier_pdf.root",
+              "components": { "K42-hpge-surface": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-hpge-shell-K42-tier_pdf.root",
+              "components": { "K42-hpge-shell": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-surface-K42-tier_pdf.root",
+              "components": { "K42-mini-shroud": { "hist-name": "raw/coax" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-cables": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-hpge-support-copper": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-fiber-shroud": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-mini-shroud": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-pen-plates": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-birds-nest": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-front-end-electronics": { "hist-name": "raw/coax" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Rn222-to-Pb214-tier_pdf.root",
+              "components": { "Pb214Bi214-cables": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-hpge-support-copper": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-fiber-shroud": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-mini-shroud": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-pen-plates": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-birds-nest": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-front-end-electronics": { "hist-name": "raw/coax" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra228-to-Ac228-tier_pdf.root",
+              "components": { "Ac228-pen-plates": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-K40-tier_pdf.root",
+              "components": { "K40-hpge-support-copper": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-K40-tier_pdf.root",
+              "components": { "K40-pen-plates": { "hist-name": "raw/coax" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-Ar39-tier_pdf.root",
+              "components": { "Ar39-homogeneous": { "hist-name": "raw/coax" } }
+            }
+          ]
+        },
+        "raw/ppc": {
+          "fit-range": [565, 2995],
+          "rebin-factor": "565:10:1465,1465:11:1520,1520:10:2995",
+          "components": [
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-bulk-2vbb-tier_pdf.root",
+              "components": { "2vbb-ppc": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-K42-tier_pdf.root",
+              "components": { "K42-homogeneous": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-surface-K42-tier_pdf.root",
+              "components": { "K42-hpge-surface": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-hpge-shell-K42-tier_pdf.root",
+              "components": { "K42-hpge-shell": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-surface-K42-tier_pdf.root",
+              "components": { "K42-mini-shroud": { "hist-name": "raw/ppc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-cables": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-hpge-support-copper": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-fiber-shroud": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-mini-shroud": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-pen-plates": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-birds-nest": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Ra224-to-Pb208-tier_pdf.root",
+              "components": { "Bi212Tl208-front-end-electronics": { "hist-name": "raw/ppc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-hv-signal-cables-Rn222-to-Pb214-tier_pdf.root",
+              "components": { "Pb214Bi214-cables": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-hpge-support-copper": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-fibers-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-fiber-shroud": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-mini-shroud-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-mini-shroud": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-pen-plates": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-birds-nest-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-birds-nest": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-front-end-electronics-Rn222-to-Po214-tier_pdf.root",
+              "components": { "Pb214Bi214-front-end-electronics": { "hist-name": "raw/ppc" } }
+            },
+
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-Ra228-to-Ac228-tier_pdf.root",
+              "components": { "Ac228-pen-plates": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-hpge-support-copper-K40-tier_pdf.root",
+              "components": { "K40-hpge-support-copper": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-pen-plates-K40-tier_pdf.root",
+              "components": { "K40-pen-plates": { "hist-name": "raw/ppc" } }
+            },
+            {
+              "root-file": "l200a-pdfs/l200a-lar-cylinder-Ar39-tier_pdf.root",
+              "components": { "Ar39-homogeneous": { "hist-name": "raw/ppc" } }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

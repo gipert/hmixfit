@@ -3,10 +3,18 @@ hmixfit
 results
 /data
 /src/obj
+inputs/data/*
+inputs/pdfs/*
+tools/*
 *.root
 *.sif
-
+*.jpg
+*.png
 # junk
 .DS_Store
 *.swp
 *.swo
+*~
+*#
+*.xz
+.vscode/settings.json
